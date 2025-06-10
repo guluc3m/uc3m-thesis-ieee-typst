@@ -3,15 +3,11 @@
 
 #let cover(
   degree,
-  subject,
-  project,
   title,
   year,
   logo,
-  group: none,
   author: (),
   professor: none,
-  team: none,
   language: "en",
   presentation_place: none,
   presentation_date: none,
@@ -31,14 +27,13 @@
   ]
 
 
-  // Título y grado
+  // Título
   #text(25pt, ["*#title*"])\
 
-  // #line(length: 70%, stroke: azuluc3m)
-
-  // TFG pero en inglés o español xd
+  // "TFG" o "Bachelor Thesis"
   #text(COVER_TYPE.at(language))
 
+  // Grado
   #emph(degree)
 
   #{
@@ -48,7 +43,7 @@
       grid(
         columns: (auto, auto),
         row-gutter: 1em,
-        column-gutter: 1em,
+        column-gutter: 0.5em,
         align: (right, left),
 
         // submission date

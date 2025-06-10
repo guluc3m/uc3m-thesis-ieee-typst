@@ -4,14 +4,10 @@
 
 #let conf(
   degree: "",
-  subject: "",
   year: (),
   author: "",
-  project: "",
   title: "",
-  group: none,
   professor: none,
-  team: none,
   language: "en",
   presentation_place: none,
   presentation_date: none,
@@ -150,15 +146,11 @@
 
   cover(
     degree,
-    subject,
-    project,
     title,
     year,
     logo,
     author: author,
     professor: professor,
-    group: group,
-    team: team,
     language: language,
     presentation_place: presentation_place,
     presentation_date: presentation_date,

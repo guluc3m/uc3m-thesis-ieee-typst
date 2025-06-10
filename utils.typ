@@ -17,7 +17,7 @@
 
 #let COVER_TUTOR = (
   "es": "Tutor:",
-  "en": "University advisor:",
+  "en": "University supervisor:",
 )
 
 #let COVER_PLACE = (
