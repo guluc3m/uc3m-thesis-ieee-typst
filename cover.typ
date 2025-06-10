@@ -13,6 +13,8 @@
   professor: none,
   team: none,
   language: "en",
+  presentation_place: none,
+  presentation_date: none,
 ) = [
   #set align(center)
   #set text(azuluc3m)
@@ -28,38 +30,60 @@
     #v(1em)
   ]
 
+
+  // Título y grado
+  #text(25pt, ["*#title*"])\
+
+  // #line(length: 70%, stroke: azuluc3m)
+
+  // TFG pero en inglés o español xd
+  #text(COVER_TYPE.at(language))
+
   #emph(degree)
 
-  #subject #year.at(0)/#year.at(1)\
-  Grupo #group
-
-  #v(2em)
-
-  #emph(project)\
-  #text(25pt, ["#title"])
-
-  #line(length: 70%, stroke: azuluc3m)
-
-  // author
   #{
-    set text(20pt)
-    author
+    set text(12pt)
+    place(
+      bottom + center,
+      grid(
+        columns: (auto, auto),
+        row-gutter: 1em,
+        column-gutter: 1em,
+        align: (right, left),
+
+        // submission date
+        text(weight: "bold", COVER_DATE.at(language)),
+        text(str(year.at(0)) + "/" + str(year.at(1))),
+
+        // autor
+        align(text(weight: "bold", COVER_AUTHOR.at(language)), top),
+        text(author),
+
+        // university supervisor
+        text(weight: "bold", COVER_TUTOR.at(language)),
+        text(professor),
+
+        // lugar
+        if presentation_place != none [
+          #text(weight: "bold", COVER_PLACE.at(language))
+        ],
+        if presentation_place != none [
+          #text(presentation_place)
+        ],
+
+        // Fecha de presentación
+        if presentation_date != none [
+          #text(weight: "bold", COVER_PRESENTATION_DATE.at(language))
+        ],
+        if presentation_date != none [
+          #text(presentation_date)
+        ],
+
+
+
+      ),
+    )
   }
-
-  #if team != none [
-    Team #team
-  ]
-
-  #v(3em)
-
-  #if professor != none [
-    #if language == "es" [
-      _Profesor_\
-    ] else [
-      _Professor_\
-    ]
-    #professor
-  ]
 
   #pagebreak()
   #counter(page).update(1)

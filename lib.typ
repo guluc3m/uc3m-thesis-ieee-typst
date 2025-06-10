@@ -13,6 +13,8 @@
   professor: none,
   team: none,
   language: "en",
+  presentation_place: none,
+  presentation_date: none,
   toc: true,
   logo: "new",
   bibliography_file: none,
@@ -158,6 +160,8 @@
     group: group,
     team: team,
     language: language,
+    presentation_place: presentation_place,
+    presentation_date: presentation_date,
   )
 
 

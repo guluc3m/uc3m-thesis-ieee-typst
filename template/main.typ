@@ -1,4 +1,4 @@
-#import "/lib.typ": conf
+#import "../lib.typ": conf
 
 #show: conf.with(
   degree: "Grado en...",
@@ -12,6 +12,8 @@
   toc: true,
   logo: "old",
   language: "en",
+  presentation_place: "Leganés, Madrid, España",
+  presentation_date: "Junio, 2025"
 )
 
 
@@ -30,6 +32,6 @@
 #lorem(200)
 
 #figure(
-  image("/img/old_uc3m_logo.svg", width: 70%),
+  image("../img/old_uc3m_logo.svg", width: 70%),
   caption: [El mejor logo de la UC3M, con diferencia],
 ) <logo>
