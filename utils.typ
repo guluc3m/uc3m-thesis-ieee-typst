@@ -30,6 +30,11 @@
   "en": "Date:",
 )
 
+#let COVER_LICENSE = (
+  "es": [Esta obra se encuentra sujeta a la licencia Creative Commons *Reconocimiento - No Comercial - Sin Obra Derivada*],
+  "en": [This work is licensed under Creative Common *Attribution - Non Commercial - No Derivatives*],
+)
+
 
 // Para copiarlo ez
 #let xd = (

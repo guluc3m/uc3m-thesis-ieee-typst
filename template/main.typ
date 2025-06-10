@@ -10,7 +10,8 @@
   logo: "old",
   language: "en",
   presentation_place: "Leganés, Madrid, España",
-  presentation_date: "Junio, 2025"
+  presentation_date: "Junio, 2025",
+  license: true,
 )
 
 

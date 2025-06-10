@@ -11,6 +11,7 @@
   language: "en",
   presentation_place: none,
   presentation_date: none,
+  license: false,
 ) = [
   #set align(center)
   #set text(azuluc3m)
@@ -74,9 +75,24 @@
           #text(presentation_date)
         ],
 
-
-
+        // Espacio para la licencia
+        if license {
+          v(7em)
+        },
       ),
+    )
+  }
+
+  // Licencia
+  #{
+    set text(fill: luma(0), size: 12pt)
+    place(
+      bottom + left,
+      if license [
+        #image("img/by-nc-nd.svg", width: 25%)
+        #v(-0.5em)
+        #text(COVER_LICENSE.at(language))
+      ],
     )
   }
 
