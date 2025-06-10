@@ -4,20 +4,19 @@
 
 #let conf(
   degree: "",
-  subject: "",
   year: (),
   author: "",
-  project: "",
   title: "",
-  group: none,
   professor: none,
-  team: none,
   language: "en",
+  presentation_place: none,
+  presentation_date: none,
   toc: true,
   logo: "new",
   bibliography_file: none,
   chapter_on_new_page: true,
   doc,
+  license: false,
 ) = {
   /* TEXT */
 
@@ -115,9 +114,7 @@
     // header
     header: [
       #set text(azuluc3m)
-      #project
       #h(1fr)
-      #subject, grp. #group
 
       #v(-0.7em)
       #line(length: 100%, stroke: 0.4pt + azuluc3m)
@@ -148,16 +145,15 @@
 
   cover(
     degree,
-    subject,
-    project,
     title,
     year,
     logo,
     author: author,
     professor: professor,
-    group: group,
-    team: team,
     language: language,
+    presentation_place: presentation_place,
+    presentation_date: presentation_date,
+    license: license,
   )
 
 
