@@ -6,8 +6,8 @@
   subject,
   project,
   title,
-  year,
   logo,
+  year: (69, 420),
   group: none,
   author: (),
   professor: none,
@@ -61,6 +61,4 @@
     #professor
   ]
 
-  #pagebreak()
-  #counter(page).update(1)
 ]

@@ -1,24 +1,30 @@
+#import "@preview/hydra:0.6.1": hydra
+
 #import "cover.typ": cover
 #import "utils.typ": *
 
 
 #let conf(
-  degree: "",
-  subject: "",
-  year: (),
-  author: "",
-  project: "",
-  title: "",
-  group: none,
-  professor: none,
-  team: none,
+  degree: none,
+  title: none,
+  author: none,
+  advisors: (),
+  place: none,
+  date: none,
+  bibliography_file: none,
   language: "en",
   toc: true,
   logo: "new",
-  bibliography_file: none,
+  shortitle: none,
   chapter_on_new_page: true,
   doc,
 ) = {
+  let in-frontmatter = state("in-frontmatter", true) // to control page number format in frontmatter
+  let in-body = state("in-body", true) // to control heading formatting in/outside of body
+
+
+  // ---------- Page Setup ---------------------------------------
+
   /* TEXT */
 
   set text(size: 12pt, lang: language)
@@ -60,17 +66,9 @@
     if it.placement == none {
       block(it, inset: (y: figure_spacing))
     } else if it.placement == top {
-      place(
-        it.placement,
-        float: true,
-        block(width: 100%, inset: (bottom: figure_spacing), align(center, it)),
-      )
+      place(it.placement, float: true, block(width: 100%, inset: (bottom: figure_spacing), align(center, it)))
     } else if it.placement == bottom {
-      place(
-        it.placement,
-        float: true,
-        block(width: 100%, inset: (top: figure_spacing), align(center, it)),
-      )
+      place(it.placement, float: true, block(width: 100%, inset: (top: figure_spacing), align(center, it)))
     }
   }
 
@@ -113,53 +111,52 @@
     ),
 
     // header
-    header: [
-      #set text(azuluc3m)
-      #project
-      #h(1fr)
-      #subject, grp. #group
+    header: context {
+      if not in-frontmatter.get() {
+        set text(azuluc3m)
+        if calc.odd(here().page()) {
+          counter(page).display()
+          h(1fr)
+          smallcaps(title)
+        } else {
+          smallcaps(hydra(1)) // chapter title
+          h(1fr)
+          counter(page).display("1") // arabic page numbers for the rest of the document
+        }
 
-      #v(-0.7em)
-      #line(length: 100%, stroke: 0.4pt + azuluc3m)
-    ],
+        v(-0.7em)
+        line(length: 100%, stroke: 0.4pt + azuluc3m)
+      }
+    },
 
     // footer
-    footer: context [
-      #line(length: 100%, stroke: 0.4pt + azuluc3m)
-      #v(-0.4em)
-
-      #set align(right)
-      #set text(azuluc3m)
-      #author
-      #h(1fr)
-      #let page_delimeter = "of"
-      #if language == "es" {
-        page_delimeter = "de"
+    footer: context {
+      if in-frontmatter.get() {
+        set align(center)
+        set text(azuluc3m)
+        counter(page).display("i") // roman page numbers for the frontmatter
       }
-      #counter(page).display(
-        "pg. 1 " + page_delimeter + " 1",
-        both: true,
-      )
-    ],
+    },
   )
 
+  // ========== TITLEPAGE ========================================
 
   /* COVER */
 
   cover(
     degree,
-    subject,
-    project,
+    "",
+    "",
     title,
-    year,
     logo,
     author: author,
-    professor: professor,
-    group: group,
-    team: team,
     language: language,
   )
 
+  pagebreak()
+  counter(page).update(1)
+
+  // ========== FRONTMATTER ========================================
 
   /* TOC */
 
@@ -171,9 +168,20 @@
     outline(title: outline_title)
     pagebreak()
   }
+  in-frontmatter.update(false) // end of frontmatter
+  counter(page).update(0) // so the first chapter starts at page 1 (now in arabic numbers)
 
+  // ========== DOCUMENT BODY ========================================
   doc
 
+
+  // ========== APPENDIX ========================================
+
+  in-body.update(false)
+  set heading(numbering: "A.1")
+  counter(heading).update(0)
+
+  // ---------- Bibliography ---------------------------------------
 
   /* BIBLIOGRAPHY */
 
