@@ -3,7 +3,6 @@
 #import "cover.typ": cover
 #import "utils.typ": *
 
-
 #let conf(
   degree: none,
   title: none,
@@ -72,9 +71,22 @@
     }
   }
 
-  // captions on top for tables
-  show figure.where(kind: table): set figure.caption(position: top)
+  /* TABLES */
 
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption.where(kind: table): it => [
+    #set text(azuluc3m, weight: "semibold")
+    #context smallcaps(it.supplement)
+    #context smallcaps(it.counter.display(it.numbering)) \
+    #set text(black, weight: "regular")
+    #smallcaps(it.body) \
+  ]
+
+  show table: block.with(stroke: (y: 0.7pt))
+  set table(
+    row-gutter: -0.1em,   // Row separation
+    stroke: (_, y) => if y == 0 { (bottom: 0.2pt) }
+  )
 
   /* REFERENCES & LINKS */
 
