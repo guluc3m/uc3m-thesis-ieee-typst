@@ -1,14 +1,17 @@
 #import "@preview/hydra:0.6.1": hydra
 
-#import "cover.typ": cover
+#import "titlepage.typ": titlepage
+#import "locale.typ": *
 #import "utils.typ": *
 
 #let conf(
-  degree: none,
   title: none,
-  author: none,
-  advisors: (),
-  place: none,
+  authors: (),
+  degree: none,
+  course: none,
+  tutors: (),
+  location: none,
+  type-of-thesis: none,
   date: none,
   bibliography_file: none,
   language: "en",
@@ -16,11 +19,44 @@
   logo: "new",
   shortitle: none,
   chapter_on_new_page: true,
+  date_format: "[day] de [month repr:long] de [year]",
   doc,
 ) = {
   let in-frontmatter = state("in-frontmatter", true) // to control page number format in frontmatter
   let in-body = state("in-body", true) // to control heading formatting in/outside of body
 
+  // ========== TITLEPAGE ========================================
+  
+  // Set up parameters for titlepage
+  let title_authors = authors
+  let title_tutors = tutors
+  let title_location = location
+  
+  // Set up logo
+  let title_logo = if logo == "new" {
+    image("img/new_uc3m_logo.svg")
+  } else if logo == "old" {
+    image("img/old_uc3m_logo.svg")
+  } else {
+    image("img/new_uc3m_logo.svg")
+  }
+
+  titlepage(
+    title_authors,
+    date,
+    auto,
+    language,
+    title_logo,
+    title,
+    type-of-thesis,
+    date_format,
+    16pt,
+    degree: degree,
+    course: course,
+    tutors: title_tutors,
+    location: title_location,
+    accent-color: azuluc3m,
+  )
 
   // ---------- Page Setup ---------------------------------------
 
@@ -149,20 +185,6 @@
         counter(page).display("i") // roman page numbers for the frontmatter
       }
     },
-  )
-
-  // ========== TITLEPAGE ========================================
-
-  /* COVER */
-
-  cover(
-    degree,
-    "",
-    "",
-    title,
-    logo,
-    author: author,
-    language: language,
   )
 
   pagebreak()

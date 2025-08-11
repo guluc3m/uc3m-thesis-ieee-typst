@@ -1,8 +1,8 @@
 [package]
 name = "uc3m-thesis-ieee"
-version = "0.3.0"
+version = "0.4.0"
 entrypoint = "lib.typ"
-authors = ["Luis Daniel Casais Mezquida <@rajayonin>"]
+authors = ["Luis Daniel Casais Mezquida <@rajayonin>", "Jorge Lázaro Ruiz <@JorgeyGari>"]
 license = "MIT"
 description = "Typst Bachelor Thesis template of the Universidad Carlos III de Madrid, IEEE style"
 repository = "https://github.com/guluc3m/uc3m-thesis-ieee-typst"

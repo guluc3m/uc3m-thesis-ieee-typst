@@ -1,15 +1,16 @@
-#import "/lib.typ": conf
+#import "../lib.typ": conf
 
 #show: conf.with(
   degree: "Grado en...",
   title: "La mejor memoria de la historia",
-  author: "Luis Daniel Casais Mezquida",
-  advisors: ("Perico de los Palotes",),
-  place: "La casa de tu madre",
-  date: "69 de abril",
+  authors: ((name: "Luis Daniel Casais Mezquida"),),
+  tutors: ("Perico de los Palotes",),
+  location: "La casa de tu madre",
+  type-of-thesis: "Trabajo de Fin de Grado",
+  date: datetime(year: 2025, month: 4, day: 20),
   toc: true,
   logo: "old",
-  language: "en",
+  language: "es",
 )
 
 
@@ -27,7 +28,7 @@
 = Related Work
 #lorem(200)
 
-#figure(image("/img/old_uc3m_logo.svg", width: 70%), caption: [El mejor logo de la UC3M, con diferencia]) <logo>
+#figure(image("../img/old_uc3m_logo.svg", width: 70%), caption: [El mejor logo de la UC3M, con diferencia]) <logo>
 
 = Tables
 
