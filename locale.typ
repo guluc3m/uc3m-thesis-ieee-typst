@@ -1,6 +1,6 @@
 #let TITLEPAGE_AUTHOR = (
-  "en": "Author",
   "es": "Autor",
+  "en": "Author",
 )
 
 #let TITLEPAGE_TUTOR = (
