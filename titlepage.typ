@@ -15,6 +15,7 @@
   course: none,
   tutors: none,
   location: none,
+  logo-type: "new",
   accent-color: azuluc3m,
 ) = {
 
@@ -31,10 +32,26 @@
   place(                                
     top + center,
     dy: -2.5 * page-grid,
-    box(if logo-left == none { image("img/new_uc3m_logo.svg") } else { logo-left }, width: 100%, height: 5.5 * page-grid)
+    {
+      let logo-content = if logo-left == none { 
+        image("img/new_uc3m_logo.svg") 
+      } else { 
+        logo-left 
+      }
+      
+      if logo-type == "old" {
+        box(logo-content, width: 100%, height: 10 * page-grid)
+      } else {
+        box(logo-content, width: 100%, height: 5.5 * page-grid)
+      }
+    }
   )
 
-  v(4.8 * page-grid)
+  if logo-type == "old" {
+    v(9.4 * page-grid)
+  } else {
+    v(4.8 * page-grid)
+  }
     
   if degree != none {
     text(size: 1.2 * page-grid, weight: "regular", degree)

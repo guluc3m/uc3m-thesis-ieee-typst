@@ -55,6 +55,7 @@
     course: course,
     tutors: title_tutors,
     location: title_location,
+    logo-type: logo,
     accent-color: azuluc3m,
   )
 
