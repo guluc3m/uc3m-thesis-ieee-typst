@@ -3,8 +3,8 @@
 #show: conf.with(
   degree: "Grado en...",
   title: "La mejor memoria de la historia",
-  authors: ((name: "Luis Daniel Casais Mezquida"),),
-  tutors: ("Perico de los Palotes",),
+  authors: ((name: "Nombre Extremadamente Largo e Incómodo de Escribir"),),
+  tutors: ("Profesor Cuyos Padres Tenían Visión de Futuro",),
   location: "La casa de tu madre",
   type-of-thesis: "Trabajo de Fin de Grado",
   date: datetime(year: 2025, month: 4, day: 20),
