@@ -19,7 +19,7 @@
   logo: "new",
   shortitle: none,
   chapter_on_new_page: true,
-  date_format: "[day] de [month repr:long] de [year]",
+  date_format: auto,
   doc,
 ) = {
   let in-frontmatter = state("in-frontmatter", true) // to control page number format in frontmatter
@@ -31,6 +31,13 @@
   let title_authors = authors
   let title_tutors = tutors
   let title_location = location
+  
+  // Set language-appropriate date format
+  let local_date_format = if date_format == auto {
+    DATE_FORMAT.at(language, default: DATE_FORMAT.at("es"))
+  } else {
+    date_format
+  }
   
   // Set up logo
   let title_logo = if logo == "new" {
@@ -49,7 +56,7 @@
     title_logo,
     title,
     type-of-thesis,
-    date_format,
+    local_date_format,
     16pt,
     degree: degree,
     course: course,
