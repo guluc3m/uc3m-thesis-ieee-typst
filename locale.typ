@@ -10,7 +10,7 @@
 
 #let TITLEPAGE_TUTORS = (
   "es": "Tutores",
-  "en": "Tutors", 
+  "en": "Advisors",
 )
 
 #let CC_LICENSE_TEXT = (
@@ -20,5 +20,5 @@
 
 #let DATE_FORMAT = (
   "es": "[day] de [month repr:long] de [year]",
-  "en": "[month repr:long] [day], [year]", 
+  "en": "[month repr:long] [day], [year]",
 )
