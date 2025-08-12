@@ -1,26 +1,97 @@
 #import "@preview/hydra:0.6.1": hydra
 
-#import "cover.typ": cover
+#import "titlepage.typ": titlepage
+#import "locale.typ": *
 #import "utils.typ": *
 
+/// Main configuration function.
+///
+/// *Example:*
+/// ```
+/// #show: conf.with(
+///   degree: "Grado en...",
+///   title: "La mejor memoria de la historia",
+///   authors: ((name: "Nombre Extremadamente Largo e Incómodo de Escribir"),),
+///   advisors: ("Profesor Cuyos Padres Tenían Visión de Futuro",),
+///   location: "La casa de tu madre",
+///   type-of-thesis: "Trabajo de Fin de Grado",
+///   bibliography-file: "sources.bib",
+///   date: datetime(year: 2025, month: 4, day: 20),
+///   toc: true,
+///   logo: "old",
+///   language: "es",
+/// )
+/// ```
+///
+/// - title (str): Title of the thesis.
+/// - author (str): Author name.
+/// - degree (str): Degree name.
+/// - advisors (array): List of advisors.
+/// - location (str): Presentation location.
+/// - type-of-thesis (str): Type of thesis (TFG/TFM).
+/// - date (datetime): Presentation date.
+/// - bibliography-file (str): Path to bibliography file.
+/// - language (str): `"en"` or `"es"`.
+/// - logo (str): Type of logo (`"old"` or `"new"`).
+/// - shortitle (str): Shorter version of the title, to be displayed in the headers.
+/// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
+/// - license (bool): Whether to include the Creative-Commons Attribution-NonCommercial-NoDerivatives 4.0 license.
+/// - doc (content): Thesis contents.
+///
+/// -> content
 #let conf(
-  degree: none,
   title: none,
   author: none,
+  degree: none,
   advisors: (),
-  place: none,
+  location: none,
+  type-of-thesis: none,
   date: none,
-  bibliography_file: none,
+  bibliography-file: none,
   language: "en",
-  toc: true,
   logo: "new",
   shortitle: none,
-  chapter_on_new_page: true,
+  date-format: auto,
+  license: true,
   doc,
 ) = {
   let in-frontmatter = state("in-frontmatter", true) // to control page number format in frontmatter
   let in-body = state("in-body", true) // to control heading formatting in/outside of body
 
+  // ========== TITLEPAGE ========================================
+
+  // Set language-appropriate date format
+  let local_date_format = if date-format == auto {
+    DATE_FORMAT.at(language, default: DATE_FORMAT.at("es"))
+  } else {
+    date-format
+  }
+
+  // Set up logo
+  let title_logo = if logo == "new" {
+    image("img/new_uc3m_logo.svg")
+  } else if logo == "old" {
+    image("img/old_uc3m_logo.svg")
+  } else {
+    image("img/new_uc3m_logo.svg")
+  }
+
+  titlepage(
+    author,
+    date,
+    auto,
+    language,
+    title,
+    type-of-thesis,
+    local_date_format,
+    16pt,
+    degree: degree,
+    advisors: advisors,
+    location: location,
+    logo-type: logo,
+    accent-color: azuluc3m,
+    license: license,
+  )
 
   // ---------- Page Setup ---------------------------------------
 
@@ -36,8 +107,9 @@
   set heading(numbering: "1.")
   show heading: set text(azuluc3m)
   show heading: set block(above: 1.4em, below: 1em)
+  // chapter on new page
   show heading.where(level: 1): it => {
-    if chapter_on_new_page { pagebreak(weak: true) }
+    pagebreak(weak: true)
     it
   }
 
@@ -84,8 +156,8 @@
 
   show table: block.with(stroke: (y: 0.7pt))
   set table(
-    row-gutter: -0.1em,   // Row separation
-    stroke: (_, y) => if y == 0 { (bottom: 0.2pt) }
+    row-gutter: -0.1em, // Row separation
+    stroke: (_, y) => if y == 0 { (bottom: 0.2pt) },
   )
 
   /* REFERENCES & LINKS */
@@ -151,20 +223,6 @@
     },
   )
 
-  // ========== TITLEPAGE ========================================
-
-  /* COVER */
-
-  cover(
-    degree,
-    "",
-    "",
-    title,
-    logo,
-    author: author,
-    language: language,
-  )
-
   pagebreak()
   counter(page).update(1)
 
@@ -172,14 +230,13 @@
 
   /* TOC */
 
-  if toc {
-    let outline_title = "Table of Contents"
-    if language == "es" {
-      outline_title = "Tabla de Contenidos"
-    }
-    outline(title: outline_title)
-    pagebreak()
+  let outline_title = "Table of Contents"
+  if language == "es" {
+    outline_title = "Tabla de Contenidos"
   }
+  outline(title: outline_title)
+  pagebreak()
+
   in-frontmatter.update(false) // end of frontmatter
   counter(page).update(0) // so the first chapter starts at page 1 (now in arabic numbers)
 
@@ -197,8 +254,8 @@
 
   /* BIBLIOGRAPHY */
 
-  if bibliography_file != none {
+  if bibliography-file != none {
     pagebreak()
-    bibliography(bibliography_file, style: "ieee")
+    bibliography(bibliography-file, style: "ieee")
   }
 }
