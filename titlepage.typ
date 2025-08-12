@@ -70,7 +70,7 @@
 
   // advisors
   if advisors != none and advisors.len() > 0 {
-    text(size: 1.2 * page-grid, style: "italic", TITLEPAGE_TUTOR.at(language))
+    text(size: 1.2 * page-grid, style: "italic", TITLEPAGE_ADVISOR.at(language))
     linebreak()
 
     for tutor in advisors {

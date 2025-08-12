@@ -3,12 +3,12 @@
   "en": "Author",
 )
 
-#let TITLEPAGE_TUTOR = (
+#let TITLEPAGE_ADVISOR = (
   "es": "Tutor",
-  "en": "Tutor",
+  "en": "Advisor",
 )
 
-#let TITLEPAGE_TUTORS = (
+#let TITLEPAGE_ADVISORS = (
   "es": "Tutores",
   "en": "Advisors",
 )
