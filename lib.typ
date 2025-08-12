@@ -1,8 +1,8 @@
 #import "@preview/hydra:0.6.1": hydra
+// #import "@preview/glossarium:0.5.8": glossarium
 
 #import "cover.typ": cover
 #import "utils.typ": *
-
 
 #let conf(
   degree: none,
@@ -39,7 +39,42 @@
   show heading: set block(above: 1.4em, below: 1em)
   show heading.where(level: 1): it => {
     if chapter_on_new_page { pagebreak(weak: true) }
-    it
+    if counter(heading).get().first() == 0 or in-frontmatter.get() or not in-body.get() {
+      make-frontmatter-header(upper(it.body), size: 24pt)
+    } else {
+      set text(azuluc3m)
+
+      let chapter-title = "CHAPTER"
+      if language == "es" {
+        chapter-title = "CAPÍTULO"
+      }
+
+      box(
+        width: 100%,
+        inset: (top: 5.5em, bottom: 5em),
+        [
+          #box(
+            width: 100%,
+            stroke: (top: azuluc3m + 1.8pt, bottom: azuluc3m + 1.8pt),
+            inset: (top: 1.5em, bottom: 1.5em),
+            [
+              #set align(center)
+              #text([#chapter-title #counter(heading).get().first()],
+                size: 24pt,
+                stroke: azuluc3m + 0.1pt)
+            ])
+          #box(
+            width: 100%,
+            inset: (top: 0.2em),
+            [
+              #set align(center)
+              #set text(azuluc3m)
+              #set par(justify: false)
+              #text(upper(it.body),
+                size: 24pt,
+                weight: "medium")])
+        ])
+    }
   }
 
   // allow to set headings with selector `<nonumber` to prevent numbering
@@ -72,9 +107,22 @@
     }
   }
 
-  // captions on top for tables
-  show figure.where(kind: table): set figure.caption(position: top)
+  /* TABLES */
 
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption.where(kind: table): it => [
+    #set text(azuluc3m, weight: "semibold")
+    #context smallcaps(it.supplement)
+    #context smallcaps(it.counter.display(it.numbering)) \
+    #set text(black, weight: "regular")
+    #smallcaps(it.body) \
+  ]
+
+  show table: block.with(stroke: (y: 0.7pt))
+  set table(
+    row-gutter: -0.1em,   // Row separation
+    stroke: (_, y) => if y == 0 { (bottom: 0.2pt) }
+  )
 
   /* REFERENCES & LINKS */
 
@@ -112,22 +160,27 @@
 
     // header
     header: context {
-      if not in-frontmatter.get() {
+
+      // https://github.com/typst/typst/discussions/4506#discussioncomment-9969245
+      let header1s = query(selector(heading.where(level: 1)))
+      let anchor = header1s.map(it => {it.location().page()})
+
+      if not in-frontmatter.get() and not here().page() in anchor {
         set text(azuluc3m)
         if calc.odd(here().page()) {
           counter(page).display()
           h(1fr)
-          smallcaps(title)
+          smallcaps(shortitle)
         } else {
           smallcaps(hydra(1)) // chapter title
           h(1fr)
           counter(page).display("1") // arabic page numbers for the rest of the document
         }
-
         v(-0.7em)
         line(length: 100%, stroke: 0.4pt + azuluc3m)
       }
     },
+
 
     // footer
     footer: context {
@@ -151,6 +204,8 @@
     logo,
     author: author,
     language: language,
+    year: date,
+    advisors: advisors
   )
 
   pagebreak()
@@ -158,18 +213,90 @@
 
   // ========== FRONTMATTER ========================================
 
-  /* TOC */
+  /* Cita */
+  [
+    #pagebreak()
 
+    #[
+      #set align(horizon + right)
+
+      _Beware of bugs in the above code;_ \
+      _I have only proved it correct,_ \
+      _not tried it._
+      
+      --- *Donald E. Knuth*
+      #pagebreak()
+      #pagebreak()
+    ]
+
+
+    /* Dedicatoria */
+    #[
+      #set align(top + left)
+      #make-frontmatter-header([*DEDICATORIA*], size: 24pt)
+      #include "../dedicatoria.typ"
+      #pagebreak()
+      #pagebreak()
+    ]
+    
+    /* Resumen */
+    #[
+      #set align(top + left)
+      #make-frontmatter-header([*RESUMEN*], size: 24pt)
+      #include "../resumen.typ"
+      #pagebreak()
+      #pagebreak()
+    ]
+  ]
+
+  // TABLE OF CONTENTS
   if toc {
-    let outline_title = "Table of Contents"
+    let outline_title = "Contents"
+    let figure_title = "List of Figures"
+    let table_title = "List of Tables"
+    let listing_title = "List of Listings"
     if language == "es" {
-      outline_title = "Tabla de Contenidos"
+      outline_title = "ÍNDICE GENERAL"
+      figure_title = "ÍNDICE DE FIGURAS"
+      table_title = "ÍNDICE DE TABLAS"
+      listing_title = "ÍNDICE DE LISTADOS"
     }
+
+    // GENERAL OUTLINE
     outline(title: outline_title)
     pagebreak()
+    pagebreak()
+
+
+    // FIGURE OUTLINE
+    outline(
+      title: figure_title,
+      target: figure.where(kind: image),
+    )
+    pagebreak()
+    pagebreak()
+
+    // TABLE OUTLINE
+    outline(
+      title: table_title,
+      target: figure.where(kind: table),
+    )
+    pagebreak()
+    pagebreak()
+
+    // LISTING OUTLINE
+    outline(
+      title: listing_title,
+      target: figure.where(kind: raw),
+    )
+    pagebreak()
+    pagebreak()
+
   }
+
   in-frontmatter.update(false) // end of frontmatter
-  counter(page).update(0) // so the first chapter starts at page 1 (now in arabic numbers)
+  counter(page).update(1) // so the first chapter starts at page 1 (now in arabic numbers)
+  counter(heading).update(0)
 
   // ========== DOCUMENT BODY ========================================
   doc

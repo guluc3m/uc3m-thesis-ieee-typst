@@ -8,9 +8,8 @@
   title,
   logo,
   year: (69, 420),
-  group: none,
   author: (),
-  professor: none,
+  advisors: (),
   team: none,
   language: "en",
 ) = [
@@ -18,10 +17,11 @@
   #set text(azuluc3m)
   #set text(size: 17pt)
   #set page(header: [], footer: [])
+  #set par(justify: false)
 
   // logo
   #if logo == "new" [
-    #image("img/new_uc3m_logo.svg", width: 100%)
+    #image("img/new_uc3m_logo.svg", width: 120%)
     #v(1em)
   ] else [
     #image("img/old_uc3m_logo.svg", width: 45%)
@@ -30,11 +30,11 @@
 
   #emph(degree)
 
-  #subject #year.at(0)/#year.at(1)\
-  Grupo #group
+  #subject #year.at(0) -- #year.at(1)\
 
-  #v(2em)
+  #v(1em)
 
+  _Trabajo fin de grado_ \
   #emph(project)\
   #text(25pt, ["#title"])
 
@@ -42,6 +42,8 @@
 
   // author
   #{
+    set text(18pt)
+    [_Autor_\ ]
     set text(20pt)
     author
   }
@@ -50,15 +52,33 @@
     Team #team
   ]
 
-  #v(3em)
+  #v(1em)
 
-  #if professor != none [
-    #if language == "es" [
-      _Profesor_\
-    ] else [
-      _Professor_\
-    ]
-    #professor
-  ]
+  #{
+    set text(18pt)
+    [_Tutor_\ ]
+    set text(20pt)
+    advisors.at(0)
+  }
 
+  #v(1em)
+  Leganés, a 8 de septiembre de 2025
+
+  #set align(left)
+
+  // #if professor != none [
+  //   #if language == "es" [
+  //     _Profesor_\
+  //   ] else [
+  //     _Professor_\
+  //   ]
+  //   #professor
+  // ]
+
+  #v(1em)
+  #image("img/creativecommons.png", height: 2em)
+  #set text(black, size: 10pt)
+
+  Esta obra se encuentra sujeta a la licencia Creative Commons \
+  *Reconocimiento -- No Comercial -- Sin Obra Derivada*
 ]
