@@ -1,139 +1,133 @@
-#import "locale.typ": *
+//! Titlepage definition.
+
+
+#import "locale.typ" as locale
 #import "utils.typ": azuluc3m
 
+
+/// Prints the titlepage of the document, including its backpage.
+///
+/// - author (str): Author full name.
+/// - date (datetime): Presentation date.
+/// - language (str): Language of the cover.
+/// - title (str): Thesis title.
+/// - type-of-thesis (str): Thesis type.
+/// - date-format (str): Format syntax (see https://typst.app/docs/reference/foundations/datetime/#format)
+/// - degree (str): Thesis degree/master.
+/// - location (str): Presentation location.
+/// - advisors (array): Array of advisor names (`str`).
+/// - license (bool): Whether to include a CC BY-NC-ND 4.0 license.
+/// - title-font (str, auto): Font of the title.
+/// - logo-type (str): Type of logo (`"old"` or "`new"`).
+/// - accent-color (color): Accent color for the page.
+///
+/// -> content
 #let titlepage(
   author,
   date,
-  title-font,
   language,
   title,
   type-of-thesis,
   date-format,
-  page-grid,
-  degree: none,
-  advisors: none,
-  location: none,
+  degree,
+  location,
+  advisors,
+  license: true,
+  title-font: auto,
   logo-type: "new",
   accent-color: azuluc3m,
-  license: true,
 ) = {
   // general configuration
-  set page(
-    margin: (top: 4cm, bottom: 3cm, left: 4cm, right: 3cm),
-  )
+  set page(margin: (x: 3cm, y: 2cm))
+  show link: set text(black)
 
-  set text(size: page-grid, fill: accent-color)
+  set text(size: 16pt, fill: accent-color, hyphenate: false)
   if title-font != auto {
     set text(font: title-font)
   }
   set align(center)
 
   // logo
-  place(
-    top + center,
-    dy: -2.5 * page-grid,
-    {
-      box(image("img/" + logo-type + "_uc3m_logo.svg"), width: 100%, height: 11 * page-grid)
-    },
-  )
-
-  if logo-type == "old" {
-    v(9.4 * page-grid)
+  if logo-type == "new" {
+    image("img/new_uc3m_logo.svg", width: 100%)
+    v(2em)
   } else {
-    v(8.4 * page-grid)
+    image("img/old_uc3m_logo.svg", width: 35%)
+    v(0.5em)
   }
 
   // degree
-  if degree != none {
-    text(size: 1.2 * page-grid, weight: "regular", degree)
-    linebreak()
-  }
+  text(size: 1.2em, weight: "regular", degree)
+  v(0.6em)
+  linebreak()
 
   // type-of-thesis
-  if type-of-thesis != none {
-    text(size: 1.2 * page-grid, style: "italic", type-of-thesis)
-    v(0.6 * page-grid)
-  }
+  text(size: 1.2em, style: "italic", type-of-thesis)
+  v(0.01em)
 
   // title
-  text(size: 2 * page-grid, weight: "bold", "\"" + title + "\"")
-  v(0.3 * page-grid)
+  text(size: 2em, weight: "bold", quote(title))
+  v(0.3em)
 
+  // line
   line(length: 70%, stroke: (paint: accent-color, thickness: 0.5pt))
-  v(0.3 * page-grid)
+  v(0.7em)
 
   // author
-  text(size: 1.2 * page-grid, style: "italic", TITLEPAGE_AUTHOR.at(language))
+  text(size: 1.2em, style: "italic", locale.AUTHOR.at(language))
   linebreak()
-  text(size: 1.5 * page-grid, weight: "bold", author)
-  v(0.3 * page-grid)
+  text(size: 1.3em, weight: "bold", author)
+  v(0.3em)
 
   // advisors
-  if advisors != none and advisors.len() > 0 {
-    text(size: 1.2 * page-grid, style: "italic", TITLEPAGE_ADVISOR.at(language))
+  if advisors.len() > 0 {
+    text(
+      size: 1.2em,
+      style: "italic",
+      {
+        if advisors.len() > 1 {
+          locale.ADVISORS.at(language)
+        } else { locale.ADVISOR.at(language) }
+      },
+    )
     linebreak()
 
-    for tutor in advisors {
-      text(size: 1.2 * page-grid, tutor)
+    for advisor in advisors {
+      text(size: 1.2em, advisor)
       linebreak()
     }
 
-    v(0.3 * page-grid)
+    v(1em)
   }
 
   // location
-  if location != none {
-    text(size: 1.2 * page-grid, location)
-    linebreak()
-  }
+  text(size: 1.1em, location)
+  linebreak()
 
   // date
-  text(size: 1.2 * page-grid, {
-    set text(lang: language)
-
-    let get-spanish-month(month-num) = {
-      let spanish-months = (
-        "enero",
-        "febrero",
-        "marzo",
-        "abril",
-        "mayo",
-        "junio",
-        "julio",
-        "agosto",
-        "septiembre",
-        "octubre",
-        "noviembre",
-        "diciembre",
+  text(size: 1.1em, {
+    // currently, Typst doesn't support localization for the format syntax
+    if (language != "en" and date-format.contains("[month repr:long]")) {
+      date-format = date-format.replace(
+        "[month repr:long]",
+        locale.MONTHS.at(language).at(date.month() - 1),
       )
-      spanish-months.at(month-num - 1)
     }
 
-    if (type(date) == datetime) {
-      if (language == "es" and date-format.contains("[month repr:long]")) {
-        // currently, Typst doesn't support localization for the format syntax
-        str(date.day()) + " de " + get-spanish-month(date.month()) + " de " + str(date.year())
-      } else {
-        date.display(date-format)
-      }
-    } else {
-      date.at(0).display(date-format) + [ -- ] + date.at(1).display(date-format)
-    }
+    date.display(date-format)
   })
 
   // license
   if license {
     place(
       bottom + left,
-      dy: -0.01 * page-grid,
       {
-        set text(fill: black, size: 0.5 * page-grid)
-        set align(left)
+        set text(fill: black, size: 0.5em)
+        set par(justify: false)
         box(width: 60%, {
           image("img/creativecommons.png", width: 3.5cm)
-          v(0.05 * page-grid)
-          set par(justify: false)
-          text(CC_LICENSE_TEXT.at(language))
+          v(0.05em)
+          locale.CC-LICENSE.at(language)
         })
       },
     )

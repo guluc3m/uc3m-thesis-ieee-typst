@@ -1,3 +1,6 @@
+//! Auxiliar functions and definitions.
+
+
 #let azuluc3m = rgb("#000e78")
 
 

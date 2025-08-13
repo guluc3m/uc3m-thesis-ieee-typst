@@ -1,26 +1,50 @@
-#let TITLEPAGE_AUTHOR = (
+//! Localization information.
+
+
+#let AUTHOR = (
   "es": "Autor",
   "en": "Author",
 )
 
-#let TITLEPAGE_ADVISOR = (
+#let ADVISOR = (
   "es": "Tutor",
   "en": "Advisor",
 )
 
-#let TITLEPAGE_ADVISORS = (
+#let ADVISORS = (
   "es": "Tutores",
   "en": "Advisors",
 )
 
-#let CC_LICENSE_TEXT = (
-  "es": "Esta obra está bajo una Licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional.",
-  "en": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.",
+#let CC-LICENSE = (
+  "es": [
+    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0 International]
+  ],
+  "en": [
+    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons *Attribution -- Non Commercial -- No Derivatives* 4.0 International]
+  ],
 )
 
-#let DATE_FORMAT = (
-  "es": "[day] de [month repr:long] de [year]",
-  "en": "[month repr:long] [day], [year]",
+#let DATE-FMT = (
+  "es": "[month repr:long] [year]",
+  "en": "[month repr:long] [year]",
+)
+
+#let MONTHS = (
+  "es": (
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ),
 )
 
 #let ACKNOWLEDGEMENTS = (
@@ -36,4 +60,31 @@
 #let KEYWORDS = (
   "es": "Palabras clave",
   "en": "Keywords",
+)
+
+#let TOC = (
+  "es": "Tabla de contenidos",
+  "en": "Table of contents",
+)
+
+#let THESIS-TYPE = (
+  "TFG": (
+    "es": "Trabajo de Fin de Grado",
+    "en": "Bachelor Thesis",
+  ),
+  "TFM": (
+    "es": "Trabajo de Fin de Máster",
+    "en": "Master Thesis",
+  ),
+)
+
+#let DEGREE-TYPE = (
+  "TFG": (
+    "es": "Grado en ",
+    "en": "Bachelor's Degree in ",
+  ),
+  "TFM": (
+    "es": "Máster en ",
+    "en": "Master's Degree in ",
+  ),
 )

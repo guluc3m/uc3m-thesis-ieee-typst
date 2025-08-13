@@ -1,7 +1,7 @@
 #import "@preview/hydra:0.6.1": hydra
 
 #import "titlepage.typ": titlepage
-#import "locale.typ": *
+#import "locale.typ" as locale
 #import "utils.typ": *
 
 /// Main configuration function.
@@ -10,17 +10,17 @@
 ///
 /// - title (str): Title of the thesis.
 /// - author (str): Author name.
-/// - degree (str): Degree name.
-/// - advisors (array): List of advisors.
+/// - degree (str): Degree name (e.g. `"Computer Science and Engineering"`).
+/// - advisors (array): List of advisor names.
 /// - location (str): Presentation location.
-/// - type-of-thesis (str): Type of thesis (TFG/TFM).
+/// - thesis-type (str): Type of thesis (`"TFG"` or `"TFM"`).
 /// - date (datetime): Presentation date.
 /// - bibliography-file (str): Path to bibliography file.
 /// - language (str): `"en"` or `"es"`.
 /// - logo (str): Type of logo (`"old"` or `"new"`).
-/// - shortitle (str): Shorter version of the title, to be displayed in the headers.
+/// - short-title (str): Shorter version of the title, to be displayed in the headers.
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
-/// - license (bool): Whether to include the Creative-Commons Attribution-NonCommercial-NoDerivatives 4.0 license.
+/// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
 /// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
 /// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`).
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
@@ -38,7 +38,7 @@
   bibliography-file: none,
   language: "en",
   logo: "new",
-  shortitle: none,
+  short-title: none,
   date-format: auto,
   license: true,
   epigraph: none,
@@ -49,7 +49,8 @@
   let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
   let in-body = state("in-body", false) // to control heading formatting in/outside of body
 
-  // ========== PAGE SETUP =======================================
+
+  // ============================== PAGE SETUP ============================== //
 
   /* TEXT */
 
@@ -157,7 +158,7 @@
         if calc.odd(here().page()) {
           counter(page).display()
           h(1fr)
-          smallcaps(title)
+          smallcaps({ if short-title != none { short-title } else { title } })
         } else {
           smallcaps(hydra(1)) // chapter title
           h(1fr)
@@ -180,27 +181,23 @@
   )
 
 
-  // ========== TITLEPAGE ========================================
+  // ============================== TITLEPAGE =============================== //
 
-  // Set language-appropriate date format
-  let local_date_format = if date-format == auto {
-    DATE_FORMAT.at(language, default: DATE_FORMAT.at("es"))
-  } else {
-    date-format
-  }
 
   titlepage(
     author,
     date,
-    auto,
     language,
     title,
-    type-of-thesis,
-    local_date_format,
-    16pt,
-    degree: degree,
-    advisors: advisors,
-    location: location,
+    locale.THESIS-TYPE.at(thesis-type).at(language),
+    if date-format == auto {
+      locale.DATE-FMT.at(language, default: locale.DATE-FMT.at("es"))
+    } else {
+      date-format
+    },
+    locale.DEGREE-TYPE.at(thesis-type).at(language) + degree,
+    location,
+    advisors,
     logo-type: logo,
     accent-color: azuluc3m,
     license: license,
@@ -209,7 +206,7 @@
   flyleaf()
 
 
-  // ========== FRONTMATTER ========================================
+  // ============================= FRONTMATTER ============================== //
 
   in-frontmatter.update(true)
 
@@ -238,54 +235,51 @@
 
   /* ABSTRACT */
 
-  heading(ABSTRACT.at(language), numbering: none)
+  heading(locale.ABSTRACT.at(language), numbering: none)
   abstract.body
 
   v(1fr)
-  [*#KEYWORDS.at(language):* #abstract.keywords.join(" • ")]
+  [*#locale.KEYWORDS.at(language):* #abstract.keywords.join(" • ")]
 
 
   /* ACKNOWLEDGEMENTS */
 
   if acknowledgements != none {
-    heading(ACKNOWLEDGEMENTS.at(language), numbering: none)
+    heading(locale.ACKNOWLEDGEMENTS.at(language), numbering: none)
     acknowledgements
   }
 
 
   /* TOC */
 
-  let outline_title = "Table of Contents"
-  if language == "es" {
-    outline_title = "Tabla de Contenidos"
-  }
-  outline(title: outline_title)
+  outline(title: locale.TOC.at(language))
 
   pagebreak(to: "odd")
+
 
   in-frontmatter.update(false)
 
 
-  // ========== DOCUMENT BODY ========================================
+  // ============================ DOCUMENT BODY ============================= //
 
   in-body.update(true)
-  counter(page).update(1) // first chapter starts at page 1 (now in arabic numbers)
+  counter(page).update(1) // first chapter starts at page 1
 
   doc
 
   in-body.update(false)
 
 
-  // ========== APPENDIX ========================================
+  // =============================== APPENDIX =============================== //
 
   set heading(numbering: "A.1")
   counter(heading).update(0)
 
 
-  // ========== BIBLIOGRAPHY =======================================
+  // ============================= BIBLIOGRAPHY ============================= //
 
   if bibliography-file != none {
-    pagebreak()
+    pagebreak(to: "odd")
     bibliography(bibliography-file, style: "ieee")
   }
 }

@@ -1,12 +1,14 @@
 #import "/lib.typ": conf
 
+
 #show: conf.with(
-  degree: "Grado en...",
+  degree: "Ingeniería Typstática",
   title: "La mejor memoria de la historia",
+  // short-title: "",
   author: "Nombre Extremadamente Largo e Incómodo de Escribir",
   advisors: ("Profesor Cuyos Padres Tenían Visión de Futuro",),
-  location: "La casa de tu madre",
-  type-of-thesis: "Trabajo de Fin de Grado",
+  location: "Leganés, Madrid",
+  thesis-type: "TFG",
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
   epigraph: (
