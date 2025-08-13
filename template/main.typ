@@ -11,6 +11,7 @@
   thesis-type: "TFG",
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
+  bibliography-file: "/template/references.bib",
   epigraph: (
     quote: [Cacaaaaaaaaaaaa.],
     author: "Uno que se cagaba",
@@ -18,7 +19,7 @@
   ),
   abstract: (
     body: [Ta wapo.],
-    keywords: ("Caca", "Culo", "Pedo", "Pis"),
+    keywords: ("Caca", "Culo", "Pedo", "Pis"), // see https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf
   ),
   acknowledgements: [Mi churri.],
 )
@@ -55,7 +56,9 @@
     table(
       columns: (34%, auto, auto, auto, auto, auto),
       row-gutter: -0.4em,
-      table.header([*Simulator*], [Kite], [ARMLite], [Sail], [CREATOR], [Proposal]),
+      table.header(
+        [*Simulator*], [Kite], [ARMLite], [Sail], [CREATOR], [Proposal]
+      ),
       align: (left, horizon, horizon, horizon, horizon, horizon),
 
       [*Language*], [C/C++], [JavaScript], [OCaml], [JavaScript], [ISO C++20],
@@ -64,11 +67,22 @@
       [*CLI*], check, uncheck, uncheck, check, check,
       [*I/O*], uncheck, check, uncheck, check, check,
       [*Step-by-step execution*], uncheck, uncheck, uncheck, check, check,
-      [*Simple architecture definition*], uncheck, uncheck, uncheck, check, check,
+      [*Simple architecture definition*],
+      uncheck,
+      uncheck,
+      uncheck,
+      check,
+      check,
+
       [*Native execution*], check, uncheck, check, uncheck, check,
       [*In-browser*], uncheck, check, uncheck, check, [$checkmark^*$],
       [*Error checking*], uncheck, check, uncheck, check, check,
-      [*Architecture validation support*], uncheck, uncheck, uncheck, uncheck, check,
+      [*Architecture validation support*],
+      uncheck,
+      uncheck,
+      uncheck,
+      uncheck,
+      check,
     )
     set align(left)
     [#super("*") Future work]

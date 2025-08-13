@@ -3,6 +3,8 @@
 #import "titlepage.typ": titlepage
 #import "locale.typ" as locale
 #import "utils.typ": *
+#import "arguments.typ": validate-argument
+
 
 /// Main configuration function.
 ///
@@ -22,7 +24,7 @@
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
 /// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
 /// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
-/// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`).
+/// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`) (see [IEEE Taxonomy](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf)).
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - doc (content): Thesis contents.
 ///
@@ -31,12 +33,12 @@
   title: none,
   author: none,
   degree: none,
-  advisors: (),
+  advisors: none,
   location: none,
-  type-of-thesis: none,
+  thesis-type: none,
   date: none,
   bibliography-file: none,
-  language: "en",
+  language: none,
   logo: "new",
   short-title: none,
   date-format: auto,
@@ -46,17 +48,103 @@
   acknowledgements: none,
   doc,
 ) = {
-  let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
-  let in-body = state("in-body", false) // to control heading formatting in/outside of body
+  // ========================= ARGUMENT VALIDATION ========================== //
+
+  validate-argument("title", title, target-type: str)
+
+  validate-argument("author", author, target-type: str)
+
+  validate-argument("degree", degree, target-type: str)
+
+  validate-argument(
+    "advisors",
+    advisors,
+    target-type: ((array, str),),
+    min-len: 1,
+  )
+
+  validate-argument("location", location, target-type: str)
+
+  validate-argument(
+    "thesis-type",
+    thesis-type,
+    target-type: str,
+    possible-values: ("TFG", "TFM"),
+  )
+
+  validate-argument("date", date, target-type: datetime)
+
+  validate-argument(bibliography-file, "bibliography-file", target-type: str)
+
+  validate-argument(
+    "language",
+    language,
+    target-type: str,
+    possible-values: ("es", "en"),
+  )
+
+  validate-argument(
+    "logo",
+    logo,
+    target-type: str,
+    possible-values: ("new", "old"),
+  )
+
+  validate-argument(
+    "short-title",
+    short-title,
+    optional: true,
+    target-type: (str, content),
+  )
+
+  validate-argument("license", license, target-type: bool)
+
+  validate-argument(
+    "epigraph",
+    epigraph,
+    optional: true,
+    target-type: dictionary,
+    schema: (
+      quote: (target-type: content),
+      author: (target-type: str),
+      source: (target-type: str, optional: true),
+    ),
+  )
+
+  validate-argument(
+    "abstract",
+    abstract,
+    target-type: dictionary,
+    schema: (
+      body: (target-type: content),
+      keywords: (target-type: ((array, str),), min-len: 2, max-len: 5),
+    ),
+  )
+
+  validate-argument(
+    "acknowledgements",
+    acknowledgements,
+    optional: true,
+    target-type: content,
+  )
 
 
   // ============================== PAGE SETUP ============================== //
+
+  let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
+  let in-body = state("in-body", false) // to control heading formatting in/outside of body
+
 
   /* TEXT */
 
   set text(size: 12pt, lang: language)
 
-  set par(leading: 0.65em, spacing: 1em, first-line-indent: 1.8em, justify: true)
+  set par(
+    leading: 0.65em,
+    spacing: 1em,
+    first-line-indent: 1.8em,
+    justify: true,
+  )
 
 
   /* HEADINGS */
@@ -94,9 +182,17 @@
     if it.placement == none {
       block(it, inset: (y: figure_spacing))
     } else if it.placement == top {
-      place(it.placement, float: true, block(width: 100%, inset: (bottom: figure_spacing), align(center, it)))
+      place(it.placement, float: true, block(
+        width: 100%,
+        inset: (bottom: figure_spacing),
+        align(center, it),
+      ))
     } else if it.placement == bottom {
-      place(it.placement, float: true, block(width: 100%, inset: (top: figure_spacing), align(center, it)))
+      place(it.placement, float: true, block(
+        width: 100%,
+        inset: (top: figure_spacing),
+        align(center, it),
+      ))
     }
   }
 
@@ -126,7 +222,10 @@
   /* FOOTNOTES */
 
   // change line color
-  set footnote.entry(separator: line(length: 30% + 0pt, stroke: 0.5pt + azuluc3m))
+  set footnote.entry(separator: line(
+    length: 30% + 0pt,
+    stroke: 0.5pt + azuluc3m,
+  ))
 
   // change footnote number color
   show footnote: set text(azuluc3m) // in text
