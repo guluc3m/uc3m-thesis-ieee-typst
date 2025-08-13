@@ -9,6 +9,16 @@
   type-of-thesis: "Trabajo de Fin de Grado",
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
+  epigraph: (
+    quote: [Cacaaaaaaaaaaaa.],
+    author: "Uno que se cagaba",
+    // source: "",
+  ),
+  abstract: (
+    body: [Ta wapo.],
+    keywords: ("Caca", "Culo", "Pedo", "Pis"),
+  ),
+  acknowledgements: [Mi churri.],
 )
 
 

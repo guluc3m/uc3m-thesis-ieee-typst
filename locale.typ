@@ -22,3 +22,18 @@
   "es": "[day] de [month repr:long] de [year]",
   "en": "[month repr:long] [day], [year]",
 )
+
+#let ACKNOWLEDGEMENTS = (
+  "es": "Agradecimientos",
+  "en": "Acknowledgements",
+)
+
+#let ABSTRACT = (
+  "es": "Resumen",
+  "en": "Abstract",
+)
+
+#let KEYWORDS = (
+  "es": "Palabras clave",
+  "en": "Keywords",
+)

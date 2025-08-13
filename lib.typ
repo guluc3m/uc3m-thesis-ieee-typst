@@ -6,22 +6,7 @@
 
 /// Main configuration function.
 ///
-/// *Example:*
-/// ```
-/// #show: conf.with(
-///   degree: "Grado en...",
-///   title: "La mejor memoria de la historia",
-///   authors: ((name: "Nombre Extremadamente Largo e Incómodo de Escribir"),),
-///   advisors: ("Profesor Cuyos Padres Tenían Visión de Futuro",),
-///   location: "La casa de tu madre",
-///   type-of-thesis: "Trabajo de Fin de Grado",
-///   bibliography-file: "sources.bib",
-///   date: datetime(year: 2025, month: 4, day: 20),
-///   toc: true,
-///   logo: "old",
-///   language: "es",
-/// )
-/// ```
+/// Recommended to use with `#show: conf.with(...)`.
 ///
 /// - title (str): Title of the thesis.
 /// - author (str): Author name.
@@ -36,6 +21,9 @@
 /// - shortitle (str): Shorter version of the title, to be displayed in the headers.
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
 /// - license (bool): Whether to include the Creative-Commons Attribution-NonCommercial-NoDerivatives 4.0 license.
+/// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
+/// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`).
+/// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -53,47 +41,15 @@
   shortitle: none,
   date-format: auto,
   license: true,
+  epigraph: none,
+  abstract: (contents: [], keywords: ()),
+  acknowledgements: none,
   doc,
 ) = {
-  let in-frontmatter = state("in-frontmatter", true) // to control page number format in frontmatter
-  let in-body = state("in-body", true) // to control heading formatting in/outside of body
+  let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
+  let in-body = state("in-body", false) // to control heading formatting in/outside of body
 
-  // ========== TITLEPAGE ========================================
-
-  // Set language-appropriate date format
-  let local_date_format = if date-format == auto {
-    DATE_FORMAT.at(language, default: DATE_FORMAT.at("es"))
-  } else {
-    date-format
-  }
-
-  // Set up logo
-  let title_logo = if logo == "new" {
-    image("img/new_uc3m_logo.svg")
-  } else if logo == "old" {
-    image("img/old_uc3m_logo.svg")
-  } else {
-    image("img/new_uc3m_logo.svg")
-  }
-
-  titlepage(
-    author,
-    date,
-    auto,
-    language,
-    title,
-    type-of-thesis,
-    local_date_format,
-    16pt,
-    degree: degree,
-    advisors: advisors,
-    location: location,
-    logo-type: logo,
-    accent-color: azuluc3m,
-    license: license,
-  )
-
-  // ---------- Page Setup ---------------------------------------
+  // ========== PAGE SETUP =======================================
 
   /* TEXT */
 
@@ -109,11 +65,11 @@
   show heading: set block(above: 1.4em, below: 1em)
   // chapter on new page
   show heading.where(level: 1): it => {
-    pagebreak(weak: true)
+    pagebreak(weak: true, to: "odd")
     it
   }
 
-  // allow to set headings with selector `<nonumber` to prevent numbering
+  // allow to set headings with selector `<nonumber>` to prevent numbering
   show selector(<nonumber>): set heading(numbering: none)
 
 
@@ -196,7 +152,7 @@
 
     // header
     header: context {
-      if not in-frontmatter.get() {
+      if in-body.get() {
         set text(azuluc3m)
         if calc.odd(here().page()) {
           counter(page).display()
@@ -223,10 +179,79 @@
     },
   )
 
-  pagebreak()
-  counter(page).update(1)
+
+  // ========== TITLEPAGE ========================================
+
+  // Set language-appropriate date format
+  let local_date_format = if date-format == auto {
+    DATE_FORMAT.at(language, default: DATE_FORMAT.at("es"))
+  } else {
+    date-format
+  }
+
+  titlepage(
+    author,
+    date,
+    auto,
+    language,
+    title,
+    type-of-thesis,
+    local_date_format,
+    16pt,
+    degree: degree,
+    advisors: advisors,
+    location: location,
+    logo-type: logo,
+    accent-color: azuluc3m,
+    license: license,
+  )
+
+  flyleaf()
+
 
   // ========== FRONTMATTER ========================================
+
+  in-frontmatter.update(true)
+
+  /* EPIGRAPH */
+
+  if epigraph != none {
+    set quote(block: true)
+    set page(header: none, footer: none) // clean page
+
+    grid(
+      columns: (1fr, 1fr),
+      rows: (1fr, 1fr, 1fr),
+      // first (empty) row
+      [], [],
+      [],
+      quote(attribution: {
+        strong({
+          epigraph.author
+          if epigraph.keys().contains("source") [, #emph(epigraph.source)]
+        })
+      })[#emph(epigraph.quote)],
+    )
+
+    pagebreak(to: "odd")
+  }
+
+  /* ABSTRACT */
+
+  heading(ABSTRACT.at(language), numbering: none)
+  abstract.body
+
+  v(1fr)
+  [*#KEYWORDS.at(language):* #abstract.keywords.join(" • ")]
+
+
+  /* ACKNOWLEDGEMENTS */
+
+  if acknowledgements != none {
+    heading(ACKNOWLEDGEMENTS.at(language), numbering: none)
+    acknowledgements
+  }
+
 
   /* TOC */
 
@@ -235,24 +260,29 @@
     outline_title = "Tabla de Contenidos"
   }
   outline(title: outline_title)
-  pagebreak()
 
-  in-frontmatter.update(false) // end of frontmatter
-  counter(page).update(0) // so the first chapter starts at page 1 (now in arabic numbers)
+  pagebreak(to: "odd")
+
+  in-frontmatter.update(false)
+
 
   // ========== DOCUMENT BODY ========================================
+
+  in-body.update(true)
+  counter(page).update(1) // first chapter starts at page 1 (now in arabic numbers)
+
   doc
+
+  in-body.update(false)
 
 
   // ========== APPENDIX ========================================
 
-  in-body.update(false)
   set heading(numbering: "A.1")
   counter(heading).update(0)
 
-  // ---------- Bibliography ---------------------------------------
 
-  /* BIBLIOGRAPHY */
+  // ========== BIBLIOGRAPHY =======================================
 
   if bibliography-file != none {
     pagebreak()
