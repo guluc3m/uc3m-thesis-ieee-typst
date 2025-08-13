@@ -22,7 +22,7 @@
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
 /// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
 /// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
-/// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`).
+/// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`) (see [IEEE Taxonomy](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf)).
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - doc (content): Thesis contents.
 ///
@@ -31,12 +31,12 @@
   title: none,
   author: none,
   degree: none,
-  advisors: (),
+  advisors: none,
   location: none,
-  type-of-thesis: none,
+  thesis-type: none,
   date: none,
   bibliography-file: none,
-  language: "en",
+  language: none,
   logo: "new",
   short-title: none,
   date-format: auto,
@@ -46,17 +46,138 @@
   acknowledgements: none,
   doc,
 ) = {
-  let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
-  let in-body = state("in-body", false) // to control heading formatting in/outside of body
+  // ========================= ARGUMENT VALIDATION ========================== //
+
+  assert(title != none, message: "Missing argument 'title'")
+  assert(type(title) == str, message: "Invalid type for 'title'")
+
+  assert(author != none, message: "Missing argument 'author'")
+  assert(type(author) == str, message: "Invalid type for 'author'")
+
+  assert(degree != none, message: "Missing argument 'degree'")
+  assert(type(degree) == str, message: "Invalid type for 'degree'")
+
+  assert(advisors != none, message: "Missing argument 'advisors'")
+  assert(type(advisors) == array, message: "Invalid type for 'advisors'")
+  assert(advisors.len() > 0, message: "At least one advisor is required")
+
+  assert(location != none, message: "Missing argument 'location'")
+  assert(type(location) == str, message: "Invalid type for 'location'")
+
+  assert(thesis-type != none, message: "Missing argument 'thesis-type'")
+  assert(type(thesis-type) == str, message: "Invalid type for 'thesis-type'")
+  assert(
+    ("TFG", "TFM").contains(thesis-type),
+    message: "Invalid thesis-type '" + thesis-type + "'",
+  )
+
+  assert(date != none, message: "Missing argument 'date'")
+  assert(type(date) == datetime, message: "Invalid type for 'date'")
+
+  assert(
+    bibliography-file != none,
+    message: "Missing argument 'bibliography-file'",
+  )
+  assert(
+    type(bibliography-file) == str,
+    message: "Invalid type for 'bibliography-file'",
+  )
+
+  assert(language != none, message: "Missing argument 'language'")
+  assert(type(language) == str, message: "Invalid type for 'language'")
+  assert(
+    ("es", "en").contains(language),
+    message: "Invalid language '" + language + "'",
+  )
+
+  assert(type(logo) == str, message: "Invalid type for 'logo'")
+  assert(("new", "old").contains(logo), message: "Invalid logo '" + logo + "'")
+
+  assert(
+    short-title == none
+      or type(short-title) == str
+      or type(short-title) == content,
+    message: "Invalid type for 'short-title'",
+  )
+
+  assert(type(license) == bool, message: "Invalid type for 'license'")
+
+  assert(
+    epigraph == none or type(epigraph) == dictionary,
+    message: "Invalid type for 'epigraph'",
+  )
+  assert(
+    epigraph.keys().contains("quote"),
+    message: "Missing field 'quote' on 'epigraph'",
+  )
+  assert(
+    type(epigraph.quote) == content,
+    message: "Invalid type for field 'quote' on 'epigraph'",
+  )
+  assert(
+    epigraph.keys().contains("author"),
+    message: "Missing field 'quote' on 'author'",
+  )
+  assert(
+    type(epigraph.author) == str,
+    message: "Invalid type for field 'author' on 'epigraph'",
+  )
+  assert(
+    not epigraph.keys().contains("source") or type(epigraph.source) == str,
+    message: "Invalid type for field 'source' on 'epigraph'",
+  )
+
+  assert(abstract != none, message: "Missing argument 'abstract'")
+  assert(
+    type(abstract) == dictionary,
+    message: "Invalid type for 'abstract'",
+  )
+  assert(
+    abstract.keys().contains("body"),
+    message: "Missing field 'body' on 'abstract'",
+  )
+  assert(
+    type(abstract.body) == content,
+    message: "Invalid type for field 'body' on 'abstract'",
+  )
+  assert(
+    abstract.keys().contains("keywords"),
+    message: "Missing field 'keywords' on 'abstract'",
+  )
+  assert(
+    type(abstract.keywords) == array,
+    message: "Invalid type for field 'keywords' on 'abstract'",
+  )
+  assert(
+    abstract.keywords.len() > 2,
+    message: "Too few 'keywords' on 'abstract'",
+  )
+  for k in abstract.keywords {
+    assert(type(k) == str, message: "Invalid keyword type on 'abstract'")
+  }
+
+  assert(
+    acknowledgements == none or type(acknowledgements) == content,
+    message: "Invalid type for 'acknowledgements'",
+  )
 
 
   // ============================== PAGE SETUP ============================== //
+
+  let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
+  let in-body = state("in-body", false) // to control heading formatting in/outside of body
+
 
   /* TEXT */
 
   set text(size: 12pt, lang: language)
 
-  set par(leading: 0.65em, spacing: 1em, first-line-indent: 1.8em, justify: true)
+  set par(
+    leading: 0.65em,
+    spacing: 1em,
+    first-line-indent: 1.8em,
+    justify: true,
+  )
 
 
   /* HEADINGS */
@@ -94,9 +215,17 @@
     if it.placement == none {
       block(it, inset: (y: figure_spacing))
     } else if it.placement == top {
-      place(it.placement, float: true, block(width: 100%, inset: (bottom: figure_spacing), align(center, it)))
+      place(it.placement, float: true, block(
+        width: 100%,
+        inset: (bottom: figure_spacing),
+        align(center, it),
+      ))
     } else if it.placement == bottom {
-      place(it.placement, float: true, block(width: 100%, inset: (top: figure_spacing), align(center, it)))
+      place(it.placement, float: true, block(
+        width: 100%,
+        inset: (top: figure_spacing),
+        align(center, it),
+      ))
     }
   }
 
@@ -126,7 +255,10 @@
   /* FOOTNOTES */
 
   // change line color
-  set footnote.entry(separator: line(length: 30% + 0pt, stroke: 0.5pt + azuluc3m))
+  set footnote.entry(separator: line(
+    length: 30% + 0pt,
+    stroke: 0.5pt + azuluc3m,
+  ))
 
   // change footnote number color
   show footnote: set text(azuluc3m) // in text

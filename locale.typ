@@ -18,10 +18,16 @@
 
 #let CC-LICENSE = (
   "es": [
-    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0 International]
+    Esta obra se encuentra sujeta a la licencia #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+      International]
   ],
   "en": [
-    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons *Attribution -- Non Commercial -- No Derivatives* 4.0 International]
+    This work is licensed under #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons *Attribution -- Non Commercial -- No Derivatives* 4.0
+      International]
   ],
 )
 
