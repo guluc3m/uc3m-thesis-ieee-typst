@@ -94,3 +94,13 @@
     "en": "Master's Degree in ",
   ),
 )
+
+#let CHAPTER = (
+  "es": "Capítulo",
+  "en": "Chapter",
+)
+
+#let APPENDIX = (
+  "es": "Apéndice",
+  "en": "Appendix",
+)
