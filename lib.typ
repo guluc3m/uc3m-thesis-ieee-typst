@@ -132,7 +132,9 @@
   // ============================== PAGE SETUP ============================== //
 
   let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
+  let in-endmatter = state("in-endmatter", false) // to control page number format in endmatter
   let in-body = state("in-body", false) // to control heading formatting in/outside of body
+  let in-appendix = state("in-appendix", false) // to control heading formatting in the appendixes
 
 
   /* TEXT */
@@ -152,10 +154,60 @@
   set heading(numbering: "1.")
   show heading: set text(azuluc3m)
   show heading: set block(above: 1.4em, below: 1em)
-  // chapter on new page
+
+  // fancy headings for chapters
   show heading.where(level: 1): it => {
+    // chapter on new page
     pagebreak(weak: true, to: "odd")
-    it
+
+    if in-frontmatter.get() or in-endmatter.get() {
+      set align(center)
+      box(
+        stroke: (top: azuluc3m + 1.8pt),
+        width: 100%,
+        height: 2em,
+        inset: (top: 1.5em),
+        { text(size: 24pt, upper(it)) },
+      )
+      v(3em)
+    } else {
+      box(
+        width: 100%,
+        inset: (top: 5.5em, bottom: 5em),
+        [
+          // chapter number
+          #box(
+            width: 100%,
+            stroke: (top: azuluc3m + 1.8pt, bottom: azuluc3m + 1.8pt),
+            inset: (top: 1.5em, bottom: 1.5em),
+            [
+              #set align(center)
+              #text(
+                [
+                  #upper(if in-body.get() {
+                    locale.CHAPTER.at(language)
+                  } else if in-appendix.get() {
+                    locale.APPENDIX.at(language)
+                  })
+                  #(counter(heading).get().first())
+                ],
+                size: 24pt,
+              )
+            ],
+          )
+          // chapter name
+          #box(
+            width: 100%,
+            inset: (top: 0.2em),
+            [
+              #set align(center)
+              #set text(azuluc3m)
+              #set par(justify: false)
+              #text(upper(it.body), size: 24pt, weight: "semibold")],
+          )
+        ],
+      )
+    }
   }
 
   // allow to set headings with selector `<nonumber>` to prevent numbering
@@ -252,14 +304,14 @@
 
     // header
     header: context {
-      if in-body.get() {
+      if in-body.get() and not is-chapter-start() {
         set text(azuluc3m)
         if calc.odd(here().page()) {
           counter(page).display()
           h(1fr)
           smallcaps({ if short-title != none { short-title } else { title } })
         } else {
-          smallcaps(hydra(1)) // chapter title
+          smallcaps([#locale.CHAPTER.at(language) #hydra(1)]) // chapter title
           h(1fr)
           counter(page).display("1") // arabic page numbers for the rest of the document
         }
@@ -271,17 +323,21 @@
 
     // footer
     footer: context {
+      set align(center)
+      set text(azuluc3m)
+
       if in-frontmatter.get() {
-        set align(center)
-        set text(azuluc3m)
         counter(page).display("i") // roman page numbers for the frontmatter
+      } else if (
+        (in-endmatter.get() or is-chapter-start()) and not in-appendix.get()
+      ) {
+        counter(page).display("1") // arabic page numbers for chapter start and endmatter
       }
     },
   )
 
 
   // ============================== TITLEPAGE =============================== //
-
 
   titlepage(
     author,
@@ -366,19 +422,32 @@
 
   doc
 
+  // pagebreak(to: "odd")
   in-body.update(false)
 
 
   // =============================== APPENDIX =============================== //
 
+  in-appendix.update(true)
+
   set heading(numbering: "A.1")
   counter(heading).update(0)
 
+  in-appendix.update(false)
 
-  // ============================= BIBLIOGRAPHY ============================= //
 
-  if bibliography-file != none {
-    pagebreak(to: "odd")
-    bibliography(bibliography-file, style: "ieee")
-  }
+  // ============================== ENDMATTER =============================== //
+
+  pagebreak(to: "odd")
+  in-endmatter.update(true)
+
+
+  /* BIBLIOGRAPHY */
+
+  bibliography(bibliography-file, style: "ieee")
+
+  /* GLOSSARY */
+
+
+  // in-endmatter.update(false)
 }
