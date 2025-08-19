@@ -157,6 +157,12 @@
 
   // fancy headings for chapters
   show heading.where(level: 1): it => {
+    // reset figure counters so they are counted per chapter
+    counter(math.equation).update(0)
+    counter(figure.where(kind: image)).update(0)
+    counter(figure.where(kind: table)).update(0)
+    counter(figure.where(kind: raw)).update(0)
+
     // chapter on new page
     pagebreak(weak: true, to: "odd")
 
@@ -225,6 +231,13 @@
     it.body
   }
 
+  // show chapter on numbering
+  set figure(numbering: (..num) => numbering(
+    if in-appendix.get() { "A.1" } else { "1.1" },
+    counter(heading).get().first(),
+    num.pos().first(),
+  ))
+
 
   // more space around figures
   // https://github.com/typst/typst/issues/6095#issuecomment-2755785839
@@ -248,22 +261,22 @@
     }
   }
 
+
+  /* IMAGES */
+
+  show figure.where(kind: image): set figure.caption(position: bottom)
+
+
   /* TABLES */
 
   show figure.where(kind: table): set figure.caption(position: top)
-  show figure.caption.where(kind: table): it => [
-    #set text(azuluc3m, weight: "semibold")
-    #context smallcaps(it.supplement)
-    #context smallcaps(it.counter.display(it.numbering)) \
-    #set text(black, weight: "regular")
-    #smallcaps(it.body) \
-  ]
 
   show table: block.with(stroke: (y: 0.7pt))
   set table(
     row-gutter: -0.1em, // Row separation
     stroke: (_, y) => if y == 0 { (bottom: 0.2pt) },
   )
+
 
   /* REFERENCES & LINKS */
 
