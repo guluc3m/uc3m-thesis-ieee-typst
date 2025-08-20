@@ -10,6 +10,8 @@
   thesis-type: "TFG",
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
+  license: true,
+  flyleaf: true,
   bibliography-file: "/template/references.bib",
   epigraph: (
     quote: [Cacaaaaaaaaaaaa.],
@@ -25,6 +27,13 @@
     keywords: ("Poop", "Butt", "Fart", "Pee"),
   ),
   acknowledgements: [Mi churri.],
+  outlines: (
+    // contents is compulsory
+    figures: true,
+    tables: true,
+    listings: false,
+    // custom: []
+  ),
 )
 
 

@@ -9,7 +9,7 @@
 /// Prints a flyleaf, an empty (double sided) page.
 ///
 /// -> content
-#let flyleaf() = {
+#let make-flyleaf() = {
   set page(header: none, footer: none)
   pagebreak()
   pagebreak()

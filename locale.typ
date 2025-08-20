@@ -68,9 +68,23 @@
   "en": "Keywords",
 )
 
-#let TOC = (
-  "es": "Tabla de contenidos",
-  "en": "Table of contents",
+#let OUTLINE = (
+  "contents": (
+    "es": "Tabla de contenidos",
+    "en": "Table of contents",
+  ),
+  "figures": (
+    "es": "Índice de figuras",
+    "en": "List of figures",
+  ),
+  "tables": (
+    "es": "Índice de tablas",
+    "en": "List of tables",
+  ),
+  "listings": (
+    "es": "Índice de listados",
+    "en": "List of listings",
+  ),
 )
 
 #let THESIS-TYPE = (

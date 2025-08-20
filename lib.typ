@@ -23,10 +23,12 @@
 /// - short-title (str): Shorter version of the title, to be displayed in the headers.
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
 /// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
+/// - flyleaf (bool): Whether to include a blank page after the cover.
 /// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
 /// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`) (see [IEEE Taxonomy](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf)).
 /// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
+/// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -44,10 +46,12 @@
   short-title: none,
   date-format: auto,
   license: true,
+  flyleaf: true,
   epigraph: none,
   abstract: (contents: [], keywords: ()),
   english-abstract: none,
   acknowledgements: none,
+  outlines: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
@@ -100,6 +104,7 @@
   )
 
   validate-argument("license", license, target-type: bool)
+  validate-argument("flyleaf", flyleaf, target-type: bool)
 
   validate-argument(
     "epigraph",
@@ -139,6 +144,19 @@
     acknowledgements,
     optional: true,
     target-type: content,
+  )
+
+  validate-argument(
+    "outlines",
+    outlines,
+    optional: true,
+    target-type: dictionary,
+    schema: (
+      figures: (target-type: bool, optional: true),
+      tables: (target-type: bool, optional: true),
+      listings: (target-type: bool, optional: true),
+      custom: (target-type: content, optional: true),
+    ),
   )
 
 
@@ -384,7 +402,7 @@
     license: license,
   )
 
-  flyleaf()
+  if flyleaf { make-flyleaf() }
 
 
   // ============================= FRONTMATTER ============================== //
@@ -418,7 +436,7 @@
   /* ABSTRACT */
 
   let make-abstract(data, language) = {
-    heading(locale.ABSTRACT.at(language), numbering: none)
+    heading(locale.ABSTRACT.at(language), numbering: none, outlined: false)
     data.body
 
     v(1fr)
@@ -437,16 +455,106 @@
   /* ACKNOWLEDGEMENTS */
 
   if acknowledgements != none {
-    heading(locale.ACKNOWLEDGEMENTS.at(language), numbering: none)
+    heading(
+      locale.ACKNOWLEDGEMENTS.at(language),
+      numbering: none,
+      outlined: false,
+    )
     acknowledgements
   }
 
 
-  /* TOC */
+  /* OUTLINES */
 
-  outline(title: locale.TOC.at(language))
 
+  // disable footnotes
+  show outline: it => {
+    set footnote.entry(separator: none)
+    show footnote.entry: hide
+    show ref: none
+    show footnote: none
+    it
+  }
+
+  // top-level TOC entries in bold without filling
+  show outline.entry.where(level: 1): it => {
+    // only apply for contents (headings) outline
+    if it.element.func() != heading { return it }
+
+    set block(above: 1.3em)
+    set text(size: 13pt, weight: "semibold", fill: azuluc3m)
+
+    // wrap it in a block to prevent justification
+    block(
+      link(
+        it.element.location(), // make entry linkable
+        [
+          #if it.prefix() != none {
+            locale.CHAPTER.at(language) + " " + it.prefix()
+          } else {
+            none
+          } #it.body() #box(width: 1fr) #it.page()
+        ],
+      ),
+    )
+  }
+
+  // other TOC entries in regular with adapted filling
+  show outline.entry.where(level: 2).or(outline.entry.where(level: 3)): it => {
+    set block(above: 0.8em)
+    show link: set text(black) // reset link color
+
+    link(
+      it.element.location(), // make entry linkable
+      it.indented(
+        it.prefix(),
+        it.body()
+          + "  "
+          + box(width: 1fr, repeat([.], gap: 2pt))
+          + "  "
+          + it.page(),
+      ),
+    )
+  }
+
+  // contents
+  outline(title: locale.OUTLINE.at("contents").at(language), depth: 3)
   pagebreak(to: "odd")
+
+  if outlines != none {
+    // figures
+    if outlines.at("figures", default: false) {
+      outline(
+        title: locale.OUTLINE.at("figures").at(language),
+        target: figure.where(kind: image),
+      )
+      pagebreak(to: "odd")
+    }
+
+    // tables
+    if outlines.at("tables", default: false) {
+      outline(
+        title: locale.OUTLINE.at("tables").at(language),
+        target: figure.where(kind: table),
+      )
+      pagebreak(to: "odd")
+    }
+
+    // listings
+    if outlines.at("listings", default: false) {
+      outline(
+        title: locale.OUTLINE.at("listings").at(language),
+        target: figure.where(kind: raw),
+      )
+      pagebreak(to: "odd")
+    }
+
+    // custom
+    if outlines.at("custom", default: false) {
+      custom
+      pagebreak(to: "odd")
+    }
+  }
 
 
   in-frontmatter.update(false)

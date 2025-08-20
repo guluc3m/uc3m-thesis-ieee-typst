@@ -302,7 +302,11 @@
   }
 
   // check dictionary schema
-  if schema != none and target-type == dictionary {
+  if (
+    schema != none
+      and target-type == dictionary
+      and not (optional and value == none)
+  ) {
     let (ok, err) = _validate-dictionary(value, schema)
     assert(ok, message: "Invalid format for '" + name + "'. " + err)
   }
