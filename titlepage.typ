@@ -2,7 +2,7 @@
 
 
 #import "locale.typ" as locale
-#import "utils.typ": azuluc3m
+#import "utils.typ": newpage
 
 
 /// Prints the titlepage of the document, including its backpage.
@@ -17,9 +17,10 @@
 /// - location (str): Presentation location.
 /// - advisors (array): Array of advisor names (`str`).
 /// - license (bool): Whether to include a CC BY-NC-ND 4.0 license.
+/// - accent-color (color): Accent color for the page.
+/// - double-sided (bool): Whether to use double-sided pages.
 /// - title-font (str, auto): Font of the title.
 /// - logo-type (str): Type of logo (`"old"` or "`new"`).
-/// - accent-color (color): Accent color for the page.
 ///
 /// -> content
 #let titlepage(
@@ -32,13 +33,15 @@
   degree,
   location,
   advisors,
+  accent-color,
+  double-sided,
   license: true,
   title-font: auto,
   logo-type: "new",
-  accent-color: azuluc3m,
 ) = {
   // general configuration
-  set page(margin: (x: 3cm, y: 2cm))
+  set page(margin: (x: 3cm, y: 2cm), header: [], footer: [])
+  set par(justify: false)
   show link: set text(black)
 
   set text(size: 16pt, fill: accent-color, hyphenate: false)
@@ -70,7 +73,7 @@
   v(0.3em)
 
   // line
-  line(length: 70%, stroke: (paint: accent-color, thickness: 0.5pt))
+  line(length: 70%, stroke: (paint: accent-color, thickness: 0.7pt))
   v(0.7em)
 
   // author
@@ -133,6 +136,5 @@
     )
   }
 
-
-  pagebreak(to: "odd")
+  newpage(double-sided, weak: false)
 }

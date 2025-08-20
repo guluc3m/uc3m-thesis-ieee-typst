@@ -1,9 +1,10 @@
-#import "@preview/hydra:0.6.1": hydra
+#import "@preview/hydra:0.6.2": hydra
 
 #import "titlepage.typ": titlepage
 #import "locale.typ" as locale
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
+
 
 
 /// Main configuration function.
@@ -19,8 +20,10 @@
 /// - date (datetime): Presentation date.
 /// - bibliography-file (str): Path to bibliography file.
 /// - language (str): `"en"` or `"es"`.
+/// - style (str): Visual style, mainly affecting headings, headers, and footers. The available styles are `strict`, which strictly follow's the university library's guidelines, `clean`, based on clean-dhbw, and `fancy`, based on my original LaTeX version.
+/// - double-sided (bool): Whether to use double-sided pages. This is not allowed in the `strict` style.
 /// - logo (str): Type of logo (`"old"` or `"new"`).
-/// - short-title (str): Shorter version of the title, to be displayed in the headers.
+/// - short-title (str): Shorter version of the title, to be displayed in the headers. Only applies if `double-sided` is set to `true`.
 /// - date-format (str, auto): Date format. Use `auto` or specify the format using the [Typst format syntax](https://typst.app/docs/reference/foundations/datetime/#format).
 /// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
 /// - flyleaf (bool): Whether to include a blank page after the cover.
@@ -42,6 +45,8 @@
   date: none,
   bibliography-file: none,
   language: none,
+  style: "fancy",
+  double-sided: false,
   logo: "new",
   short-title: none,
   date-format: auto,
@@ -80,13 +85,31 @@
 
   validate-argument("date", date, target-type: datetime)
 
-  validate-argument(bibliography-file, "bibliography-file", target-type: str)
+  validate-argument("bibliography-file", bibliography-file, target-type: str)
 
   validate-argument(
     "language",
     language,
     target-type: str,
     possible-values: ("es", "en"),
+  )
+
+  validate-argument(
+    "style",
+    style,
+    target-type: str,
+    possible-values: ("fancy", "clean", "strict"),
+  )
+
+  validate-argument(
+    "double-sided",
+    double-sided,
+    target-type: bool,
+  )
+
+  assert(
+    not (double-sided and style == "strict"),
+    message: "'strict' style doesn't allow for 'double-sided' to be set to `true`.",
   )
 
   validate-argument(
@@ -167,14 +190,20 @@
   let in-body = state("in-body", false) // to control heading formatting in/outside of body
   let in-appendix = state("in-appendix", false) // to control heading formatting in the appendixes
 
+  let accent-color = if style == "strict" { black } else { azuluc3m }
+
 
   /* TEXT */
 
-  set text(size: 12pt, lang: language)
+  let font = if style == "strict" {
+    "Times New Roman"
+  } else { "Libertinus Serif" }
+
+  set text(size: 12pt, lang: language, font: font)
 
   set par(
-    leading: 0.65em,
-    spacing: 1em,
+    leading: if style == "strict" { 7pt } else { 8pt },
+    spacing: 1.15em,
     first-line-indent: 1.8em,
     justify: true,
   )
@@ -182,9 +211,39 @@
 
   /* HEADINGS */
 
-  set heading(numbering: "1.")
-  show heading: set text(azuluc3m)
-  show heading: set block(above: 1.4em, below: 1em)
+  set heading(numbering: if style == "clean" { "1.1" } else { "1." })
+  show heading: set text(
+    accent-color,
+    font: font,
+  )
+
+  show heading: it => {
+    if style == "clean" {
+      if (it.level >= 4) {
+        [
+          #v(16pt)
+          #smallcaps(
+            text(
+              size: 11pt,
+              weight: "semibold",
+              fill: azuluc3m,
+              it.body,
+            ),
+          )
+        ]
+      } else {
+        set par(leading: 4pt, justify: false)
+        text(it, top-edge: 0.75em, bottom-edge: -0.25em, fill: azuluc3m)
+      }
+      v(16pt, weak: true)
+    } else if style == "fancy" {
+      set block(above: 1.4em, below: 1em)
+      it
+    } else if style == "strict" {
+      set block(above: 1.15em, below: 1.15em)
+      text(it, size: 12pt, weight: "bold")
+    } else { it }
+  }
 
   // fancy headings for chapters
   show heading.where(level: 1): it => {
@@ -195,72 +254,141 @@
     counter(figure.where(kind: raw)).update(0)
 
     // chapter on new page
-    pagebreak(weak: true, to: "odd")
+    newpage(double-sided)
+
+    if style == "strict" {
+      set align(center)
+      text(upper(it), size: 14pt, weight: "bold")
+      v(1.15em)
+      return
+    }
+
 
     if in-frontmatter.get() or in-endmatter.get() {
-      set align(center)
-      box(
-        stroke: (top: azuluc3m + 1.8pt),
-        width: 100%,
-        height: 2em,
-        inset: (top: 1.5em),
-        { text(size: 24pt, upper(it)) },
-      )
-      v(3em)
+      /* frontmatter / endmatter */
+
+      if style == "clean" {
+        v(32pt) + text(size: 32pt, fill: azuluc3m, weight: "bold", it)
+      } else if style == "fancy" {
+        set align(center)
+        box(
+          stroke: (top: azuluc3m + 1.8pt),
+          width: 100%,
+          height: 2em,
+          inset: (top: 1.5em),
+          { text(size: 24pt, upper(it)) },
+        )
+        v(3em)
+      } else { it }
     } else {
-      box(
-        width: 100%,
-        inset: (top: 5.5em, bottom: 5em),
-        [
-          // chapter number
-          #box(
-            width: 100%,
-            stroke: (top: azuluc3m + 1.8pt, bottom: azuluc3m + 1.8pt),
-            inset: (top: 1.5em, bottom: 1.5em),
-            [
-              #set align(center)
-              #text(
-                [
-                  #upper(if in-body.get() {
-                    locale.CHAPTER.at(language)
-                  } else if in-appendix.get() {
-                    locale.APPENDIX.at(language)
-                  })
-                  #(counter(heading).get().first())
-                ],
-                size: 24pt,
-              )
-            ],
-          )
-          // chapter name
-          #box(
-            width: 100%,
-            inset: (top: 0.2em),
-            [
-              #set align(center)
-              #set text(azuluc3m)
-              #set par(justify: false)
-              #text(upper(it.body), size: 24pt, weight: "semibold")],
-          )
-        ],
-      )
+      /* document */
+
+      if style == "clean" {
+        set par(leading: 0pt, justify: false)
+        pagebreak()
+        context {
+          if in-body.get() {
+            v(160pt)
+            place(
+              // place heading number prominently at the upper right corner
+              top + right,
+              dx: 9pt, // slight adjustment for optimal alignment with right margin
+              text(
+                counter(heading).display(),
+                top-edge: "bounds",
+                size: 160pt,
+                weight: 900,
+                azuluc3m.lighten(70%),
+              ),
+            )
+            text(
+              // heading text on separate line
+              it.body,
+              size: 40pt,
+              fill: azuluc3m,
+              weight: "bold",
+              top-edge: 0.75em,
+              bottom-edge: -0.25em,
+            )
+          } else {
+            v(2 * page-grid)
+            text(
+              size: 2 * page-grid,
+              fill: azul-uc3m,
+              weight: "bold",
+              counter(heading).display() + h(0.5em) + it.body,
+            ) // appendix
+          }
+        }
+      } else if style == "fancy" {
+        box(
+          width: 100%,
+          inset: (top: 5.5em, bottom: 5em),
+          [
+            // chapter number
+            #box(
+              width: 100%,
+              stroke: (top: azuluc3m + 1.8pt, bottom: azuluc3m + 1.8pt),
+              inset: (top: 1.5em, bottom: 1.5em),
+              [
+                #set align(center)
+                #text(
+                  [
+                    #upper(if in-body.get() {
+                      locale.CHAPTER.at(language)
+                    } else if in-appendix.get() {
+                      locale.APPENDIX.at(language)
+                    })
+                    #(counter(heading).get().first())
+                  ],
+                  size: 24pt,
+                )
+              ],
+            )
+            // chapter name
+            #box(
+              width: 100%,
+              inset: (top: 0.2em),
+              [
+                #set align(center)
+                #set text(azuluc3m)
+                #set par(justify: false)
+                #text(upper(it.body), size: 24pt, weight: "semibold")],
+            )
+          ],
+        )
+      }
     }
   }
 
-  // allow to set headings with selector `<nonumber>` to prevent numbering
-  show selector(<nonumber>): set heading(numbering: none)
+  show heading.where(level: 2): it => {
+    if style == "clean" { v(16pt) + text(size: 16pt, it) } else { it }
+  }
+  show heading.where(level: 3): it => {
+    if style == "clean" { v(16pt) + text(size: 11pt, it) } else { it }
+  }
 
 
   /* FIGURES */
 
-  // figure captions w/ blue
+  // figure captions
   show figure.caption: it => {
-    [
-      #set text(azuluc3m, weight: "semibold")
-      #it.supplement #context it.counter.display(it.numbering):
-    ]
-    it.body
+    set text(size: 10pt)
+    if style == "strict" { it } else {
+      [
+        #set text(azuluc3m, weight: "semibold")
+        #it.supplement #context it.counter.display(it.numbering):
+      ]
+      it.body
+    }
   }
+
+  set figure.caption(
+    separator: if style == "strict" {
+      [.]
+      h(1em)
+    } else { auto },
+  )
 
   // show chapter on numbering
   set figure(numbering: (..num) => numbering(
@@ -295,12 +423,32 @@
 
   /* IMAGES */
 
+  // caption position
   show figure.where(kind: image): set figure.caption(position: bottom)
+  show figure.caption.where(kind: image): set align(if style == "strict" {
+    left
+  } else { center })
+
+  // change supplement for strict style
+  show figure.where(kind: image): set figure(
+    supplement: if style == "strict" {
+      "Fig."
+    } else { auto },
+    gap: { 1em },
+  )
 
 
   /* TABLES */
 
   show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption.where(kind: table): it => {
+    if style == "strict" [
+      #context smallcaps(it.supplement)
+      #context smallcaps(it.counter.display(it.numbering)) \
+      #set text(weight: "regular")
+      #smallcaps(it.body) \
+    ] else { it }
+  }
 
   show table: block.with(stroke: (y: 0.7pt))
   set table(
@@ -311,8 +459,8 @@
 
   /* REFERENCES & LINKS */
 
-  show ref: set text(azuluc3m)
-  show link: set text(azuluc3m)
+  show ref: set text(accent-color)
+  show link: set text(accent-color)
 
 
   /* FOOTNOTES */
@@ -320,16 +468,16 @@
   // change line color
   set footnote.entry(separator: line(
     length: 30% + 0pt,
-    stroke: 0.5pt + azuluc3m,
+    stroke: 0.5pt + accent-color,
   ))
 
   // change footnote number color
-  show footnote: set text(azuluc3m) // in text
+  show footnote: set text(accent-color) // in text
   show footnote.entry: it => {
     // in footnote
     h(1em) // indent
     {
-      set text(azuluc3m)
+      set text(accent-color)
       super(str(counter(footnote).at(it.note.location()).at(0))) // number
     }
     h(.05em) // mini-space in between number and body (same as default)
@@ -341,41 +489,76 @@
 
   set page(
     paper: "a4",
-    margin: (
-      y: 2.5cm,
-      x: 3cm,
-    ),
+    margin: if double-sided {
+      (y: 2.5cm, inside: 3cm, outside: 2.5cm)
+    } else { (y: 2.5cm, x: 3cm) },
 
-    // header
+    /* header */
     header: context {
-      if in-body.get() and not is-chapter-start() {
-        set text(azuluc3m)
-        if calc.odd(here().page()) {
+      if style == "strict" {
+        // no header
+        return
+      }
+
+      if (
+        (style == "clean" and not in-appendix.get())
+          or (style == "fancy" and in-body.get() and not is-chapter-start())
+      ) {
+        // show header
+        set text(accent-color)
+        if double-sided and calc.even(here().page()) {
           counter(page).display()
           h(1fr)
           smallcaps({ if short-title != none { short-title } else { title } })
         } else {
-          smallcaps([#locale.CHAPTER.at(language) #hydra(1)]) // chapter title
+          // chapter title
+          if style == "clean" {
+            // just name
+            hydra(
+              1,
+              display: (_, it) => {
+                // hydra should already do this... but alas...
+                if not is-chapter-start() {
+                  smallcaps(it.body)
+                }
+              },
+              use-last: true,
+              skip-starting: true,
+              book: double-sided,
+            )
+          } else if style == "fancy" {
+            // name and number
+            smallcaps([#locale.CHAPTER.at(language) #hydra(1)])
+          }
           h(1fr)
           counter(page).display("1") // arabic page numbers for the rest of the document
         }
 
-        v(-0.7em)
+        v(-0.6em)
         line(length: 100%, stroke: 0.4pt + azuluc3m)
       }
     },
 
-    // footer
+    /* footer */
     footer: context {
-      set align(center)
-      set text(azuluc3m)
+      if style == "strict" {
+        set align(right)
+        if in-frontmatter.get() {
+          counter(page).display("I")
+        } else if not in-appendix.get() {
+          counter(page).display("1")
+        }
+      } else if style == "fancy" {
+        set align(center)
+        set text(azuluc3m)
 
-      if in-frontmatter.get() {
-        counter(page).display("i") // roman page numbers for the frontmatter
-      } else if (
-        (in-endmatter.get() or is-chapter-start()) and not in-appendix.get()
-      ) {
-        counter(page).display("1") // arabic page numbers for chapter start and endmatter
+        if in-frontmatter.get() {
+          counter(page).display("i") // roman page numbers for the frontmatter
+        } else if (
+          (in-endmatter.get() or is-chapter-start()) and not in-appendix.get()
+        ) {
+          counter(page).display("1") // arabic page numbers for chapter start and endmatter
+        }
       }
     },
   )
@@ -397,12 +580,13 @@
     locale.DEGREE-TYPE.at(thesis-type).at(language) + degree,
     location,
     advisors,
+    accent-color,
+    double-sided,
     logo-type: logo,
-    accent-color: azuluc3m,
     license: license,
   )
 
-  if flyleaf { make-flyleaf() }
+  if flyleaf { make-flyleaf(double-sided) }
 
 
   // ============================= FRONTMATTER ============================== //
@@ -429,7 +613,7 @@
       })[#emph(epigraph.quote)],
     )
 
-    pagebreak(to: "odd")
+    newpage(double-sided)
   }
 
 
@@ -447,7 +631,7 @@
 
   // english abstract
   if english-abstract != none {
-    pagebreak(to: "odd")
+    newpage(double-sided)
     make-abstract(english-abstract, "en")
   }
 
@@ -481,27 +665,50 @@
     // only apply for contents (headings) outline
     if it.element.func() != heading { return it }
 
-    set block(above: 1.3em)
-    set text(size: 13pt, weight: "semibold", fill: azuluc3m)
-
-    // wrap it in a block to prevent justification
-    block(
+    if style == "strict" {
+      set block(spacing: 1.5em)
       link(
         it.element.location(), // make entry linkable
-        [
-          #if it.prefix() != none {
-            locale.CHAPTER.at(language) + " " + it.prefix()
-          } else {
-            none
-          } #it.body() #box(width: 1fr) #it.page()
-        ],
-      ),
-    )
+        it.indented(
+          it.prefix(),
+          upper(it.body())
+            + "  "
+            + box(width: 1fr, repeat([.], gap: 2pt))
+            + "  "
+            + it.page(),
+        ),
+      )
+    } else if style == "clean" {
+      set block(above: 2em)
+      set text(weight: "semibold", fill: azuluc3m)
+      link(
+        it.element.location(), // make entry linkable
+        it.indented(it.prefix(), it.body() + box(width: 1fr) + it.page()),
+      )
+    } else if style == "fancy" {
+      set block(above: 1.3em)
+      set text(size: 13pt, weight: "semibold", fill: azuluc3m)
+
+      // wrap it in a block to prevent justification
+      block(
+        link(
+          it.element.location(), // make entry linkable
+          [
+            #if it.prefix() != none {
+              locale.CHAPTER.at(language) + " " + it.prefix()
+            } else {
+              none
+            } #it.body() #box(width: 1fr) #it.page()
+          ],
+        ),
+      )
+    }
   }
 
   // other TOC entries in regular with adapted filling
   show outline.entry.where(level: 2).or(outline.entry.where(level: 3)): it => {
-    set block(above: 0.8em)
+    set block(above: if style == "strict" { auto } else { 0.8em })
+
     show link: set text(black) // reset link color
 
     link(
@@ -519,7 +726,7 @@
 
   // contents
   outline(title: locale.OUTLINE.at("contents").at(language), depth: 3)
-  pagebreak(to: "odd")
+  newpage(double-sided)
 
   if outlines != none {
     // figures
@@ -528,7 +735,7 @@
         title: locale.OUTLINE.at("figures").at(language),
         target: figure.where(kind: image),
       )
-      pagebreak(to: "odd")
+      newpage(double-sided)
     }
 
     // tables
@@ -537,7 +744,7 @@
         title: locale.OUTLINE.at("tables").at(language),
         target: figure.where(kind: table),
       )
-      pagebreak(to: "odd")
+      newpage(double-sided)
     }
 
     // listings
@@ -546,13 +753,13 @@
         title: locale.OUTLINE.at("listings").at(language),
         target: figure.where(kind: raw),
       )
-      pagebreak(to: "odd")
+      newpage(double-sided)
     }
 
     // custom
     if outlines.at("custom", default: false) {
       custom
-      pagebreak(to: "odd")
+      newpage(double-sided)
     }
   }
 
@@ -567,7 +774,7 @@
 
   doc
 
-  // pagebreak(to: "odd")
+  // newpage(double-sided)
   in-body.update(false)
 
 
@@ -583,7 +790,7 @@
 
   // ============================== ENDMATTER =============================== //
 
-  pagebreak(to: "odd")
+  newpage(double-sided, weak: false)
   in-endmatter.update(true)
 
 

@@ -10,7 +10,9 @@
   thesis-type: "TFG",
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
+  style: "fancy",
   license: true,
+  double-sided: true,
   flyleaf: true,
   bibliography-file: "/template/references.bib",
   epigraph: (
@@ -39,7 +41,16 @@
 
 
 = Introduction
-#lorem(900)
+#lorem(50)
+
+== In the beninging
+#lorem(400)
+
+=== Some cool stuff
+#lorem(50)
+
+==== But not _that_ cool
+#lorem(40)
 
 
 == Motivation

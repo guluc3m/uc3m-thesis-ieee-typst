@@ -6,13 +6,25 @@
 #let azuluc3m = rgb("#000e78")
 
 
-/// Prints a flyleaf, an empty (double sided) page.
+
+/// Advances to the next clean page.
+///
+/// - double-sided (bool): Whether to use a double-sided page.
+/// - weak (bool): If `true`, the page break is skipped if the current page is already empty.
+/// -> content
+#let newpage(double-sided, weak: true) = {
+  pagebreak(weak: weak, to: if double-sided { "odd" } else { none })
+}
+
+
+/// Prints a flyleaf, an empty page.
+///
+/// - double-sided (bool): Whether to use a double-sided page.
 ///
 /// -> content
-#let make-flyleaf() = {
+#let make-flyleaf(double-sided) = {
   set page(header: none, footer: none)
-  pagebreak()
-  pagebreak()
+  newpage(double-sided, weak: false)
 }
 
 /// Checks whether the current page is a chapter start page.
