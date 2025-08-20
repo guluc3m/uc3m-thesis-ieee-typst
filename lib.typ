@@ -25,6 +25,7 @@
 /// - license (bool): Whether to include the CC BY-NC-ND 4.0 license.
 /// - epigraph (dictionary, none): A short quote that guided you through the writting of the thesis, your degree, or your life. Consists of `quote` (of type `content`), the body or text itself, `author` (of type `str`), the author of the quote and, optionally, `source` (of type `str`), where the quote was found.
 /// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`) (see [IEEE Taxonomy](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf)).
+/// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - doc (content): Thesis contents.
 ///
@@ -45,6 +46,7 @@
   license: true,
   epigraph: none,
   abstract: (contents: [], keywords: ()),
+  english-abstract: none,
   acknowledgements: none,
   doc,
 ) = {
@@ -115,6 +117,17 @@
     "abstract",
     abstract,
     target-type: dictionary,
+    schema: (
+      body: (target-type: content),
+      keywords: (target-type: ((array, str),), min-len: 2, max-len: 5),
+    ),
+  )
+
+  validate-argument(
+    "english-abstract",
+    english-abstract,
+    target-type: if language == "es" { dictionary } else { none },
+    optional: if language == "es" { false } else { true },
     schema: (
       body: (target-type: content),
       keywords: (target-type: ((array, str),), min-len: 2, max-len: 5),
@@ -401,13 +414,24 @@
     pagebreak(to: "odd")
   }
 
+
   /* ABSTRACT */
 
-  heading(locale.ABSTRACT.at(language), numbering: none)
-  abstract.body
+  let make-abstract(data, language) = {
+    heading(locale.ABSTRACT.at(language), numbering: none)
+    data.body
 
-  v(1fr)
-  [*#locale.KEYWORDS.at(language):* #abstract.keywords.join(" • ")]
+    v(1fr)
+    [*#locale.KEYWORDS.at(language):* #data.keywords.join(" • ")]
+  }
+
+  make-abstract(abstract, language)
+
+  // english abstract
+  if english-abstract != none {
+    pagebreak(to: "odd")
+    make-abstract(english-abstract, "en")
+  }
 
 
   /* ACKNOWLEDGEMENTS */

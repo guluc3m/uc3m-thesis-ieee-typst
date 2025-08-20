@@ -1,6 +1,5 @@
 #import "/lib.typ": conf
 
-
 #show: conf.with(
   degree: "Ingeniería Typstática",
   title: "La mejor memoria de la historia",
@@ -20,6 +19,10 @@
   abstract: (
     body: [Ta wapo.],
     keywords: ("Caca", "Culo", "Pedo", "Pis"), // see https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf
+  ),
+  english-abstract: (
+    body: ['tis cool.],
+    keywords: ("Poop", "Butt", "Fart", "Pee"),
   ),
   acknowledgements: [Mi churri.],
 )
