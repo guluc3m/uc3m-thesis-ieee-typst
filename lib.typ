@@ -19,6 +19,7 @@
 /// - thesis-type (str): Type of thesis (`"TFG"` or `"TFM"`).
 /// - date (datetime): Presentation date.
 /// - bibliography-file (str): Path to bibliography file.
+/// - bibliography-style (str): Bibliography citation style. See https://typst.app/docs/reference/model/bibliography/#parameters-style.
 /// - language (str): `"en"` or `"es"`.
 /// - style (str): Visual style, mainly affecting headings, headers, and footers. The available styles are `strict`, which strictly follow's the university library's guidelines, `clean`, based on clean-dhbw, and `fancy`, based on my original LaTeX version.
 /// - double-sided (bool): Whether to use double-sided pages. This is not allowed in the `strict` style.
@@ -32,6 +33,9 @@
 /// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
+/// - abbreviations (dict, none): Map of abbreviations, acronyms and initials used throughout the thesis.
+/// - appendixes (content, none): Set of appendixes.
+/// - glossary (content, none): Glossary.
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -44,6 +48,7 @@
   thesis-type: none,
   date: none,
   bibliography-file: none,
+  bibliography-style: "ieee",
   language: none,
   style: "fancy",
   double-sided: false,
@@ -57,6 +62,9 @@
   english-abstract: none,
   acknowledgements: none,
   outlines: none,
+  appendixes: none,
+  glossary: none,
+  abbreviations: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
@@ -86,6 +94,8 @@
   validate-argument("date", date, target-type: datetime)
 
   validate-argument("bibliography-file", bibliography-file, target-type: str)
+
+  validate-argument("bibliography-style", bibliography-style, target-type: str)
 
   validate-argument(
     "language",
@@ -180,6 +190,27 @@
       listings: (target-type: bool, optional: true),
       custom: (target-type: content, optional: true),
     ),
+  )
+
+  validate-argument(
+    "abbreviations",
+    abbreviations,
+    optional: true,
+    target-type: ((dictionary, str),),
+  )
+
+  validate-argument(
+    "appendixes",
+    appendixes,
+    optional: true,
+    target-type: content,
+  )
+
+  validate-argument(
+    "glossary",
+    glossary,
+    optional: true,
+    target-type: content,
   )
 
 
@@ -449,12 +480,6 @@
       #smallcaps(it.body) \
     ] else { it }
   }
-
-  show table: block.with(stroke: (y: 0.7pt))
-  set table(
-    row-gutter: -0.1em, // Row separation
-    stroke: (_, y) => if y == 0 { (bottom: 0.2pt) },
-  )
 
 
   /* REFERENCES & LINKS */
@@ -764,6 +789,28 @@
   }
 
 
+  /* ABBREVIATIONS */
+
+  if abbreviations != none {
+    heading(
+      locale.ABBREVIATIONS.at(language),
+      numbering: none,
+    )
+
+    set align(center)
+
+    box(
+      width: 80%,
+      table(
+        columns: (1fr, 2fr), // ful width
+        stroke: none,
+        align: left,
+        ..abbreviations.pairs().flatten()
+      ),
+    )
+  }
+
+
   in-frontmatter.update(false)
 
 
@@ -778,16 +825,6 @@
   in-body.update(false)
 
 
-  // =============================== APPENDIX =============================== //
-
-  in-appendix.update(true)
-
-  set heading(numbering: "A.1")
-  counter(heading).update(0)
-
-  in-appendix.update(false)
-
-
   // ============================== ENDMATTER =============================== //
 
   newpage(double-sided, weak: false)
@@ -796,10 +833,35 @@
 
   /* BIBLIOGRAPHY */
 
-  bibliography(bibliography-file, style: "ieee")
+  bibliography(bibliography-file, style: bibliography-style)
+
 
   /* GLOSSARY */
 
+  if glossary != none {
+    heading(
+      locale.GLOSSARY.at(language),
+      numbering: none,
+    )
 
-  // in-endmatter.update(false)
+    glossary
+  }
+
+  in-endmatter.update(false)
+
+
+  // =============================== APPENDIX =============================== //
+
+  if appendixes != none {
+    in-appendix.update(true)
+
+    newpage(double-sided)
+
+    set heading(numbering: "A.1")
+    counter(heading).update(0)
+
+    appendixes
+
+    // in-appendix.update(false)
+  }
 }

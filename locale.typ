@@ -118,3 +118,13 @@
   "es": "Apéndice",
   "en": "Appendix",
 )
+
+#let GLOSSARY = (
+  "es": "Glosario",
+  "en": "Glossary",
+)
+
+#let ABBREVIATIONS = (
+  "es": "Listado de abreviaciones",
+  "en": "List of abbreviations",
+)

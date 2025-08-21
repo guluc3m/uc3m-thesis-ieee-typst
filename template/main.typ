@@ -36,6 +36,9 @@
     listings: false,
     // custom: []
   ),
+  // appendixes: [],
+  // glossary: []
+  // abbreviations: (TFG: "Trabajo de Fin de Grado"),
 )
 
 
@@ -76,36 +79,46 @@
   caption: "Feature comparison of current assembly simulators",
   {
     set text(9.4pt)
-    table(
-      columns: (34%, auto, auto, auto, auto, auto),
-      row-gutter: -0.4em,
-      table.header(
-        [*Simulator*], [Kite], [ARMLite], [Sail], [CREATOR], [Proposal]
+    block(
+      stroke: (y: 0.7pt),
+      table(
+        columns: (34%, auto, auto, auto, auto, auto),
+        row-gutter: -0.2em,
+        stroke: (_, y) => if y == 0 { (bottom: 0.2pt) },
+        table.header(
+          [*Simulator*], [Kite], [ARMLite], [Sail], [CREATOR], [Proposal]
+        ),
+        align: (left, horizon, horizon, horizon, horizon, horizon),
+
+        [*Language*], [C/C++], [JavaScript], [OCaml], [JavaScript], [ISO C++20],
+
+        [*License*],
+        [BSD-3-Clause],
+        [None],
+        [BSD-2-Clause],
+        [LGPLv2.1],
+        [GPLv3],
+
+        [*CLI*], check, uncheck, uncheck, check, check,
+        [*I/O*], uncheck, check, uncheck, check, check,
+        [*Step-by-step execution*], uncheck, uncheck, uncheck, check, check,
+        [*Simple architecture definition*],
+        uncheck,
+        uncheck,
+        uncheck,
+        check,
+        check,
+
+        [*Native execution*], check, uncheck, check, uncheck, check,
+        [*In-browser*], uncheck, check, uncheck, check, [$checkmark^*$],
+        [*Error checking*], uncheck, check, uncheck, check, check,
+        [*Architecture validation support*],
+        uncheck,
+        uncheck,
+        uncheck,
+        uncheck,
+        check,
       ),
-      align: (left, horizon, horizon, horizon, horizon, horizon),
-
-      [*Language*], [C/C++], [JavaScript], [OCaml], [JavaScript], [ISO C++20],
-
-      [*License*], [BSD-3-Clause], [None], [BSD-2-Clause], [LGPLv2.1], [GPLv3],
-      [*CLI*], check, uncheck, uncheck, check, check,
-      [*I/O*], uncheck, check, uncheck, check, check,
-      [*Step-by-step execution*], uncheck, uncheck, uncheck, check, check,
-      [*Simple architecture definition*],
-      uncheck,
-      uncheck,
-      uncheck,
-      check,
-      check,
-
-      [*Native execution*], check, uncheck, check, uncheck, check,
-      [*In-browser*], uncheck, check, uncheck, check, [$checkmark^*$],
-      [*Error checking*], uncheck, check, uncheck, check, check,
-      [*Architecture validation support*],
-      uncheck,
-      uncheck,
-      uncheck,
-      uncheck,
-      check,
     )
     set align(left)
     [#super("*") Future work]

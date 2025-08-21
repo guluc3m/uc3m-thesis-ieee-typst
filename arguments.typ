@@ -44,25 +44,31 @@
 /// the operation and `err` is the error message in case of error.
 ///
 /// - value (any): Argument value.
-/// - target-types (array): List of valid types. For arrays, you can specify the subtypes (e.g. `(array, str)`).
+/// - target-types (array): List of valid types. For arrays and dictionaries, you can specify the subtypes (e.g. `(array, str)`).
 /// - optional (bool): Whether the argument is optional.
 /// -> array
 #let _validate-type(value, target-types, optional) = {
   let argument-type = type(value)
-  // assert(false, message: format-value(argument-type))
 
   for t in target-types {
-    // check subtypes for array
-    if type(t) == array and t.at(0) == array {
+    // check for optionals
+    if optional and value == none {
+      continue
+    }
+
+    // check subtypes for compound types
+    if type(t) == array and (array, dictionary).contains(t.at(0)) {
       if t.len() == 2 {
-        for (i, el) in value.enumerate() {
+        let values = if t.at(0) == dictionary { value.values() } else { value }
+
+        for (i, el) in values.enumerate() {
           let (ok, err) = _validate-type(el, (t.at(1),), false)
           if not ok {
             return (false, "Element " + str(i) + ": " + err)
           }
         }
       }
-      t = array
+      t = t.at(0) // unpack base type for further checking
     }
 
     if (
