@@ -35,6 +35,7 @@
   advisors,
   accent-color,
   double-sided,
+  style,
   license: true,
   title-font: auto,
   logo-type: "new",
@@ -52,7 +53,13 @@
 
   // logo
   if logo-type == "new" {
-    image("img/new_uc3m_logo.svg", width: 120%)
+    if style == "fancy" {
+      image("img/new_uc3m_logo.svg", width: 120%)
+    } else if style == "clean" {
+      image("img/new_uc3m_logo.svg", width: 80%)
+    } else {
+      image("img/new_uc3m_logo.svg", width: 100%)
+    }
     v(2em)
   } else {
     image("img/old_uc3m_logo.svg", width: 35%)
@@ -62,14 +69,17 @@
   // degree
   text(size: 1.2em, weight: "regular", degree)
   v(0.6em)
-  linebreak()
 
   // type-of-thesis
   text(size: 1.2em, style: "italic", type-of-thesis)
   v(0.01em)
 
   // title
-  text(size: 2em, weight: "bold", quote(title))
+  if style == "clean" {
+    text(size: 2em, weight: "bold", quote(title))
+  } else {
+    text(size: 1.6em, weight: 500, quote(title))
+  }
   v(0.3em)
 
   // line

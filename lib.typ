@@ -608,6 +608,7 @@
     advisors,
     accent-color,
     double-sided,
+    style,
     logo-type: logo,
     license: license,
   )
