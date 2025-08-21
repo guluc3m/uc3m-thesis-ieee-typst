@@ -11,6 +11,7 @@
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
   style: "fancy",
+  // titlepage-style: "fancy",
   license: true,
   double-sided: true,
   flyleaf: true,
