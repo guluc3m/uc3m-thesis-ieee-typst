@@ -58,7 +58,7 @@
   license: true,
   flyleaf: true,
   epigraph: none,
-  abstract: (contents: [], keywords: ()),
+  abstract: none,
   english-abstract: none,
   acknowledgements: none,
   outlines: none,
@@ -137,6 +137,7 @@
   )
 
   validate-argument("license", license, target-type: bool)
+
   validate-argument("flyleaf", flyleaf, target-type: bool)
 
   validate-argument(

@@ -52,8 +52,8 @@
 
   for t in target-types {
     // check for optionals
-    if optional and value == none {
-      continue
+    if optional and value == none and argument-type != none {
+      return (true, none)
     }
 
     // check subtypes for compound types
@@ -71,22 +71,20 @@
       t = t.at(0) // unpack base type for further checking
     }
 
-    if (
-      (t != argument-type)
-        and not (optional and value == none and argument-type != none)
-    ) {
-      return (
-        false,
-        "Expected '"
-          + format-value(t)
-          + "', got '"
-          + format-value(argument-type)
-          + "'.",
-      )
+    if (t == argument-type) {
+      // found it
+      return (true, none)
     }
   }
 
-  (true, none)
+  return (
+    false,
+    "Expected '"
+      + target-types.map(t => format-value(t)).join(", ")
+      + "', got '"
+      + format-value(argument-type)
+      + "'.",
+  )
 }
 
 
