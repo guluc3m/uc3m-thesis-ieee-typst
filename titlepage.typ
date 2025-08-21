@@ -41,7 +41,7 @@
 ) = {
   // general configuration
   set page(margin: (x: 3cm, y: 2cm), header: [], footer: [])
-  set par(justify: false)
+  set par(justify: false, leading: 0.7em)
   show link: set text(black)
 
   set text(size: 16pt, fill: accent-color, hyphenate: false)
@@ -52,7 +52,7 @@
 
   // logo
   if logo-type == "new" {
-    image("img/new_uc3m_logo.svg", width: 100%)
+    image("img/new_uc3m_logo.svg", width: 120%)
     v(2em)
   } else {
     image("img/old_uc3m_logo.svg", width: 35%)
