@@ -33,7 +33,7 @@
 /// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
-/// - abbreviations (dict, none): Map of abbreviations, acronyms and initials used throughout the thesis.
+/// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
 /// - doc (content): Thesis contents.
@@ -197,7 +197,7 @@
     "abbreviations",
     abbreviations,
     optional: true,
-    target-type: ((dictionary, str),),
+    target-type: ((dictionary, str), content),
   )
 
   validate-argument(
@@ -799,17 +799,22 @@
       numbering: none,
     )
 
-    set align(center)
-
-    box(
-      width: 80%,
-      table(
-        columns: (1fr, 2fr), // ful width
-        stroke: none,
-        align: left,
-        ..abbreviations.pairs().flatten()
-      ),
-    )
+    if type(abbreviations) == dictionary {
+      // table w/out borders
+      set align(center)
+      box(
+        width: 80%,
+        table(
+          columns: (1fr, 2fr), // full page width
+          stroke: none,
+          align: left,
+          ..abbreviations.pairs().flatten()
+        ),
+      )
+    } else if type(abbreviations) == content {
+      // custom
+      abbreviations
+    }
   }
 
 

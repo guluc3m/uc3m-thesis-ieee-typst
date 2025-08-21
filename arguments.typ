@@ -57,18 +57,24 @@
     }
 
     // check subtypes for compound types
-    if type(t) == array and (array, dictionary).contains(t.at(0)) {
-      if t.len() == 2 {
-        let values = if t.at(0) == dictionary { value.values() } else { value }
+    if (
+      type(t) == array
+        and t.len() == 2
+        and (array, dictionary).contains(t.at(0))
+    ) {
+      let subtype = t.at(1)
+      t = t.at(0) // unpack base type for further checking
 
-        for (i, el) in values.enumerate() {
-          let (ok, err) = _validate-type(el, (t.at(1),), false)
-          if not ok {
-            return (false, "Element " + str(i) + ": " + err)
-          }
+      if t != argument-type { continue }
+
+      let values = if t == dictionary { value.values() } else { value }
+
+      for (i, el) in values.enumerate() {
+        let (ok, err) = _validate-type(el, (subtype,), false)
+        if not ok {
+          return (false, "Element " + str(i) + ": " + err)
         }
       }
-      t = t.at(0) // unpack base type for further checking
     }
 
     if (t == argument-type) {
