@@ -2,7 +2,7 @@
 
 #show: conf.with(
   degree: "Ingeniería Typstática",
-  title: "La mejor memoria de la historia",
+  title: "Análisis, diseño, e implementación del mejor Trabajo de Fin de Grado de la historia",
   // short-title: "",
   author: "Nombre Extremadamente Largo e Incómodo de Escribir",
   advisors: ("Profesor Cuyos Padres Tenían Visión de Futuro",),

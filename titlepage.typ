@@ -41,7 +41,11 @@
   logo-type: "new",
 ) = {
   // general configuration
-  set page(margin: (x: 3cm, y: 2cm), header: [], footer: [])
+  set page(
+    margin: (x: if style == "fancy" { 2cm } else { 3cm }, y: 2cm),
+    header: [],
+    footer: [],
+  )
   set par(justify: false, leading: 0.7em)
   show link: set text(black)
 
@@ -53,82 +57,86 @@
 
   // logo
   if logo-type == "new" {
-    if style == "fancy" {
-      image("img/new_uc3m_logo.svg", width: 120%)
-    } else if style == "clean" {
-      image("img/new_uc3m_logo.svg", width: 80%)
-    } else {
-      image("img/new_uc3m_logo.svg", width: 100%)
-    }
-    v(2em)
+    image(
+      "img/new_uc3m_logo.svg",
+      width: if style == "clean" { 60% } else { 100% },
+    )
+    v(if style == "fancy" { 3em } else { 2em })
   } else {
     image("img/old_uc3m_logo.svg", width: 35%)
     v(0.5em)
   }
 
-  // degree
-  text(size: 1.2em, weight: "regular", degree)
-  v(0.6em)
+  box(
+    width: if style == "fancy" { 80% } else { 100% },
+    {
+      // degree
+      text(size: 1.2em, weight: "regular", degree + parbreak())
 
-  // type-of-thesis
-  text(size: 1.2em, style: "italic", type-of-thesis)
-  v(0.01em)
+      // type-of-thesis
+      text(size: 1.2em, style: "italic", type-of-thesis + parbreak())
 
-  // title
-  if style == "clean" {
-    text(size: 2em, weight: "bold", quote(title))
-  } else {
-    text(size: 1.6em, weight: 500, quote(title))
-  }
-  v(0.3em)
-
-  // line
-  line(length: 70%, stroke: (paint: accent-color, thickness: 0.7pt))
-  v(0.7em)
-
-  // author
-  text(size: 1.2em, style: "italic", locale.AUTHOR.at(language))
-  linebreak()
-  text(size: 1.3em, weight: "bold", author)
-  v(0.3em)
-
-  // advisors
-  if advisors.len() > 0 {
-    text(
-      size: 1.2em,
-      style: "italic",
-      {
-        if advisors.len() > 1 {
-          locale.ADVISORS.at(language)
-        } else { locale.ADVISOR.at(language) }
-      },
-    )
-    linebreak()
-
-    for advisor in advisors {
-      text(size: 1.2em, advisor)
-      linebreak()
-    }
-
-    v(1em)
-  }
-
-  // location
-  text(size: 1.1em, location)
-  linebreak()
-
-  // date
-  text(size: 1.1em, {
-    // currently, Typst doesn't support localization for the format syntax
-    if (language != "en" and date-format.contains("[month repr:long]")) {
-      date-format = date-format.replace(
-        "[month repr:long]",
-        locale.MONTHS.at(language).at(date.month() - 1),
+      // title
+      text(
+        size: if style == "clean" { 2em } else { 1.6em },
+        weight: if style == "clean" { "semibold" } else { "medium" },
+        quote(title),
       )
-    }
+      parbreak()
 
-    date.display(date-format)
-  })
+      // line
+      line(length: 70%, stroke: (paint: accent-color, thickness: 0.7pt))
+      v(0.7em)
+
+      // author
+      text(size: 1.2em, style: "italic", locale.AUTHOR.at(language))
+      linebreak()
+      text(
+        size: 1.3em,
+        weight: if style == "clean" { "semibold" } else { "medium" },
+        author,
+      )
+      parbreak()
+      v(0.7em)
+
+      // advisors
+      text(
+        size: 1.2em,
+        style: "italic",
+        {
+          if advisors.len() > 1 {
+            locale.ADVISORS.at(language)
+          } else { locale.ADVISOR.at(language) }
+        },
+      )
+      linebreak()
+
+      for advisor in advisors {
+        text(size: 1.2em, advisor)
+        linebreak()
+      }
+
+      parbreak()
+      v(1em)
+
+      // location
+      text(size: 1.1em, location)
+      linebreak()
+
+      // date
+      text(size: 1.1em, {
+        // currently, Typst doesn't support localization for the format syntax
+        if (language != "en" and date-format.contains("[month repr:long]")) {
+          date-format = date-format.replace(
+            "[month repr:long]",
+            locale.MONTHS.at(language).at(date.month() - 1),
+          )
+        }
+
+        date.display(date-format)
+      })
+    },
+  )
 
   // license
   if license {
