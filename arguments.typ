@@ -13,6 +13,8 @@
   // base types
   if value == none {
     return "none"
+  } else if value == auto {
+    return "auto"
   } else if type(value) == type {
     return str(value)
   } else if type(value) == bool {
@@ -49,6 +51,7 @@
 /// -> array
 #let _validate-type(value, target-types, optional) = {
   let argument-type = type(value)
+  // FIXME: if argument-type is `auto`, things break
 
   for t in target-types {
     // check for optionals
@@ -57,18 +60,24 @@
     }
 
     // check subtypes for compound types
-    if type(t) == array and (array, dictionary).contains(t.at(0)) {
-      if t.len() == 2 {
-        let values = if t.at(0) == dictionary { value.values() } else { value }
+    if (
+      type(t) == array
+        and t.len() == 2
+        and (array, dictionary).contains(t.at(0))
+    ) {
+      let subtype = t.at(1)
+      t = t.at(0) // unpack base type for further checking
 
-        for (i, el) in values.enumerate() {
-          let (ok, err) = _validate-type(el, (t.at(1),), false)
-          if not ok {
-            return (false, "Element " + str(i) + ": " + err)
-          }
+      if t != argument-type { continue }
+
+      let values = if t == dictionary { value.values() } else { value }
+
+      for (i, el) in values.enumerate() {
+        let (ok, err) = _validate-type(el, (subtype,), false)
+        if not ok {
+          return (false, "Element " + str(i) + ": " + err)
         }
       }
-      t = t.at(0) // unpack base type for further checking
     }
 
     if (t == argument-type) {
@@ -234,7 +243,7 @@
 /// - name (str): Name of the argument, used for the error message.
 /// - value (any): Value to check.
 /// - optional (bool): If the argument is optional
-/// - target-type? (): Valid type, or types. For arrays, you can specify the subtypes (e.g. `(array, str)`).
+/// - target-type? (): Valid type, or types. For arrays, you can specify the subtypes (e.g. `(array, str)`). If `possible-values` is set, it is ignored.
 /// - possible-values? (array): Check against a list of valid values.
 /// - min-len? (number): Check minimum array lenght. Only applies to arrays.
 /// - max-len? (number): Check maximum array lenght. Only applies to arrays.
@@ -257,15 +266,6 @@
     assert(value != none, message: "Missing argument '" + name + "'.")
   }
 
-  // check type
-  let (ok, err) = _validate-type(
-    value,
-    // specify one or multiple types
-    if type(target-type) == array { target-type } else { (target-type,) },
-    optional,
-  )
-  assert(ok, message: "Invalid type for '" + name + "'. " + err)
-
   // check enum values
   if possible-values.len() > 0 {
     assert(
@@ -278,6 +278,15 @@
         + possible-values.map(format-value).join(", ")
         + ".",
     )
+  } else {
+    // check type
+    let (ok, err) = _validate-type(
+      value,
+      // specify one or multiple types
+      if type(target-type) == array { target-type } else { (target-type,) },
+      optional,
+    )
+    assert(ok, message: "Invalid type for '" + name + "'. " + err)
   }
 
   // check array lenght

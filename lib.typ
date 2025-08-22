@@ -22,6 +22,7 @@
 /// - bibliography-style (str): Bibliography citation style. See https://typst.app/docs/reference/model/bibliography/#parameters-style.
 /// - language (str): `"en"` or `"es"`.
 /// - style (str): Visual style, mainly affecting headings, headers, and footers. The available styles are `strict`, which strictly follow's the university library's guidelines, `clean`, based on clean-dhbw, and `fancy`, based on my original LaTeX version.
+/// - titlepage-style (str, auto): Style for the titlepage (see `style`). If set to `auto`, uses the main style.
 /// - double-sided (bool): Whether to use double-sided pages. This is not allowed in the `strict` style.
 /// - logo (str): Type of logo (`"old"` or `"new"`).
 /// - short-title (str): Shorter version of the title, to be displayed in the headers. Only applies if `double-sided` is set to `true`.
@@ -33,7 +34,7 @@
 /// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
 /// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
-/// - abbreviations (dict, none): Map of abbreviations, acronyms and initials used throughout the thesis.
+/// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
 /// - doc (content): Thesis contents.
@@ -51,6 +52,7 @@
   bibliography-style: "ieee",
   language: none,
   style: "fancy",
+  titlepage-style: auto,
   double-sided: false,
   logo: "new",
   short-title: none,
@@ -87,7 +89,6 @@
   validate-argument(
     "thesis-type",
     thesis-type,
-    target-type: str,
     possible-values: ("TFG", "TFM"),
   )
 
@@ -97,37 +98,28 @@
 
   validate-argument("bibliography-style", bibliography-style, target-type: str)
 
-  validate-argument(
-    "language",
-    language,
-    target-type: str,
-    possible-values: ("es", "en"),
-  )
+  validate-argument("language", language, possible-values: ("es", "en"))
 
   validate-argument(
     "style",
     style,
-    target-type: str,
     possible-values: ("fancy", "clean", "strict"),
   )
 
   validate-argument(
-    "double-sided",
-    double-sided,
-    target-type: bool,
+    "titlepage-style",
+    titlepage-style,
+    possible-values: (auto, "fancy", "clean", "strict"),
   )
+
+  validate-argument("double-sided", double-sided, target-type: bool)
 
   assert(
     not (double-sided and style == "strict"),
     message: "'strict' style doesn't allow for 'double-sided' to be set to `true`.",
   )
 
-  validate-argument(
-    "logo",
-    logo,
-    target-type: str,
-    possible-values: ("new", "old"),
-  )
+  validate-argument("logo", logo, possible-values: ("new", "old"))
 
   validate-argument(
     "short-title",
@@ -197,7 +189,7 @@
     "abbreviations",
     abbreviations,
     optional: true,
-    target-type: ((dictionary, str),),
+    target-type: ((dictionary, str), content),
   )
 
   validate-argument(
@@ -207,12 +199,7 @@
     target-type: content,
   )
 
-  validate-argument(
-    "glossary",
-    glossary,
-    optional: true,
-    target-type: content,
-  )
+  validate-argument("glossary", glossary, optional: true, target-type: content)
 
 
   // ============================== PAGE SETUP ============================== //
@@ -613,7 +600,7 @@
     advisors,
     accent-color,
     double-sided,
-    style,
+    if titlepage-style == auto { style } else { titlepage-style },
     logo-type: logo,
     license: license,
   )
@@ -808,17 +795,22 @@
       numbering: none,
     )
 
-    set align(center)
-
-    box(
-      width: 80%,
-      table(
-        columns: (1fr, 2fr), // ful width
-        stroke: none,
-        align: left,
-        ..abbreviations.pairs().flatten()
-      ),
-    )
+    if type(abbreviations) == dictionary {
+      // table w/out borders
+      set align(center)
+      box(
+        width: 80%,
+        table(
+          columns: (1fr, 2fr), // full page width
+          stroke: none,
+          align: left,
+          ..abbreviations.pairs().flatten()
+        ),
+      )
+    } else if type(abbreviations) == content {
+      // custom
+      abbreviations
+    }
   }
 
 
