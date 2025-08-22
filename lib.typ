@@ -371,7 +371,12 @@
                     } else if in-appendix.get() {
                       locale.APPENDIX.at(language)
                     })
-                    #(counter(heading).get().first())
+                    #let count = counter(heading).get().first()
+                    #let image = numbering(heading.numbering, count)
+                    #if image.last() == "." {
+                      image = image.slice(0, image.len() - 1)
+                    }
+                    #image
                   ],
                   size: 24pt,
                 )
@@ -722,7 +727,11 @@
           it.element.location(), // make entry linkable
           [
             #if it.prefix() != none {
-              locale.CHAPTER.at(language) + " " + it.prefix()
+              if regex("\d+") in it.prefix().text {
+                locale.CHAPTER.at(language) + " " + it.prefix()
+              } else {
+                locale.APPENDIX.at(language) + " " + it.prefix()
+              }
             } else {
               none
             } #it.body() #box(width: 1fr) #it.page()
@@ -859,7 +868,7 @@
 
     newpage(double-sided)
 
-    set heading(numbering: "A.1")
+    set heading(numbering: "A.1.", supplement: [#locale.APPENDIX.at(language)])
     counter(heading).update(0)
 
     appendixes
