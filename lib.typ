@@ -4,7 +4,7 @@
 #import "locale.typ" as locale
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
-
+#import "generative-ai.typ": genai
 
 
 /// Main configuration function.
