@@ -236,6 +236,7 @@
         ),
       ),
       followed_terms: (target-type: bool),
+      data_usage_explication: (target-type: str, optional: true),
     ),
   )
 

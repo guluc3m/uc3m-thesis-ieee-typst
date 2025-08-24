@@ -216,6 +216,11 @@
       kind: table,
     )
 
+    if ai_data_usage.at("sensible_data_usage").contains("yes") or ai_data_usage.at("copyright_data_usage").contains("yes") or ai_data_usage.at("personal_data_usage").contains("yes") [
+      #ai_data_usage.data_usage_explication
+    ]
+
+
 
     [== #locale.AI_P2_TITLE.at(language)]
 
