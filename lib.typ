@@ -860,7 +860,11 @@
 
     newpage(double-sided)
 
-    set heading(numbering: "A.1.", supplement: [#locale.APPENDIX.at(language)])
+    set heading(
+      // don't show numbering for headings above level 1
+      numbering: (..n) => { if n.pos().len() == 1 { numbering("A.1", ..n) } },
+      supplement: [#locale.APPENDIX.at(language)],
+    )
     counter(heading).update(0)
 
     appendixes
