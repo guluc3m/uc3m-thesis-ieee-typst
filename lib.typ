@@ -67,8 +67,10 @@
   appendixes: none,
   glossary: none,
   abbreviations: none,
-  genai_usage: false,
-  ai_data_usage: none,
+  genai-usage: false,
+  ai-data-usage: none,
+  ai-technical-usage: none,
+  ai-usage-reflection: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
@@ -203,40 +205,63 @@
 
   validate-argument("glossary", glossary, optional: true, target-type: content)
 
-  validate-argument("genai_usage", genai_usage, target-type: bool)
-
   validate-argument(
-    "ai_data_usage",
-    ai_data_usage,
-    optional: true,
+    "genai-usage",
+    genai-usage,
     target-type: dictionary,
+    optional: true,
     schema: (
-      sensible_data_usage: (
-        target-type: str,
-        possible-values: (
-          "yes_with_auth",
-          "no_without_auth",
-          "no_not_used",
+      usage: (target-type: bool),
+      ai-data-usage: (
+        target-type: dictionary,
+        schema: (
+          sensible-data-usage: (
+            target-type: str,
+            possible-values: (
+              "yes_with_auth",
+              "no_without_auth",
+              "no_not_used",
+            ),
+          ),
+          copyright-data-usage: (
+            target-type: str,
+            possible-values: (
+              "yes_with_auth",
+              "no_without_auth",
+              "no_not_used",
+            ),
+          ),
+          personal-data-usage: (
+            target-type: str,
+            possible-values: (
+              "yes_with_auth",
+              "no_without_auth",
+              "no_not_used",
+            ),
+          ),
+          followed-terms: (target-type: bool),
+          data-usage-explication: (target-type: str, optional: true),
         ),
       ),
-      copyright_data_usage: (
-        target-type: str,
-        possible-values: (
-          "yes_with_auth",
-          "no_without_auth",
-          "no_not_used",
+      ai-technical-usage: (
+        target-type: dictionary,
+        optional: true,
+        schema: (
+          documentation: (target-type: (array, str), optional: true),
+          review: (target-type: (array, str), optional: true),
+          information_search: (target-type: (array, str), optional: true),
+          references: (target-type: (array, str), optional: true),
+          summary_references: (target-type: (array, str), optional: true),
+          translation: (target-type: (array, str), optional: true),
+          assistance-coding: (target-type: (array, str), optional: true),
+          generating_schemas: (target-type: (array, str), optional: true),
+          optimization: (target-type: (array, str), optional: true),
+          data_processing: (target-type: (array, str), optional: true),
+          idea_inspiration: (target-type: (array, str), optional: true),
+          other_generations: (target-type: (array, str), optional: true),
         ),
       ),
-      personal_data_usage: (
-        target-type: str,
-        possible-values: (
-          "yes_with_auth",
-          "no_without_auth",
-          "no_not_used",
-        ),
-      ),
-      followed_terms: (target-type: bool),
-      data_usage_explication: (target-type: str, optional: true),
+      ai-usage-reflection: (target-type: content),
     ),
   )
 
@@ -558,8 +583,7 @@
       }
 
       if (
-        (style == "clean" and not in-appendix.get())
-          or (style == "fancy" and in-body.get() and not is-chapter-start())
+        (style == "clean" and not in-appendix.get()) or (style == "fancy" and in-body.get() and not is-chapter-start())
       ) {
         // show header
         set text(accent-color)
@@ -729,11 +753,7 @@
         it.element.location(), // make entry linkable
         it.indented(
           it.prefix(),
-          upper(it.body())
-            + "  "
-            + box(width: 1fr, repeat([.], gap: 2pt))
-            + "  "
-            + it.page(),
+          upper(it.body()) + "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + it.page(),
         ),
       )
     } else if style == "clean" {
@@ -777,11 +797,7 @@
       it.element.location(), // make entry linkable
       it.indented(
         it.prefix(),
-        it.body()
-          + "  "
-          + box(width: 1fr, repeat([.], gap: 2pt))
-          + "  "
-          + it.page(),
+        it.body() + "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + it.page(),
       ),
     )
   }
@@ -903,6 +919,11 @@
     counter(heading).update(0)
 
     appendixes
+
+    genai(
+      language,
+      genai-usage,
+    )
 
     // in-appendix.update(false)
   }

@@ -18,15 +18,11 @@
 
 #let CC-LICENSE = (
   "es": [
-    Esta obra se encuentra sujeta a la licencia #link(
-      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    )[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
       International]
   ],
   "en": [
-    This work is licensed under #link(
-      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    )[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
+    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
       International]
   ],
 )
@@ -160,16 +156,67 @@
 )
 
 #let AI_P1_TITLE = (
-  "es": "Parte 1: reflexión sobre comportamiento ético y responsable",
-  "en": "Part 1: Reflection on ethical and responsible behaviour",
+  "es": "Reflexión sobre comportamiento ético y responsable",
+  "en": "Reflection on ethical and responsible behaviour",
 )
 
 #let AI_P2_TITLE = (
-  "es": "Parte 2: declaración de uso técnico",
-  "en": "Part 2: Declaration of technical use",
+  "es": "Declaración de uso técnico",
+  "en": "Declaration of technical use",
 )
 
 #let AI_P3_TITLE = (
-  "es": "Parte 3: reflexión sobre utilidad",
-  "en": "Part 3: Reflection on utility",
+  "es": "Reflexión sobre utilidad",
+  "en": "Reflection on utility",
+)
+
+#let AI_INTERACTION = (
+  "document": (
+    "es": "Documentación y redacción",
+    "en": "Documentation and drafting",
+  ),
+  "review": (
+    "es": "Revisión o reescritura de párrafos redactados previamente",
+    "en": "Revision or rewriting of previously drafted paragraphs",
+  ),
+  "information_search": (
+    "es": "Búsqueda de información o respuesta a preguntas concretas",
+    "en": "Search for information or answers to specific questions",
+  ),
+  "references": (
+    "es": "Búsqueda de bibliografía",
+    "en": "Bibliography search",
+  ),
+  "summary_references": (
+    "es": "Resumen de bibliografía consultada",
+    "en": "Summary of bibliography consulted",
+  ),
+  "translation": (
+    "es": "Traducción de texto consultados ",
+    "en": "Translation of texts consulted ",
+  ),
+  "assistance-coding": (
+    "es": "Asistencia en el desarrollo de líneas de código (programación)",
+    "en": "Assistance in the development of lines of code (programming)",
+  ),
+  "generating_schemas": (
+    "es": "Generación de esquemas, imágenes, audios o vídeos",
+    "en": "Generation of diagrams, images, audios or videos",
+  ),
+  "optimization": (
+    "es": "Procesos de optimización",
+    "en": "Optimisation processes",
+  ),
+  "data_processing": (
+    "es": "Tratamiento de datos: recogida, análisis, cruce de datos…",
+    "en": "Data processing: collection, analysis, cross-checking of data...",
+  ),
+  "idea_inspiration": (
+    "es": "Inspiración de ideas en el proceso creativo",
+    "en": "Inspiration of ideas in the creative process",
+  ),
+  "other_generations": (
+    "es": "Otros usos vinculados a la generación de puntos concretos del desarrollo específico del trabajo",
+    "en": "Other uses linked to the generation of specific points of the specific development of the work",
+  ),
 )

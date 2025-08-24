@@ -11,58 +11,40 @@
 ///
 /// - language (str): The language of the project (e.g. "en", "es").
 /// - usage (bool): Whether AI is used in the project.
-/// - ai_data_usage (dictionary): AI data usage declaration. // todo add more info here
+/// - ai-data-usage (dictionary): AI data usage declaration. // todo add more info here
 /// todo: refactor this to 3 dicts
-/// - sensible_data_usage (str): sensible data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - copyright_data_usage (str): copyright data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - personal_data_usage (str): personal data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - followed_terms (str): followed terms (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - followed_terms (bool, str): Whether the followed terms are accepted
+/// - sensible-data-usage (str): sensible data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - copyright-data-usage (str): copyright data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - personal-data-usage (str): personal data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - followed-terms (str): followed terms (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - followed-terms (bool, str): Whether the followed terms are accepted
 /// - technical_usage_documentation (array): array of the dictionary format: tool (str), for (array) str, example (str).
 
 #let genai(
   language,
-  usage,
-  ai_data_usage,
-  // technical_usage_documentation,
-  // technical_usage_review,
-  // technical_usage_information_search,
-  // technical_usage_references,
-  // technical_usage_summary_references,
-  // technical_usage_translation,
-  // technical_usage_assistance_coding,
-  // technical_usage_generating_schemas,
-  // technical_usage_optimization,
-  // technical_usage_data_processing,
-  // technical_usage_idea_inspiration,
-  // technical_usage_other_generations,
-  // usage_reflection,
+  genai-usage,
 ) = {
-  validate-argument(
-    "language",
-    language,
-    possible-values: ("es", "en"),
-  )
-
-  validate-argument("usage", usage, target-type: bool)
-
-
   [= #locale.AI_USAGE_TITLE.at(language)]
 
   strong[#locale.AFFIRMATION_AI_USAGE.at(language)]
+
+  let usage = genai-usage.at("usage")
+
+  let ai-data-usage = genai-usage.at("ai-data-usage")
+  let ai-technical-usage = genai-usage.at("ai-technical-usage")
+  let ai-usage-reflection = genai-usage.at("ai-usage-reflection")
+
 
   figure(
     align(
       center,
     )[#table(
-      fill: (x, y) => if x == 0 and usage { gray } else if x == 1
-        and not usage {
+      fill: (x, y) => if x == 0 and usage { gray } else if x == 1 and not usage {
         gray
       } else { white },
       columns: (1fr, 1fr),
       align: (auto, auto),
-      [#strong[#locale.AFFIRMATION.at(language)];],
-      [#strong[#locale.NEGATION.at(language)];],
+      [#strong[#locale.AFFIRMATION.at(language)];], [#strong[#locale.NEGATION.at(language)];],
     )],
     kind: table,
   )
@@ -81,26 +63,26 @@
 
       // Define the mapping of data types to row positions
       let data_type_rows = (
-        "sensible_data_usage": 2,
-        "copyright_data_usage": 4,
-        "personal_data_usage": 6,
+        "sensible-data-usage": 2,
+        "copyright-data-usage": 4,
+        "personal-data-usage": 6,
       )
 
       // Check data usage fields
       for (field, row) in data_type_rows.pairs() {
-        let value = ai_data_usage.at(field)
+        let value = ai-data-usage.at(field)
         let target_column = value_to_column.at(value)
         if (x, y) == (target_column, row) {
           return gray
         }
       }
 
-      // Check followed_terms field (row 8)
+      // Check followed-terms field (row 8)
       if y == 8 {
-        if (x == 0 and ai_data_usage.at("followed_terms")) {
+        if (x == 0 and ai-data-usage.at("followed-terms")) {
           return gray
         }
-        if (x == 2 and not ai_data_usage.at("followed_terms")) {
+        if (x == 2 and not ai-data-usage.at("followed-terms")) {
           return gray
         }
       }
@@ -216,15 +198,33 @@
       kind: table,
     )
 
-    if ai_data_usage.at("sensible_data_usage").contains("yes") or ai_data_usage.at("copyright_data_usage").contains("yes") or ai_data_usage.at("personal_data_usage").contains("yes") [
-      #ai_data_usage.data_usage_explication
+    if (
+      ai-data-usage.at("sensible-data-usage").contains("yes")
+        or ai-data-usage.at("copyright-data-usage").contains("yes")
+        or ai-data-usage.at("personal-data-usage").contains("yes")
+    ) [
+      #ai-data-usage.data-usage-explication
     ]
-
 
 
     [== #locale.AI_P2_TITLE.at(language)]
 
+
+    for (key_interaction, interactions) in ai-technical-usage {
+      set enum(numbering: "1.", start: 1)
+      [=== #locale.AI_INTERACTION.at(key_interaction).at(language)]
+      list(
+        marker: none,
+        for interaction in interactions {
+          list.item([#interaction])
+        },
+      )
+    }
+
+
     [== #locale.AI_P3_TITLE.at(language)]
+
+    ai-usage-reflection
   } else {
     // No se ha utilizado IA
     [#locale.NEGATION_AI_USAGE.at(language)]
