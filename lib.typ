@@ -67,6 +67,8 @@
   appendixes: none,
   glossary: none,
   abbreviations: none,
+  genai_usage: false,
+  ai_data_usage: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
@@ -200,6 +202,42 @@
   )
 
   validate-argument("glossary", glossary, optional: true, target-type: content)
+
+  validate-argument("genai_usage", genai_usage, target-type: bool)
+
+  validate-argument(
+    "ai_data_usage",
+    ai_data_usage,
+    optional: true,
+    target-type: dictionary,
+    schema: (
+      sensible_data_usage: (
+        target-type: str,
+        possible-values: (
+          "yes_with_auth",
+          "no_without_auth",
+          "no_not_used",
+        ),
+      ),
+      copyright_data_usage: (
+        target-type: str,
+        possible-values: (
+          "yes_with_auth",
+          "no_without_auth",
+          "no_not_used",
+        ),
+      ),
+      personal_data_usage: (
+        target-type: str,
+        possible-values: (
+          "yes_with_auth",
+          "no_without_auth",
+          "no_not_used",
+        ),
+      ),
+      followed_terms: (target-type: bool),
+    ),
+  )
 
 
   // ============================== PAGE SETUP ============================== //

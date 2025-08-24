@@ -128,3 +128,48 @@
   "es": "Listado de abreviaciones",
   "en": "List of abbreviations",
 )
+
+
+#let AFFIRMATION = (
+  "es": "SI",
+  "en": "YES",
+)
+
+#let NEGATION = (
+  "es": "NO",
+  "en": "NO",
+)
+
+#let AI_USAGE_TITLE = (
+  "es": "Declaración de uso de IA generativa",
+  "en": "Declaration of Use of Generative AI",
+)
+
+#let AFFIRMATION_AI_USAGE = (
+  "es": "He utilizado IA generativa en este trabajo",
+  "en": "I have used Generative AI in this work",
+)
+
+#let NEGATION_AI_USAGE = (
+  "es": [El autor de esta tésis *no* ha usado ningún tipo de inteligencia
+    artificial generativa durante el desarrollo del proyecto ni durante la
+    redacción de este documento.],
+  "en": [The author of this thesis *has not* used any type of generative
+    artificial intelligence during the development of the project or during the
+    writing of this document.],
+)
+
+#let AI_P1_TITLE = (
+  "es": "Parte 1: reflexión sobre comportamiento ético y responsable",
+  "en": "Part 1: Reflection on ethical and responsible behaviour",
+)
+
+#let AI_P2_TITLE = (
+  "es": "Parte 2: declaración de uso técnico",
+  "en": "Part 2: Declaration of technical use",
+)
+
+#let AI_P3_TITLE = (
+  "es": "Parte 3: reflexión sobre utilidad",
+  "en": "Part 3: Reflection on utility",
+)
