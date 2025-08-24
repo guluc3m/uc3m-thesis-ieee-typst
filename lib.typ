@@ -37,6 +37,7 @@
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
+/// - genai-usage (dictionary, none): Information about the use of Generative AI in the thesis. Consists of `usage` (bool), `ai-data-usage` (dictionary: (sensible-data-usage: str, copyright-data-usage: str, personal-data-usage: str, followed-terms: bool, data-usage-explication: str)), `ai-technical-usage` (dictionary: `documentation`: (target-type: (array, str), `review`: (target-type: (array, str), `information_search`: (target-type: (array, str), `references`: (target-type: (array, str), `summary_references`: (target-type: (array, str), `translation`: (target-type: (array, str), `assistance-coding`: (target-type: (array, str), `generating_schemas`: (target-type: (array, str), `optimization`: (target-type: (array, str), `data_processing`: (target-type: (array, str), `idea_inspiration`: (target-type: (array, str), `other_generations`: (target-type: (array, str),), and `ai-usage-reflection` (content).
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -67,10 +68,7 @@
   appendixes: none,
   glossary: none,
   abbreviations: none,
-  genai-usage: false,
-  ai-data-usage: none,
-  ai-technical-usage: none,
-  ai-usage-reflection: none,
+  genai-usage: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
