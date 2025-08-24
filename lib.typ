@@ -243,7 +243,6 @@
       ),
       ai-technical-usage: (
         target-type: dictionary,
-        optional: true,
         schema: (
           documentation: (target-type: (array, str), optional: true),
           review: (target-type: (array, str), optional: true),
@@ -918,10 +917,13 @@
 
     appendixes
 
-    genai(
-      language,
-      genai-usage,
-    )
+    if type(genai-usage) == dictionary {
+      genai(
+        language,
+        genai-usage,
+      )
+    }
+
 
     // in-appendix.update(false)
   }
