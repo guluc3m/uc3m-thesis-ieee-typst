@@ -254,7 +254,7 @@
 
 
 #let AI_INTERACTION = (
-  "document": (
+  "documentation": (
     "es": "Documentación y redacción",
     "en": "Documentation and drafting",
   ),
