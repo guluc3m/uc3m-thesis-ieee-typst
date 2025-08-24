@@ -864,7 +864,11 @@
       // don't show numbering for headings above level 1
       numbering: (..n) => { if n.pos().len() == 1 { numbering("A.1", ..n) } },
       supplement: [#locale.APPENDIX.at(language)],
+      outlined: false, // not in outline
     )
+    // show just appendixes titles in outline
+    show heading.where(level: 1): set heading(outlined: true)
+
     counter(heading).update(0)
 
     appendixes
