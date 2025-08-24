@@ -330,10 +330,10 @@
               bottom-edge: -0.25em,
             )
           } else {
-            v(2 * page-grid)
+            v(32pt)
             text(
-              size: 2 * page-grid,
-              fill: azul-uc3m,
+              size: 32pt,
+              fill: azuluc3m,
               weight: "bold",
               counter(heading).display() + h(0.5em) + it.body,
             ) // appendix
@@ -684,6 +684,11 @@
     // only apply for contents (headings) outline
     if it.element.func() != heading { return it }
 
+    // don't show page number in outline for appendixes
+    let page-number = if (
+      it.element.supplement == [#locale.APPENDIX.at(language)]
+    ) { "" } else { it.page() }
+
     if style == "strict" {
       set block(spacing: 1.5em)
       link(
@@ -691,10 +696,9 @@
         it.indented(
           it.prefix(),
           upper(it.body())
-            + "  "
-            + box(width: 1fr, repeat([.], gap: 2pt))
-            + "  "
-            + it.page(),
+            + if page-number == "" { "" } else {
+              "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + page-number
+            },
         ),
       )
     } else if style == "clean" {
@@ -702,7 +706,7 @@
       set text(weight: "semibold", fill: azuluc3m)
       link(
         it.element.location(), // make entry linkable
-        it.indented(it.prefix(), it.body() + box(width: 1fr) + it.page()),
+        it.indented(it.prefix(), it.body() + box(width: 1fr) + page-number),
       )
     } else if style == "fancy" {
       set block(above: 1.3em)
@@ -721,7 +725,7 @@
               }
             } else {
               none
-            } #it.body() #box(width: 1fr) #it.page()
+            } #it.body() #box(width: 1fr) #page-number
           ],
         ),
       )
