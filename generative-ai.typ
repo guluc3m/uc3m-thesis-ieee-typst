@@ -11,11 +11,11 @@
 ///
 /// - language (str): The language of the project (e.g. "en", "es").
 /// - usage (bool): Whether AI is used in the project.
-/// - ai-data-usage (dictionary): AI data usage declaration. // todo add more info here
+/// - data-usage (dictionary): AI data usage declaration. // todo add more info here
 /// todo: refactor this to 3 dicts
-/// - sensible-data-usage (str): sensible data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - copyright-data-usage (str): copyright data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - personal-data-usage (str): personal data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - sensible (str): sensible data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - copyright (str): copyright data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
+/// - personal (str): personal data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
 /// - followed-terms (str): followed terms (`yes_with_auth`, `no_without_auth`, `no_not_used`)
 /// - followed-terms (bool, str): Whether the followed terms are accepted
 /// - technical_usage_documentation (array): array of the dictionary format: tool (str), for (array) str, example (str).
@@ -30,11 +30,11 @@
 
   let usage = genai-usage.at("usage")
 
-  let ai-data-usage = genai-usage.at("ai-data-usage")
-  let ai-technical-usage = genai-usage.at("ai-technical-usage")
-  let ai-usage-reflection = genai-usage.at("ai-usage-reflection")
+  let data-usage = genai-usage.at("data-usage")
+  let technical-usage = genai-usage.at("technical-usage")
+  let usage-reflection = genai-usage.at("usage-reflection")
 
-
+  show figure: set block(breakable: true)
   figure(
     align(
       center,
@@ -63,14 +63,14 @@
 
       // Define the mapping of data types to row positions
       let data_type_rows = (
-        "sensible-data-usage": 2,
-        "copyright-data-usage": 4,
-        "personal-data-usage": 6,
+        "sensible": 2,
+        "copyright": 4,
+        "personal": 6,
       )
 
       // Check data usage fields
       for (field, row) in data_type_rows.pairs() {
-        let value = ai-data-usage.at(field)
+        let value = data-usage.at(field)
         let target_column = value_to_column.at(value)
         if (x, y) == (target_column, row) {
           return gray
@@ -79,10 +79,10 @@
 
       // Check followed-terms field (row 8)
       if y == 8 {
-        if (x == 0 and ai-data-usage.at("followed-terms")) {
+        if (x == 0 and data-usage.at("followed-terms")) {
           return gray
         }
-        if (x == 2 and not ai-data-usage.at("followed-terms")) {
+        if (x == 2 and not data-usage.at("followed-terms")) {
           return gray
         }
       }
@@ -199,32 +199,27 @@
     )
 
     if (
-      ai-data-usage.at("sensible-data-usage").contains("yes")
-        or ai-data-usage.at("copyright-data-usage").contains("yes")
-        or ai-data-usage.at("personal-data-usage").contains("yes")
+      data-usage.at("sensible").contains("yes")
+        or data-usage.at("copyright").contains("yes")
+        or data-usage.at("personal").contains("yes")
     ) [
-      #ai-data-usage.data-usage-explication
+      #data-usage.data-usage-explication
     ]
 
 
     [== #locale.AI_P2_TITLE.at(language)]
 
 
-    for (key_interaction, interactions) in ai-technical-usage {
+    for (key_interaction, interactions) in technical-usage {
       set enum(numbering: "1.", start: 1)
       [=== #locale.AI_INTERACTION.at(key_interaction).at(language)]
-      list(
-        marker: none,
-        for interaction in interactions {
-          list.item([#interaction])
-        },
-      )
+      [#interactions]
     }
 
 
     [== #locale.AI_P3_TITLE.at(language)]
 
-    ai-usage-reflection
+    usage-reflection
   } else {
     // No se ha utilizado IA
     [#locale.NEGATION_AI_USAGE.at(language)]

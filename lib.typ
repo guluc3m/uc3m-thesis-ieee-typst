@@ -37,7 +37,7 @@
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
-/// - genai-usage (dictionary, none): Information about the use of Generative AI in the thesis. Consists of `usage` (bool), `ai-data-usage` (dictionary: (sensible-data-usage: str, copyright-data-usage: str, personal-data-usage: str, followed-terms: bool, data-usage-explication: str)), `ai-technical-usage` (dictionary: `documentation`: (target-type: (array, str), `review`: (target-type: (array, str), `information_search`: (target-type: (array, str), `references`: (target-type: (array, str), `summary_references`: (target-type: (array, str), `translation`: (target-type: (array, str), `assistance-coding`: (target-type: (array, str), `generating_schemas`: (target-type: (array, str), `optimization`: (target-type: (array, str), `data_processing`: (target-type: (array, str), `idea_inspiration`: (target-type: (array, str), `other_generations`: (target-type: (array, str),), and `ai-usage-reflection` (content).
+/// - genai-usage (dictionary, none): Information about the use of Generative AI in the thesis. Consists of `usage` (bool), `data-usage` (dictionary: (sensible: str, copyright: str, personal: str, followed-terms: bool, data-usage-explication: str)), `technical-usage` (dictionary: `documentation`: (target-type: (array, str), `review`: (target-type: (array, str), `information_search`: (target-type: (array, str), `references`: (target-type: (array, str), `summary_references`: (target-type: (array, str), `translation`: (target-type: (array, str), `assistance-coding`: (target-type: (array, str), `generating_schemas`: (target-type: (array, str), `optimization`: (target-type: (array, str), `data_processing`: (target-type: (array, str), `idea_inspiration`: (target-type: (array, str), `other_generations`: (target-type: (array, str),), and `usage-reflection` (content).
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -210,10 +210,10 @@
     optional: true,
     schema: (
       usage: (target-type: bool),
-      ai-data-usage: (
+      data-usage: (
         target-type: dictionary,
         schema: (
-          sensible-data-usage: (
+          sensible: (
             target-type: str,
             possible-values: (
               "yes_with_auth",
@@ -221,7 +221,7 @@
               "no_not_used",
             ),
           ),
-          copyright-data-usage: (
+          copyright: (
             target-type: str,
             possible-values: (
               "yes_with_auth",
@@ -229,7 +229,7 @@
               "no_not_used",
             ),
           ),
-          personal-data-usage: (
+          personal: (
             target-type: str,
             possible-values: (
               "yes_with_auth",
@@ -241,24 +241,24 @@
           data-usage-explication: (target-type: str, optional: true),
         ),
       ),
-      ai-technical-usage: (
+      technical-usage: (
         target-type: dictionary,
         schema: (
-          documentation: (target-type: (array, str), optional: true),
-          review: (target-type: (array, str), optional: true),
-          information_search: (target-type: (array, str), optional: true),
-          references: (target-type: (array, str), optional: true),
-          summary_references: (target-type: (array, str), optional: true),
-          translation: (target-type: (array, str), optional: true),
-          assistance-coding: (target-type: (array, str), optional: true),
-          generating_schemas: (target-type: (array, str), optional: true),
-          optimization: (target-type: (array, str), optional: true),
-          data_processing: (target-type: (array, str), optional: true),
-          idea_inspiration: (target-type: (array, str), optional: true),
-          other_generations: (target-type: (array, str), optional: true),
+          documentation: (target-type: content, optional: true),
+          review: (target-type: content, optional: true),
+          information_search: (target-type: content, optional: true),
+          references: (target-type: content, optional: true),
+          summary_references: (target-type: content, optional: true),
+          translation: (target-type: content, optional: true),
+          assistance-coding: (target-type: content, optional: true),
+          generating_schemas: (target-type: content, optional: true),
+          optimization: (target-type: content, optional: true),
+          data_processing: (target-type: content, optional: true),
+          idea_inspiration: (target-type: content, optional: true),
+          other_generations: (target-type: content, optional: true),
         ),
       ),
-      ai-usage-reflection: (target-type: content),
+      usage-reflection: (target-type: content),
     ),
   )
 
