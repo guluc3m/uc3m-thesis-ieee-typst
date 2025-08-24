@@ -46,12 +46,14 @@
     align(
       center,
     )[#table(
-      fill: (x, y) => if x == 0 and usage { gray } else if x == 1 and not usage {
+      fill: (x, y) => if x == 0 and usage { gray } else if x == 1
+        and not usage {
         gray
       } else { white },
       columns: (1fr, 1fr),
       align: (auto, auto),
-      [#strong[#locale.AFFIRMATION.at(language)];], [#strong[#locale.NEGATION.at(language)];],
+      [#strong[#locale.AFFIRMATION.at(language)];],
+      [#strong[#locale.NEGATION.at(language)];],
     )],
     kind: table,
   )
@@ -109,22 +111,21 @@
         table.cell(
           colspan: 4,
         )[
-          + In my interaction with Generative AI tools, I have submitted
-            #strong[sensitive data] with the consent of the data subjects.
+          + #locale.AI_REFLECTION.at("q1").at(language)
 
         ],
         [#quote(block: true)[
-            YES, I have used this data with permission
+            #locale.AI_REFLECTION.at("a1-1").at(language)
           ]
 
         ],
         table.cell(colspan: 2)[#quote(block: true)[
-            NO, I have used this data without authorisation
+            #locale.AI_REFLECTION.at("a1-2").at(language)
           ]
 
         ],
         [#quote(block: true)[
-            NO, I have not used sensitive data
+            #locale.AI_REFLECTION.at("a1-3").at(language)
           ]
 
         ],
@@ -132,24 +133,22 @@
           colspan: 4,
         )[#block[
             #set enum(numbering: "1.", start: 2)
-            + In my interaction with Generative AI tools, I have submitted
-              #strong[copyrighted materials] with the permission of those
-              concerned.
+            + #locale.AI_REFLECTION.at("q2").at(language)
           ]
 
         ],
         [#quote(block: true)[
-            YES, I have used these materials with permission
+            #locale.AI_REFLECTION.at("a2-1").at(language)
           ]
 
         ],
         table.cell(colspan: 2)[#quote(block: true)[
-            NO, I have used these materials without permission
+            #locale.AI_REFLECTION.at("a2-2").at(language)
           ]
 
         ],
         [#quote(block: true)[
-            NO, I have not used protected materials
+            #locale.AI_REFLECTION.at("a2-3").at(language)
           ]
 
         ],
@@ -157,23 +156,22 @@
           colspan: 4,
         )[#block[
             #set enum(numbering: "1.", start: 3)
-            + In my interaction with Generative AI tools, I have submitted
-              #strong[personal data] with the consent of the data subjects.
+            + #locale.AI_REFLECTION.at("q3").at(language)
           ]
 
         ],
         [#quote(block: true)[
-            YES, I have used this data with permission
+            #locale.AI_REFLECTION.at("a3-1").at(language)
           ]
 
         ],
         table.cell(colspan: 2)[#quote(block: true)[
-            NO, I have used this data without authorisation
+            #locale.AI_REFLECTION.at("a3-2").at(language)
           ]
 
         ],
         [#quote(block: true)[
-            NO, I have not used personal data
+            #locale.AI_REFLECTION.at("a3-3").at(language)
           ]
 
         ],
@@ -182,22 +180,17 @@
           colspan: 4,
         )[#block[
             #set enum(numbering: "1.", start: 4)
-            + My use of the Generative AI tool has #strong[respected its terms
-                of use];, as well as the essential ethical principles, not being
-              maliciously oriented to obtain an inappropriate result for the
-              work presented, that is to say, one that produces an impression or
-              knowledge contrary to the reality of the results obtained, that
-              supplants my own work or that could harm people.
+            + #locale.AI_REFLECTION.at("q4").at(language)
           ]
 
         ],
         table.cell(align: left, colspan: 2)[#quote(block: true)[
-            YES
+            #locale.AFFIRMATION.at(language)
           ]
 
         ],
         table.cell(align: left, colspan: 2)[#quote(block: true)[
-            NO
+            #locale.NEGATION.at(language)
           ]
 
         ],

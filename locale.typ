@@ -18,12 +18,15 @@
 
 #let CC-LICENSE = (
   "es": [
-    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
-    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
       International]
   ],
   "en": [
-    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
+    This work is licensed under #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
       International]
   ],
 )
@@ -170,6 +173,85 @@
   "es": "Reflexión sobre utilidad",
   "en": "Reflection on utility",
 )
+
+#let AI_REFLECTION = (
+  "question": ("es": "Pregunta", "en": "Question"),
+  "q1": (
+    "es": [En mi interacción con herramientas de IA Generativa he remitido
+      #strong[datos de carácter sensible] con la debida autorización de los
+      interesados.],
+    "en": [In my interaction with Generative AI tools, I have submitted
+      #strong[sensitive data] with the consent of the data subjects.],
+  ),
+  "a1-1": (
+    "es": [SÍ, he usado estos datos con autorización],
+    "en": [YES, I have used this data with permission],
+  ),
+  "a1-2": (
+    "es": [NO, he usado estos datos sin autorización],
+    "en": [NO, I have used this data without authorisation],
+  ),
+  "a1-3": (
+    "es": [NO, no he usado datos de carácter sensible],
+    "en": [NO, I have not used sensitive data],
+  ),
+  "q2": (
+    "es": [
+      En mi interacción con herramientas de IA Generativa he remitido
+      #strong[materiales protegidos por derechos de autor] con la debida
+      autorización de los interesados.
+    ],
+    "en": [In my interaction with Generative AI tools, I have submitted
+      #strong[copyrighted materials] with the permission of those concerned.],
+  ),
+  "a2-1": (
+    "es": [SÍ, he usado estos materiales con autorización],
+    "en": [YES, I have used these materials with permission.],
+  ),
+  "a2-2": (
+    "es": [NO, he usado estos materiales sin autorización],
+    "en": [NO, I have used these materials without permission.],
+  ),
+  "a2-3": (
+    "es": [NO, no he usado materiales protegidos],
+    "en": [NO, I have not used protected materials.],
+  ),
+  "q3": (
+    "es": [En mi interacción con herramientas de IA Generativa he remitido
+      #strong[datos de carácter personal] con la debida autorización de los
+      interesados],
+    "en": [In my interaction with Generative AI tools, I have submitted
+      #strong[personal data] with the consent of the data subjects.],
+  ),
+  "a3-1": (
+    "es": [SÍ, he usado estos datos con autorización],
+    "en": [YES, I have used this data with permission.],
+  ),
+  "a3-2": (
+    "es": [NO, he usado estos datos sin autorización],
+    "en": [NO, I have used this data without authorisation.],
+  ),
+  "a3-3": (
+    "es": [NO, no he usado datos de carácter personal],
+    "en": [NO, I have not used personal data.],
+  ),
+  "q4": (
+    "es": [
+      Mi utilización de la herramienta de IA Generativa ha #strong[respetado sus
+        términos de uso], así como los principios éticos esenciales, no
+      orientándola de manera maliciosa a obtener un resultado inapropiado para
+      el trabajo presentado, es decir, que produzca una impresión o conocimiento
+      contrario a la realidad de los resultados obtenidos, que suplante mi
+      propio trabajo o que pueda resultar en un perjuicio para las personas
+    ],
+    "en": [My use of the Generative AI tool has #strong[respected its terms of
+        use];, as well as the essential ethical principles, not being
+      maliciously oriented to obtain an result for the work presented, that is
+      to say, one that an impression or knowledge contrary to the reality of the
+      obtained, that supplants my own work or that could harm people.],
+  ),
+)
+
 
 #let AI_INTERACTION = (
   "document": (
