@@ -30,6 +30,13 @@
 
   let usage = genai-usage.at("usage")
 
+  let ai-data-usage = genai-usage.at("ai-data-usage")
+  let ai-technical-usage = genai-usage.at("ai-technical-usage")
+  let ai-usage-reflection = genai-usage.at("ai-usage-reflection")
+
+
+  let usage = genai-usage.at("usage")
+
   let data-usage = genai-usage.at("data-usage")
   let technical-usage = genai-usage.at("technical-usage")
   let usage-reflection = genai-usage.at("usage-reflection")

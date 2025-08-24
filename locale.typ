@@ -19,6 +19,7 @@
 #let CC-LICENSE = (
   "es": [
     Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
       International]
   ],
   "en": [
@@ -171,7 +172,7 @@
 )
 
 #let AI_INTERACTION = (
-  "documentation": (
+  "document": (
     "es": "Documentación y redacción",
     "en": "Documentation and drafting",
   ),

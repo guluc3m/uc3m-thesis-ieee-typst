@@ -580,7 +580,8 @@
       }
 
       if (
-        (style == "clean" and not in-appendix.get()) or (style == "fancy" and in-body.get() and not is-chapter-start())
+        (style == "clean" and not in-appendix.get())
+          or (style == "fancy" and in-body.get() and not is-chapter-start())
       ) {
         // show header
         set text(accent-color)
@@ -755,7 +756,10 @@
         it.element.location(), // make entry linkable
         it.indented(
           it.prefix(),
-          upper(it.body()) + "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + it.page(),
+          upper(it.body())
+            + if page-number == "" { "" } else {
+              "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + page-number
+            },
         ),
       )
     } else if style == "clean" {
