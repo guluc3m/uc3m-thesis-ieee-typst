@@ -34,13 +34,6 @@
   let technical-usage = genai-usage.at("technical-usage")
   let usage-reflection = genai-usage.at("usage-reflection")
 
-
-  let usage = genai-usage.at("usage")
-
-  let data-usage = genai-usage.at("data-usage")
-  let technical-usage = genai-usage.at("technical-usage")
-  let usage-reflection = genai-usage.at("usage-reflection")
-
   show figure: set block(breakable: true)
   figure(
     align(
