@@ -5,14 +5,14 @@
 #import "arguments.typ": validate-argument
 
 
-/// Prints the declaration of use of AI in the project.
+/// UC3M template for declaration of use of AI in the project.
 ///
 /// - language (str): The language of the project (e.g. "en", "es").
 /// - usage (bool): Whether AI is used in the project.
 /// - data-usage (dictionary): AI data usage declaration.
 /// - technical-usage (dictionary): Technical usage of AI.
 /// -> content
-#let genai(
+#let genai-template(
   language,
   usage,
   data-usage,
@@ -20,23 +20,12 @@
   usage-reflection,
 ) = {
   /* SETUP */
-  // for headings of level 2, show "Part N"
+
+  // Remove first number of heading
   set heading(
-    numbering: (..n) => {
-      if n.pos().len() == 1 { numbering("A.1", ..n) } else {
-        numbering("1.", ..n.pos().slice(1)) // remove the first one
-      }
-    },
+    numbering: (..n) => { numbering("1.", ..n.pos().slice(1)) },
     supplement: [#locale.PART.at(language)], // this doesn't work for some reason...
-    outlined: false, // not in outline
   )
-
-  // this also doesn't work
-  show heading.where(level: 1): set heading(
-    supplement: [#locale.APPENDIX.at(language)],
-  )
-
-  [= #locale.AI-USAGE.title.at(language)]
 
 
   /* USAGE */

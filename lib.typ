@@ -4,7 +4,7 @@
 #import "locale.typ" as locale
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
-#import "generative-ai.typ": genai
+#import "generative-ai.typ": genai-template
 
 
 /// Main configuration function.
@@ -37,7 +37,7 @@
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
-/// - genai-declaration (dictionary, none): Information about the use of Generative AI in the thesis. See the example for more details.
+/// - genai-declaration (dictionary, content): Information about the use of Generative AI in the thesis. You can suply your own `content`, or use the university's template, by suplying a `dictionary`. See the example for more details.
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -206,7 +206,7 @@
   validate-argument(
     "genai-declaration",
     genai-declaration,
-    target-type: dictionary,
+    target-type: (content, dictionary),
     schema: (
       usage: (target-type: bool),
       data-usage: (
@@ -939,13 +939,21 @@
     appendixes
   }
 
-  genai(
-    language,
-    genai-declaration.at("usage"),
-    genai-declaration.at("data-usage"),
-    genai-declaration.at("technical-usage"),
-    genai-declaration.at("usage-reflection"),
-  )
+  /* generative AI declaration */
+  [= #locale.AI-USAGE.title.at(language)]
+
+  if type(genai-declaration) == content {
+    // custom
+    genai-declaration
+  } else {
+    genai-template(
+      language,
+      genai-declaration.at("usage"),
+      genai-declaration.at("data-usage"),
+      genai-declaration.at("technical-usage"),
+      genai-declaration.at("usage-reflection"),
+    )
+  }
 
 
   // in-appendix.update(false)
