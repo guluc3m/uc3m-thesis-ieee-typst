@@ -41,24 +41,20 @@
 
   /* USAGE */
 
-  pad(top: -24pt)[
-    #strong[#locale.AI-USAGE.affirmation.at(language)]
-  ]
+  [#strong[#locale.AI-USAGE.affirmation.at(language)]]
 
   table(
-    fill: (x, y) => if x == 0 and usage { gray } else if x == 1 and not usage {
-      gray
-    } else { white },
+    fill: (x, y) => if x != int(usage) { gray },
     columns: 2,
-    align: (auto, auto),
+    align: auto,
     [#strong[#locale.AFFIRMATION.at(language)];],
     [#strong[#locale.NEGATION.at(language)];],
   )
 
 
   if not usage {
-    // No se ha utilizado IA
-    return [#locale.AI-USAGE.negation.at(language)]
+    [#locale.AI-USAGE.negation.at(language)]
+    return
   }
 
 
@@ -70,7 +66,9 @@
     columns: (2fr, 1fr, 1fr, 2fr),
     align: center,
     inset: 0.8em,
-    table.cell(colspan: 4)[#strong[Question];],
+    table.cell(colspan: 4, inset: 0.6em)[*#locale.QUESTION.at(language)*],
+
+    /* general question */
     ..for (index, (question-key, question-data)) in locale
       .AI-DATA-USAGE
       .questions
@@ -100,28 +98,23 @@
       )
     },
 
-    // terms of use
-    table.cell(
-      colspan: 4,
-    )[
+    /* terms of use */
+    table.cell(colspan: 4)[
       #set enum(start: locale.AI-DATA-USAGE.questions.len() + 1)
       + #locale.AI-DATA-USAGE.followed-terms.at(language)
     ],
 
     table.cell(
       colspan: 2,
+      inset: 0.6em,
       fill: if data-usage.followed-terms { gray },
-      inset: 5pt,
-    )[
-      #locale.AFFIRMATION.at(language)
-    ],
+    )[#locale.AFFIRMATION.at(language)],
+
     table.cell(
       colspan: 2,
+      inset: 0.6em,
       fill: if not data-usage.followed-terms { gray },
-      inset: 5pt,
-    )[
-      #locale.NEGATION.at(language)
-    ],
+    )[#locale.NEGATION.at(language)],
   )
 
   if (

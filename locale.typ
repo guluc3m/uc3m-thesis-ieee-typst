@@ -256,8 +256,7 @@
       orientándola de manera maliciosa a obtener un resultado inapropiado para
       el trabajo presentado, es decir, que produzca una impresión o conocimiento
       contrario a la realidad de los resultados obtenidos, que suplante mi
-      propio trabajo o que pueda resultar en un perjuicio para las personas
-    ],
+      propio trabajo o que pueda resultar en un perjuicio para las personas.],
     en: [My use of the Generative AI tool has *respected its terms of use*, as
       well as the essential ethical principles, not being maliciously oriented
       to obtain an result for the work presented, that is to say, one that an

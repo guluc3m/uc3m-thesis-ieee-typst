@@ -57,8 +57,17 @@
       // *using the prompt* ...
       //            (write the request made to the IAG)
       // *having as interaction* ...
-      //            (describe what interaction you made with the IAG after the prompt's response)
-      // Example: I declare that I have made use of the Generative AI system Chat GPT 3.5 to search for information using the prompt: "Tell me a concrete example that illustrates the application of the urban planning proposal of the 15-minute City in Spain", having as interaction the proposition of the concrete example of the Chamartín district that has been reflected in the report.
+      //            (describe what interaction you made with the IAG after the
+      //            prompt's response)
+      //
+      // Comment out the ones that don't apply.
+      //
+      // Example: I declare that I have made use of the Generative AI system
+      // Chat GPT 3.5 to search for information using the prompt: "Tell me a
+      // concrete example that illustrates the application of the urban planning
+      // proposal of the 15-minute City in Spain", having as interaction the
+      // proposition of the concrete example of the Chamartín district that has
+      // been reflected in the report.
       documentation: [_[Add an example] For example: I have asked for a list of
         alternatives to address the problem stated at the beginning of the
         paper._],
