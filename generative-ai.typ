@@ -66,10 +66,10 @@
   [== #locale.AI-DATA-USAGE.title.at(language)]
 
   table(
-    columns: (1fr, 1fr, 1fr),
+    columns: (2fr, 1fr, 1fr, 2fr),
     align: center,
     inset: 0.8em,
-    table.cell(colspan: 3)[#strong[Question];],
+    table.cell(colspan: 4)[#strong[Question];],
     ..for (index, (question-key, question-data)) in locale
       .AI-DATA-USAGE
       .questions
@@ -78,15 +78,19 @@
       // we use spreading, creating an array within the loop
       // see https://forum.typst.app/t/how-come-this-does-not-generate-a-grid-as-expected/1660/2
       (
-        // prompt
-        table.cell(colspan: 3)[
+        // prompt spanning all columns
+        table.cell(colspan: 4)[
           #set enum(start: index + 1) // correctly set enum number
           + #question-data.prompt.at(language)
         ],
-        // answer
-        ..for (answer-key, answer-text) in question-data.answers.pairs() {
+        // Answer layout: Answer1 (2fr), Answer2 (1fr+1fr with colspan), Answer3 (2fr)
+        ..for (i, (answer-key, answer-text)) in question-data
+          .answers
+          .pairs()
+          .enumerate() {
           (
             table.cell(
+              colspan: if i == 1 { 2 } else { 1 }, // middle answer spans 2 columns
               fill: if data-usage.at(question-key) == answer-key { gray },
             )[#set par(justify: false)
               #answer-text.at(language)],
@@ -97,29 +101,25 @@
 
     // terms of use
     table.cell(
-      colspan: 3,
+      colspan: 4,
     )[
       #set enum(start: locale.AI-DATA-USAGE.questions.len() + 1)
       + #locale.AI-DATA-USAGE.followed-terms.at(language)
     ],
 
-    table.cell(colspan: 3, inset: 0pt)[
-      // instead of using 4 columns in the table (`columns: (2fr, 1fr, 1fr,
-      // 2fr)`), so we could divide in three and two, I opted to use a full row
-      // and divide using a grid.
-      // This is because I couldn't get the other way to work, for some reason.
-      #grid(
-        columns: (1fr, 1fr),
-        gutter: 0pt,
-        inset: 5pt,
-        stroke: black,
-        fill: (x, _y) => {
-          if x == (int(data-usage.followed-terms)) { gray }
-        },
-        align: center,
-        rows: 1,
-        [ #locale.AFFIRMATION.at(language) ], [ #locale.NEGATION.at(language) ],
-      )
+    table.cell(
+      colspan: 2,
+      fill: if data-usage.followed-terms { gray },
+      inset: 5pt,
+    )[
+      #locale.AFFIRMATION.at(language)
+    ],
+    table.cell(
+      colspan: 2,
+      fill: if not data-usage.followed-terms { gray },
+      inset: 5pt,
+    )[
+      #locale.NEGATION.at(language)
     ],
   )
 
