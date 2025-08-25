@@ -36,13 +36,14 @@
     supplement: [#locale.APPENDIX.at(language)],
   )
 
-
   [= #locale.AI-USAGE.title.at(language)]
 
 
   /* USAGE */
 
-  strong[#locale.AI-USAGE.affirmation.at(language)]
+  pad(top: -24pt)[
+    #strong[#locale.AI-USAGE.affirmation.at(language)]
+  ]
 
   table(
     fill: (x, y) => if x == 0 and usage { gray } else if x == 1 and not usage {
