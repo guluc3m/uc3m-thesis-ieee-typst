@@ -803,7 +803,11 @@
       it.element.location(), // make entry linkable
       it.indented(
         it.prefix(),
-        it.body() + "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + it.page(),
+        it.body()
+          + "  "
+          + box(width: 1fr, repeat([.], gap: 2pt))
+          + "  "
+          + it.page(),
       ),
     )
   }
