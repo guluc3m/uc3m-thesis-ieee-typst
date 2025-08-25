@@ -130,6 +130,7 @@
           "min-len",
           "max-len",
           "schema",
+          "possible-values",
         ).contains(k),
         message: "Invalid key '" + k + "' for " + "'" + key + "' config schema",
       )
@@ -177,34 +178,35 @@
 
     // check enum values
     if (
-      keys.contains("possible-values")
+      config.keys().contains("possible-values")
         and config.possible-values.len() > 0
-        and not config.possible-values.contains(value)
+        and not config.possible-values.contains(value.at(key))
+        and not (optional and value.at(key, default: none) == none)
     ) {
       return (
         false,
         "Invalid "
-          + name
+          + key
           + " "
-          + format-value(value)
+          + format-value(value.at(key))
           + ". Possible values are: "
-          + possible-values.map(format-value).join(", ")
+          + config.possible-values.map(format-value).join(", ")
           + ".",
       )
     }
 
     // check array lenght
     if (
-      keys.contains("target-type") and target-type == array
+      config.keys().contains("target-type") and config.target-type == array
     ) {
       if (
-        config.at("min-len", default = none) != none
-          and value.len() >= config.min-len
+        config.at("min-len", default: none) != none
+          and value.at(key).len() < config.min-len
       ) {
         return (
           false,
           "Size of '"
-            + name
+            + key
             + "' must be bigger or equal to "
             + str(config.min-len)
             + ".",
@@ -213,13 +215,13 @@
 
 
       if (
-        config.at("max-len", default = none) != none
-          and value.len() >= config.max-len
+        config.at("max-len", default: none) != none
+          and value.at(key).len() > config.max-len
       ) {
         return (
           false,
           "Size of '"
-            + name
+            + key
             + "' must be smaller or equal to "
             + str(config.max-len)
             + ".",
