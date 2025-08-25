@@ -1,222 +1,161 @@
+//! Declaration of use of AI in the project
 
 #import "locale.typ" as locale
 #import "utils.typ": newpage
 #import "arguments.typ": validate-argument
 
 
-
-// Set the declaration of use of AI in the project
-
-/// Prints the declaration of use of AI in the project
+/// Prints the declaration of use of AI in the project.
 ///
 /// - language (str): The language of the project (e.g. "en", "es").
 /// - usage (bool): Whether AI is used in the project.
-/// - data-usage (dictionary): AI data usage declaration. // todo add more info here
-/// todo: refactor this to 3 dicts
-/// - sensible (str): sensible data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - copyright (str): copyright data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - personal (str): personal data usage (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - followed-terms (str): followed terms (`yes_with_auth`, `no_without_auth`, `no_not_used`)
-/// - followed-terms (bool, str): Whether the followed terms are accepted
-/// - technical_usage_documentation (array): array of the dictionary format: tool (str), for (array) str, example (str).
-
+/// - data-usage (dictionary): AI data usage declaration.
+/// - technical-usage (dictionary): Technical usage of AI.
+/// -> content
 #let genai(
   language,
-  genai-usage,
+  usage,
+  data-usage,
+  technical-usage,
+  usage-reflection,
 ) = {
-  [= #locale.AI_USAGE_TITLE.at(language)]
-
-  strong[#locale.AFFIRMATION_AI_USAGE.at(language)]
-
-  let usage = genai-usage.at("usage")
-
-  let data-usage = genai-usage.at("data-usage")
-  let technical-usage = genai-usage.at("technical-usage")
-  let usage-reflection = genai-usage.at("usage-reflection")
-
-  show figure: set block(breakable: true)
-  figure(
-    align(
-      center,
-    )[#table(
-      fill: (x, y) => if x == 0 and usage { gray } else if x == 1
-        and not usage {
-        gray
-      } else { white },
-      columns: (1fr, 1fr),
-      align: (auto, auto),
-      [#strong[#locale.AFFIRMATION.at(language)];],
-      [#strong[#locale.NEGATION.at(language)];],
-    )],
-    kind: table,
+  /* SETUP */
+  // for headings of level 2, show "Part N"
+  set heading(
+    numbering: (..n) => {
+      if n.pos().len() == 1 { numbering("A.1", ..n) } else {
+        numbering("1.", ..n.pos().slice(1)) // remove the first one
+      }
+    },
+    supplement: [#locale.PART.at(language)], // this doesn't work for some reason...
+    outlined: false, // not in outline
   )
 
-  if usage {
-    [== #locale.AI_P1_TITLE.at(language)]
+  // this also doesn't work
+  show heading.where(level: 1): set heading(
+    supplement: [#locale.APPENDIX.at(language)],
+  )
 
-    // Helper function to determine table fill color
-    let get_table_fill(x, y) = {
-      // Define the mapping of data usage values to column positions
-      let value_to_column = (
-        "yes_with_auth": 0,
-        "no_without_auth": 1,
-        "no_not_used": 3,
+
+  [= #locale.AI-USAGE.title.at(language)]
+
+
+  /* USAGE */
+
+  strong[#locale.AI-USAGE.affirmation.at(language)]
+
+  table(
+    fill: (x, y) => if x == 0 and usage { gray } else if x == 1 and not usage {
+      gray
+    } else { white },
+    columns: 2,
+    align: (auto, auto),
+    [#strong[#locale.AFFIRMATION.at(language)];],
+    [#strong[#locale.NEGATION.at(language)];],
+  )
+
+
+  if not usage {
+    // No se ha utilizado IA
+    return [#locale.AI-USAGE.negation.at(language)]
+  }
+
+
+  /* DATA USAGE */
+
+  [== #locale.AI-DATA-USAGE.title.at(language)]
+
+  table(
+    columns: (1fr, 1fr, 1fr),
+    align: center,
+    inset: 0.8em,
+    table.cell(colspan: 3)[#strong[Question];],
+    ..for (index, (question-key, question-data)) in locale
+      .AI-DATA-USAGE
+      .questions
+      .pairs()
+      .enumerate() {
+      // we use spreading, creating an array within the loop
+      // see https://forum.typst.app/t/how-come-this-does-not-generate-a-grid-as-expected/1660/2
+      (
+        // prompt
+        table.cell(colspan: 3)[
+          #set enum(start: index + 1) // correctly set enum number
+          + #question-data.prompt.at(language)
+        ],
+        // answer
+        ..for (answer-key, answer-text) in question-data.answers.pairs() {
+          (
+            table.cell(
+              fill: if data-usage.at(question-key) == answer-key { gray },
+            )[#set par(justify: false)
+              #answer-text.at(language)],
+          )
+        },
       )
+    },
 
-      // Define the mapping of data types to row positions
-      let data_type_rows = (
-        "sensible": 2,
-        "copyright": 4,
-        "personal": 6,
+    // terms of use
+    table.cell(
+      colspan: 3,
+    )[
+      #set enum(start: locale.AI-DATA-USAGE.questions.len() + 1)
+      + #locale.AI-DATA-USAGE.followed-terms.at(language)
+    ],
+
+    table.cell(colspan: 3, inset: 0pt)[
+      // instead of using 4 columns in the table (`columns: (2fr, 1fr, 1fr,
+      // 2fr)`), so we could divide in three and two, I opted to use a full row
+      // and divide using a grid.
+      // This is because I couldn't get the other way to work, for some reason.
+      #grid(
+        columns: (1fr, 1fr),
+        gutter: 0pt,
+        inset: 5pt,
+        stroke: black,
+        fill: (x, _y) => {
+          if x == (int(data-usage.followed-terms)) { gray }
+        },
+        align: center,
+        rows: 1,
+        [ #locale.AFFIRMATION.at(language) ], [ #locale.NEGATION.at(language) ],
       )
+    ],
+  )
 
-      // Check data usage fields
-      for (field, row) in data_type_rows.pairs() {
-        let value = data-usage.at(field)
-        let target_column = value_to_column.at(value)
-        if (x, y) == (target_column, row) {
-          return gray
-        }
-      }
+  if (
+    data-usage.at("sensitive") == "without-authorization"
+      or data-usage.at("copyright") == "without-authorization"
+      or data-usage.at("personal") == "without-authorization"
+  ) {
+    assert(
+      data-usage.at("explanation", default: none) != none,
+      message: "Missing key 'explanation' in 'genai-declaration'. If any of the data usage was done without authorization, you must provide an explanation.",
+    )
+    data-usage.explanation
+  }
 
-      // Check followed-terms field (row 8)
-      if y == 8 {
-        if (x == 0 and data-usage.at("followed-terms")) {
-          return gray
-        }
-        if (x == 2 and not data-usage.at("followed-terms")) {
-          return gray
-        }
-      }
 
-      return white
-    }
+  /* TECHNICAL USAGE */
 
-    set table(fill: get_table_fill)
+  [== #locale.AI-TECHNICAL-USAGE.title.at(language)]
 
-    figure(
-      align(
-        center,
-      )[#table(
-        columns: (33.33%, 16.5%, 14.33%, 35.83%),
-        align: (auto, auto, auto, auto),
-        table.cell(colspan: 4)[#strong[Question];],
-        table.cell(
-          colspan: 4,
-        )[
-          + #locale.AI_REFLECTION.at("q1").at(language)
+  show heading.where(level: 3): set heading(numbering: none) // remove numbering
 
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a1-1").at(language)
-          ]
-
-        ],
-        table.cell(colspan: 2)[#quote(block: true)[
-            #locale.AI_REFLECTION.at("a1-2").at(language)
-          ]
-
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a1-3").at(language)
-          ]
-
-        ],
-        table.cell(
-          colspan: 4,
-        )[#block[
-            #set enum(numbering: "1.", start: 2)
-            + #locale.AI_REFLECTION.at("q2").at(language)
-          ]
-
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a2-1").at(language)
-          ]
-
-        ],
-        table.cell(colspan: 2)[#quote(block: true)[
-            #locale.AI_REFLECTION.at("a2-2").at(language)
-          ]
-
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a2-3").at(language)
-          ]
-
-        ],
-        table.cell(
-          colspan: 4,
-        )[#block[
-            #set enum(numbering: "1.", start: 3)
-            + #locale.AI_REFLECTION.at("q3").at(language)
-          ]
-
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a3-1").at(language)
-          ]
-
-        ],
-        table.cell(colspan: 2)[#quote(block: true)[
-            #locale.AI_REFLECTION.at("a3-2").at(language)
-          ]
-
-        ],
-        [#quote(block: true)[
-            #locale.AI_REFLECTION.at("a3-3").at(language)
-          ]
-
-        ],
-        table.cell(
-          align: left,
-          colspan: 4,
-        )[#block[
-            #set enum(numbering: "1.", start: 4)
-            + #locale.AI_REFLECTION.at("q4").at(language)
-          ]
-
-        ],
-        table.cell(align: left, colspan: 2)[#quote(block: true)[
-            #locale.AFFIRMATION.at(language)
-          ]
-
-        ],
-        table.cell(align: left, colspan: 2)[#quote(block: true)[
-            #locale.NEGATION.at(language)
-          ]
-
-        ],
-      )],
-      kind: table,
+  for (key_interaction, interactions) in technical-usage {
+    assert(
+      locale.AI-TECHNICAL-USAGE.questions.keys().contains(key_interaction),
+      message: "Unknown technical-usage '" + key_interaction + "'",
     )
 
-    if (
-      data-usage.at("sensible").contains("yes")
-        or data-usage.at("copyright").contains("yes")
-        or data-usage.at("personal").contains("yes")
-    ) [
-      #data-usage.data-usage-explication
-    ]
-
-
-    [== #locale.AI_P2_TITLE.at(language)]
-
-
-    for (key_interaction, interactions) in technical-usage {
-      set enum(numbering: "1.", start: 1)
-      [=== #locale.AI_INTERACTION.at(key_interaction).at(language)]
-      [#interactions]
-    }
-
-
-    [== #locale.AI_P3_TITLE.at(language)]
-
-    usage-reflection
-  } else {
-    // No se ha utilizado IA
-    [#locale.NEGATION_AI_USAGE.at(language)]
-
-    // If there is an extra comment, add it here
+    [=== #locale.AI-TECHNICAL-USAGE.questions.at(key_interaction).at(language)
+      #interactions]
   }
+
+
+  /* REFLECTION */
+
+  [== #locale.AI-USAGE-REFLECTION.title.at(language)]
+
+  usage-reflection
 }

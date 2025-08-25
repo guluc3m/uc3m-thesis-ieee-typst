@@ -37,7 +37,7 @@
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (content, none): Glossary.
-/// - genai-usage (dictionary, none): Information about the use of Generative AI in the thesis. Consists of `usage` (bool), `data-usage` (dictionary: (sensible: str, copyright: str, personal: str, followed-terms: bool, data-usage-explication: str)), `technical-usage` (dictionary: `documentation`: (target-type: (array, str), `review`: (target-type: (array, str), `information_search`: (target-type: (array, str), `references`: (target-type: (array, str), `summary_references`: (target-type: (array, str), `translation`: (target-type: (array, str), `assistance-coding`: (target-type: (array, str), `generating_schemas`: (target-type: (array, str), `optimization`: (target-type: (array, str), `data_processing`: (target-type: (array, str), `idea_inspiration`: (target-type: (array, str), `other_generations`: (target-type: (array, str),), and `usage-reflection` (content).
+/// - genai-declaration (dictionary, none): Information about the use of Generative AI in the thesis. See the example for more details.
 /// - doc (content): Thesis contents.
 ///
 /// -> content
@@ -68,7 +68,7 @@
   appendixes: none,
   glossary: none,
   abbreviations: none,
-  genai-usage: none,
+  genai-declaration: none,
   doc,
 ) = {
   // ========================= ARGUMENT VALIDATION ========================== //
@@ -204,41 +204,40 @@
   validate-argument("glossary", glossary, optional: true, target-type: content)
 
   validate-argument(
-    "genai-usage",
-    genai-usage,
+    "genai-declaration",
+    genai-declaration,
     target-type: dictionary,
-    optional: true,
     schema: (
       usage: (target-type: bool),
       data-usage: (
         target-type: dictionary,
         schema: (
-          sensible: (
+          sensitive: (
             target-type: str,
             possible-values: (
-              "yes_with_auth",
-              "no_without_auth",
-              "no_not_used",
+              "with-authorization",
+              "without-authorization",
+              "not-used",
             ),
           ),
           copyright: (
             target-type: str,
             possible-values: (
-              "yes_with_auth",
-              "no_without_auth",
-              "no_not_used",
+              "with-authorization",
+              "without-authorization",
+              "not-used",
             ),
           ),
           personal: (
             target-type: str,
             possible-values: (
-              "yes_with_auth",
-              "no_without_auth",
-              "no_not_used",
+              "with-authorization",
+              "without-authorization",
+              "not-used",
             ),
           ),
           followed-terms: (target-type: bool),
-          data-usage-explication: (target-type: str, optional: true),
+          explanation: (target-type: str, optional: true),
         ),
       ),
       technical-usage: (
@@ -246,16 +245,16 @@
         schema: (
           documentation: (target-type: content, optional: true),
           review: (target-type: content, optional: true),
-          information_search: (target-type: content, optional: true),
+          research: (target-type: content, optional: true),
           references: (target-type: content, optional: true),
-          summary_references: (target-type: content, optional: true),
+          summary: (target-type: content, optional: true),
           translation: (target-type: content, optional: true),
           assistance-coding: (target-type: content, optional: true),
-          generating_schemas: (target-type: content, optional: true),
+          generating-content: (target-type: content, optional: true),
           optimization: (target-type: content, optional: true),
-          data_processing: (target-type: content, optional: true),
-          idea_inspiration: (target-type: content, optional: true),
-          other_generations: (target-type: content, optional: true),
+          data-processing: (target-type: content, optional: true),
+          idea-inspiration: (target-type: content, optional: true),
+          other: (target-type: content, optional: true),
         ),
       ),
       usage-reflection: (target-type: content),
@@ -918,34 +917,36 @@
   in-endmatter.update(false)
 
 
-  // =============================== APPENDIX =============================== //
+  // ============================== APPENDIXES ============================== //
+
+  // we need to start a new page so `in-appendix` doesn't affect the bibliography
+  newpage(double-sided, weak: true)
+
+  in-appendix.update(true)
+
+  set heading(
+    // don't show numbering for headings above level 1
+    numbering: (..n) => { if n.pos().len() == 1 { numbering("A.1", ..n) } },
+    supplement: [#locale.APPENDIX.at(language)],
+    outlined: false, // not in outline
+  )
+  // show just appendixes titles in outline
+  show heading.where(level: 1): set heading(outlined: true)
+
+  counter(heading).update(0)
 
   if appendixes != none {
-    in-appendix.update(true)
-
-    newpage(double-sided)
-
-    set heading(
-      // don't show numbering for headings above level 1
-      numbering: (..n) => { if n.pos().len() == 1 { numbering("A.1", ..n) } },
-      supplement: [#locale.APPENDIX.at(language)],
-      outlined: false, // not in outline
-    )
-    // show just appendixes titles in outline
-    show heading.where(level: 1): set heading(outlined: true)
-
-    counter(heading).update(0)
-
     appendixes
-
-    if type(genai-usage) == dictionary {
-      genai(
-        language,
-        genai-usage,
-      )
-    }
-
-
-    // in-appendix.update(false)
   }
+
+  genai(
+    language,
+    genai-declaration.at("usage"),
+    genai-declaration.at("data-usage"),
+    genai-declaration.at("technical-usage"),
+    genai-declaration.at("usage-reflection"),
+  )
+
+
+  // in-appendix.update(false)
 }
