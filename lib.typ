@@ -935,6 +935,7 @@
 
   counter(heading).update(0)
 
+
   if appendixes != none {
     appendixes
   }
