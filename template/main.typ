@@ -1,4 +1,5 @@
-#import "/lib.typ": conf
+#import "/lib.typ": conf, gls, glspl
+// #import "glossary.typ": glossary-entries as glossary // uncomment this line and the config if you want a glossary
 
 #show: conf.with(
   degree: "Ingeniería Typstática",
@@ -38,7 +39,7 @@
     // custom: []
   ),
   // appendixes: [],
-  // glossary: []
+  // glossary: glossary,
   // abbreviations: (TFG: "Trabajo de Fin de Grado"),
   genai-declaration: (
     usage: true,
@@ -189,3 +190,6 @@
     [#super("*") Future work]
   },
 )
+
+// Referencing an acronym or the glossary is very important, ie. if you don't know
+// what an #gls("API") is, you should look it up.

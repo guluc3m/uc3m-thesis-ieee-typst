@@ -5,6 +5,9 @@
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
 #import "generative-ai.typ": genai-template
+#import "@preview/glossarium:0.5.9": (
+  gls, glspl, make-glossary, print-glossary, register-glossary,
+)
 
 
 /// Main configuration function.
@@ -201,7 +204,10 @@
     target-type: content,
   )
 
-  validate-argument("glossary", glossary, optional: true, target-type: content)
+  validate-argument("glossary", glossary, optional: true, target-type: (
+    array,
+    str,
+  ))
 
   validate-argument(
     "genai-declaration",
@@ -886,6 +892,13 @@
   in-body.update(true)
   counter(page).update(1) // first chapter starts at page 1
 
+  // Initialize glossary support before rendering the document body so
+  // references like `#gls("key-name")` inside `doc` can resolve.
+  show: make-glossary
+  if glossary != none {
+    register-glossary(glossary)
+  }
+
   doc
 
   // newpage(double-sided)
@@ -911,7 +924,7 @@
       numbering: none,
     )
 
-    glossary
+    print-glossary(glossary)
   }
 
   in-endmatter.update(false)
