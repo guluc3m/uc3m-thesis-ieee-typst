@@ -191,5 +191,9 @@
   },
 )
 
+== Graph Example
+#include "graph_example.typ"
+
+
 // Referencing an acronym or the glossary is very important, ie. if you don't know
 // what an #gls("API") is, you should look it up.
