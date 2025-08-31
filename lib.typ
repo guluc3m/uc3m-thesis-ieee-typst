@@ -1,14 +1,13 @@
 #import "@preview/hydra:0.6.2": hydra
+#import "@preview/glossarium:0.5.9": (
+  gls, glspl, make-glossary, print-glossary, register-glossary,
+)
 
 #import "titlepage.typ": titlepage
 #import "locale.typ" as locale
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
 #import "generative-ai.typ": genai-template
-#import "@preview/glossarium:0.5.9": (
-  gls, glspl, make-glossary, print-glossary, register-glossary,
-)
-
 
 /// Main configuration function.
 ///
@@ -204,10 +203,16 @@
     target-type: content,
   )
 
-  validate-argument("glossary", glossary, optional: true, target-type: (
-    array,
-    str,
-  ))
+  validate-argument(
+    "glossary",
+    glossary,
+    optional: true,
+    target-type: (array, content),
+    schema: (
+      content: (target-type: content),
+      config: (target-type: function, optional: true),
+    ),
+  )
 
   validate-argument(
     "genai-declaration",
@@ -490,7 +495,7 @@
 
   // more space around figures
   // https://github.com/typst/typst/issues/6095#issuecomment-2755785839
-  show figure: it => {
+  show figure.where(kind: image).or(figure.where(kind: table)): it => {
     let figure_spacing = 0.75em
 
     if it.placement == none {
@@ -894,6 +899,7 @@
 
   // Initialize glossary support before rendering the document body so
   // references like `#gls("key-name")` inside `doc` can resolve.
+  // Moved to glossary.typ
   show: make-glossary
   if glossary != none {
     register-glossary(glossary)
@@ -923,8 +929,12 @@
       locale.GLOSSARY.at(language),
       numbering: none,
     )
-
-    print-glossary(glossary)
+    if type(glossary) == array {
+      show: make-glossary
+      print-glossary(glossary)
+    } else if type(glossary) == content {
+      glossary
+    }
   }
 
   in-endmatter.update(false)
@@ -949,9 +959,7 @@
   counter(heading).update(0)
 
 
-  if appendixes != none {
-    appendixes
-  }
+  if appendixes != none { appendixes }
 
   /* generative AI declaration */
   [= #locale.AI-USAGE.title.at(language)]

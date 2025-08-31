@@ -1,5 +1,5 @@
 #import "/lib.typ": conf, gls, glspl
-// #import "glossary.typ": glossary-entries as glossary // uncomment this line and the config if you want a glossary
+#import "glossary.typ": glossary-entries
 
 #show: conf.with(
   degree: "Ingeniería Typstática",
@@ -16,7 +16,7 @@
   license: true,
   double-sided: true,
   flyleaf: true,
-  bibliography-file: "/template/references.bib",
+  bibliography-file: "/references.bib",
   epigraph: (
     quote: [Cacaaaaaaaaaaaa.],
     author: "Uno que se cagaba",
@@ -39,7 +39,7 @@
     // custom: []
   ),
   // appendixes: [],
-  // glossary: glossary,
+  glossary: glossary-entries, // uncomment this line if you want a glossary
   // abbreviations: (TFG: "Trabajo de Fin de Grado"),
   genai-declaration: (
     usage: true,
@@ -108,7 +108,6 @@
 )
 
 
-
 = Introduction
 #lorem(50)
 
@@ -132,7 +131,7 @@
 #lorem(200)
 
 #figure(
-  image("/img/old_uc3m_logo.svg", width: 70%),
+  image("uc3m-thesis-ieee-typst/img/old_uc3m_logo.svg", width: 70%),
   caption: [El mejor logo de la UC3M, con diferencia],
 ) <logo>
 
@@ -193,7 +192,6 @@
 
 == Graph Example
 #include "graph_example.typ"
-
 
 // Referencing an acronym or the glossary is very important, ie. if you don't know
 // what an #gls("API") is, you should look it up.
