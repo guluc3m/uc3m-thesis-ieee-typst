@@ -1,4 +1,4 @@
-#import "/lib.typ": conf, gls, glspl
+#import "../lib.typ": conf, gls, glspl
 #import "glossary.typ": glossary-entries
 
 #show: conf.with(
@@ -131,8 +131,8 @@
 #lorem(200)
 
 #figure(
-  image("uc3m-thesis-ieee-typst/img/old_uc3m_logo.svg", width: 70%),
-  caption: [El mejor logo de la UC3M, con diferencia],
+  image("logo_gul_uc3m.svg", width: 70%),
+  caption: [El logo de la mejor asociación de la UC3M, con diferencia],
 ) <logo>
 
 
@@ -195,3 +195,4 @@
 
 // Referencing an acronym or the glossary is very important, ie. if you don't know
 // what an #gls("API") is, you should look it up.
+// #gls("API")

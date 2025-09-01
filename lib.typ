@@ -38,7 +38,7 @@
 /// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
-/// - glossary (content, none): Glossary.
+/// - glossary (array, content, none): Glossary entries. If `array` is provided, it will use the `glossarium` library. If content is passed, it will display that content, without applying any styling.
 /// - genai-declaration (dictionary, content): Information about the use of Generative AI in the thesis. You can suply your own `content`, or use the university's template, by suplying a `dictionary`. See the example for more details.
 /// - doc (content): Thesis contents.
 ///
@@ -207,7 +207,7 @@
     "glossary",
     glossary,
     optional: true,
-    target-type: (array, content),
+    target-type: ((array, dictionary), content),
     schema: (
       content: (target-type: content),
       config: (target-type: function, optional: true),
@@ -901,7 +901,7 @@
   // references like `#gls("key-name")` inside `doc` can resolve.
   // Moved to glossary.typ
   show: make-glossary
-  if glossary != none {
+  if glossary != none and type(glossary) == array {
     register-glossary(glossary)
   }
 
@@ -931,6 +931,7 @@
     )
     if type(glossary) == array {
       show: make-glossary
+
       print-glossary(glossary)
     } else if type(glossary) == content {
       glossary
