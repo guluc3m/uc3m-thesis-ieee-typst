@@ -1,0 +1,3 @@
+#let acknowledgements = [
+  "Mi churri.",
+]

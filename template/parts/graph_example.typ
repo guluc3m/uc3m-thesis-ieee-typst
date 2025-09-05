@@ -78,6 +78,8 @@
   )
 }
 
+== Graph Example
+
 #figure(
   canvas({
     plot.plot(
