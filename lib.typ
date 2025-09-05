@@ -53,6 +53,7 @@
   date: none,
   bibliography-file: none,
   bibliography-style: "ieee",
+  bibliography: none,
   language: none,
   style: "fancy",
   titlepage-style: auto,
@@ -98,9 +99,16 @@
 
   validate-argument("date", date, target-type: datetime)
 
-  validate-argument("bibliography-file", bibliography-file, target-type: str)
+  // validate-argument("bibliography-file", bibliography-file, target-type: str)
 
-  validate-argument("bibliography-style", bibliography-style, target-type: str)
+  // validate-argument("bibliography-style", bibliography-style, target-type: str)
+
+  validate-argument(
+    "bibliography",
+    bibliography,
+    optional: true,
+    target-type: content,
+  )
 
   validate-argument("language", language, possible-values: ("es", "en"))
 
@@ -919,7 +927,7 @@
 
   /* BIBLIOGRAPHY */
 
-  bibliography(bibliography-file, style: bibliography-style)
+  bibliography
 
 
   /* GLOSSARY */

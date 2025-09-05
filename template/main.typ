@@ -1,7 +1,8 @@
 #import "../lib.typ": conf, gls, glspl
-#import "/config/glossary.typ": glossary-entries
-#import "/config/gen-ai.typ": genai-declaration
-#import "/config/acknowledgements.typ": acknowledgements
+#import "config/glossary.typ": glossary-entries
+#import "config/gen-ai.typ": genai-declaration
+#import "config/acknowledgements.typ": acknowledgements
+#import "config/bibliography.typ": bibliography
 
 
 #show: conf.with(
@@ -19,7 +20,7 @@
   license: true,
   double-sided: true,
   flyleaf: true,
-  bibliography-file: "/references.bib",
+  bibliography: bibliography,
   epigraph: (
     quote: [Cacaaaaaaaaaaaa.],
     author: "Uno que se cagaba",
@@ -59,7 +60,7 @@
 
 
 #figure(
-  image("../img/old_uc3m_logo.svg", width: 70%),
+  image("img/logo_gul_uc3m.svg", width: 70%),
   caption: [El mejor logo de la UC3M, con diferencia],
 ) <logo>
 
