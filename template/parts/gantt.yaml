@@ -1,0 +1,71 @@
+# Example of a gantt chart configuration in YAML format, source: https://gitlab.com/john_t/typst-gantty/-/blob/master/example/gantt.yaml
+
+
+# Whether or not to show today as a 'milestone' on the gantt chart.
+show-today: false
+# (Optional) the localized variant of "Today"
+today-localized: Today
+# Either month or day. Determines to what unit of time the gantt chart's
+# visual start and end are rounded to.
+viewport-snap: day
+# Headers at the top of the gantt chart. Can include `year`, `month`,
+# `week`, or `day`
+headers:
+  - year
+  - month
+
+# Date formats are YYYY-MM-DD
+# A start date, used to set the left limit. Not required.
+start: 2024-11-01
+# An end date, used to set the right limit. Not required.
+end: 2025-03-31
+# Taskgroups are logical groupings of tasks.
+taskgroups:
+    # The name of the taskgroup. If set to YAML `null` / Typst `none` then the
+    # taskgroup will not render a title.
+  - name: Research
+    # Optional: taskgroups _can_ specify a start, end, and done date.
+    # If not, then the date will be calculated from its tasks.
+    #
+    # Thus it is rarely needed to specify this field, unless you would like to
+    # create a taskgroup without any subtasks
+    intervals:
+      - start: 2024-11-27
+        end: 2024-12-04
+        done: 2024-11-29
+
+    # The tasks in this taskgroup
+    tasks:
+      - name: Read Statements
+        start: 2024-11-27
+        end: 2024-12-04
+        # Optional: indicates a completion date of a task, so that the
+        # task will be highlighted differently.
+        done: 2024-11-29
+  - name: Drafting
+    tasks:
+      - name: α draft
+        start: 2024-12-12
+        end: 2024-12-31
+      - name: β draft
+        start: 2024-12-31
+        end: 2025-01-31
+      - name: Final Draft
+        # If a task has a hiatus in it, it can be specified like this:
+        # Each interval can have its own `start`, `end`, and `date`.
+        intervals:
+          - start: 2025-03-07
+            end: 2025-03-14
+          - start: 2025-03-18
+            end: 2025-03-24
+  - name: Production Log
+    tasks:
+        - name: Record initial ideas
+          start: 2024-11-27
+          end: 2024-12-04
+          done: 2024-12-08
+milestones:
+  - name: 1st Draft Hand In
+    date: 2025-02-14
+  - name: Final Hand In
+    date: 2025-03-24
