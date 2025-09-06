@@ -1,3 +1,0 @@
-#let acknowledgements = [
-  "Mi churri.",
-]
