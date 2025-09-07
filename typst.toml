@@ -6,6 +6,7 @@ authors = [
     "Luis Daniel Casais Mezquida <@rajayonin>",
     "José Antonio Verde Jimenez <@joseaverde>",
     "Jorge Lázaro Ruiz <@JorgeyGari>",
+    "Eduardo Alarcón <@Astrak00>",
 ]
 license = "MIT"
 description = "Typst Bachelor Thesis template of the Universidad Carlos III de Madrid, IEEE style"
