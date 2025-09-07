@@ -1,11 +1,13 @@
 #import "@preview/hydra:0.6.2": hydra
+#import "@preview/glossarium:0.5.9": (
+  gls, glspl, make-glossary, print-glossary, register-glossary,
+)
 
 #import "titlepage.typ": titlepage
 #import "locale.typ" as locale
 #import "utils.typ": *
 #import "arguments.typ": validate-argument
 #import "generative-ai.typ": genai-template
-
 
 /// Main configuration function.
 ///
@@ -36,7 +38,7 @@
 /// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
-/// - glossary (content, none): Glossary.
+/// - glossary (array, content, none): Glossary entries. If `array` is provided, it will use the `glossarium` library. If content is passed, it will display that content, without applying any styling.
 /// - genai-declaration (dictionary, content): Information about the use of Generative AI in the thesis. You can suply your own `content`, or use the university's template, by suplying a `dictionary`. See the example for more details.
 /// - doc (content): Thesis contents.
 ///
@@ -51,6 +53,7 @@
   date: none,
   bibliography-file: none,
   bibliography-style: "ieee",
+  bibliography: none,
   language: none,
   style: "fancy",
   titlepage-style: auto,
@@ -96,9 +99,16 @@
 
   validate-argument("date", date, target-type: datetime)
 
-  validate-argument("bibliography-file", bibliography-file, target-type: str)
+  // validate-argument("bibliography-file", bibliography-file, target-type: str)
 
-  validate-argument("bibliography-style", bibliography-style, target-type: str)
+  // validate-argument("bibliography-style", bibliography-style, target-type: str)
+
+  validate-argument(
+    "bibliography",
+    bibliography,
+    optional: true,
+    target-type: content,
+  )
 
   validate-argument("language", language, possible-values: ("es", "en"))
 
@@ -201,7 +211,16 @@
     target-type: content,
   )
 
-  validate-argument("glossary", glossary, optional: true, target-type: content)
+  validate-argument(
+    "glossary",
+    glossary,
+    optional: true,
+    target-type: ((array, dictionary), content),
+    schema: (
+      content: (target-type: content),
+      config: (target-type: function, optional: true),
+    ),
+  )
 
   validate-argument(
     "genai-declaration",
@@ -482,29 +501,6 @@
   ))
 
 
-  // more space around figures
-  // https://github.com/typst/typst/issues/6095#issuecomment-2755785839
-  show figure: it => {
-    let figure_spacing = 0.75em
-
-    if it.placement == none {
-      block(it, inset: (y: figure_spacing))
-    } else if it.placement == top {
-      place(it.placement, float: true, block(
-        width: 100%,
-        inset: (bottom: figure_spacing),
-        align(center, it),
-      ))
-    } else if it.placement == bottom {
-      place(it.placement, float: true, block(
-        width: 100%,
-        inset: (top: figure_spacing),
-        align(center, it),
-      ))
-    }
-  }
-
-
   /* IMAGES */
 
   // caption position
@@ -699,6 +695,7 @@
   /* ABSTRACT */
 
   let make-abstract(data, language) = {
+    set text(lang: language)
     heading(locale.ABSTRACT.at(language), numbering: none, outlined: false)
     data.body
 
@@ -886,6 +883,14 @@
   in-body.update(true)
   counter(page).update(1) // first chapter starts at page 1
 
+  // Initialize glossary support before rendering the document body so
+  // references like `#gls("key-name")` inside `doc` can resolve.
+  // Moved to glossary.typ
+  show: make-glossary
+  if glossary != none and type(glossary) == array {
+    register-glossary(glossary)
+  }
+
   doc
 
   // newpage(double-sided)
@@ -900,7 +905,7 @@
 
   /* BIBLIOGRAPHY */
 
-  bibliography(bibliography-file, style: bibliography-style)
+  bibliography
 
 
   /* GLOSSARY */
@@ -910,8 +915,13 @@
       locale.GLOSSARY.at(language),
       numbering: none,
     )
+    if type(glossary) == array {
+      show: make-glossary
 
-    glossary
+      print-glossary(glossary)
+    } else if type(glossary) == content {
+      glossary
+    }
   }
 
   in-endmatter.update(false)
@@ -936,9 +946,7 @@
   counter(heading).update(0)
 
 
-  if appendixes != none {
-    appendixes
-  }
+  if appendixes != none { appendixes }
 
   /* generative AI declaration */
   [= #locale.AI-USAGE.title.at(language)]

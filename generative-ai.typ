@@ -1,4 +1,4 @@
-//! Declaration of use of AI in the project
+//! Declaration of use of generative AI in the project
 
 #import "locale.typ" as locale
 #import "utils.typ": newpage
