@@ -10,10 +10,18 @@ The template is based on [ldcas-uc3m/thesis-template](https://github.com/ldcas-u
 
 ## Usage
 
+### Installation
+
 > [!NOTE]
 > This is still in beta. The following is a quick and dirty way of setting up your thesis.
 > 
 > We plan on publishing this to the official repository ([Typst Universe](https://typst.app/universe/)) eventually, to have a cleaner setup process.
+
+> [!TIP]
+> One-liner for lazy people:
+> ```bash
+> git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i 's%"/lib.typ"%"uc3m-thesis-ieee-typst/lib.typ"%' main.typ
+> ```
 
 1. Make a folder for your report.
 2. Clone or download this folder, as a subfolder.
