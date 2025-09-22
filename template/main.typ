@@ -99,8 +99,7 @@ Figure @fig:logo.
 
 @sdg-un // bibliography reference
 
-glossary
+// glossary
 #import "@preview/glossarium:0.5.9": gls, glspl
 #gls("API")
-
 
