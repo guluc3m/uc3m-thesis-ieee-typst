@@ -94,17 +94,6 @@
   ),
 )
 
-#let DEGREE-TYPE = (
-  TFG: (
-    es: "Grado en ",
-    en: "Bachelor's Degree in ",
-  ),
-  TFM: (
-    es: "Máster en ",
-    en: "Master's Degree in ",
-  ),
-)
-
 #let CHAPTER = (
   es: "Capítulo",
   en: "Chapter",

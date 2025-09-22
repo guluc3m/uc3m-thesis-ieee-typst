@@ -660,7 +660,7 @@
     } else {
       date-format
     },
-    locale.DEGREE-TYPE.at(thesis-type).at(language) + degree,
+    degree,
     location,
     advisors,
     accent-color,
