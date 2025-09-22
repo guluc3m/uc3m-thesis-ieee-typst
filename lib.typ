@@ -166,11 +166,20 @@
     ),
   )
 
+  assert(
+    not (language == "es" and english-abstract == none),
+    message: "`english-abstract` is required for spanish reports",
+  )
+  assert(
+    not (language == "en" and english-abstract != none),
+    message: "`english-abstract` is not needed for english reports",
+  )
+
   validate-argument(
     "english-abstract",
     english-abstract,
     target-type: if language == "es" { dictionary } else { none },
-    optional: if language == "es" { false } else { true },
+    optional: language == "en",
     schema: (
       body: (target-type: content),
       keywords: (target-type: ((array, str),), min-len: 2, max-len: 5),
