@@ -319,7 +319,12 @@
   // check dictionary schema
   if (
     schema != none
-      and target-type == dictionary
+      and (
+        target-type == dictionary
+          or type(target-type) == array
+            and target-type.contains(dictionary)
+            and type(value) == dictionary
+      )
       and not (optional and value == none)
   ) {
     let (ok, err) = _validate-dictionary(value, schema)

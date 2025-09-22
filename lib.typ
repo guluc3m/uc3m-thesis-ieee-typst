@@ -239,6 +239,7 @@
       usage: (target-type: bool),
       data-usage: (
         target-type: dictionary,
+        optional: not genai-declaration.usage,
         schema: (
           sensitive: (
             target-type: str,
@@ -270,6 +271,7 @@
       ),
       technical-usage: (
         target-type: dictionary,
+        optional: not genai-declaration.usage,
         schema: (
           documentation: (target-type: content, optional: true),
           review: (target-type: content, optional: true),
@@ -285,7 +287,10 @@
           other: (target-type: content, optional: true),
         ),
       ),
-      usage-reflection: (target-type: content),
+      usage-reflection: (
+        target-type: content,
+        optional: not genai-declaration.usage,
+      ),
     ),
   )
 
@@ -966,10 +971,10 @@
   } else {
     genai-template(
       language,
-      genai-declaration.at("usage"),
-      genai-declaration.at("data-usage"),
-      genai-declaration.at("technical-usage"),
-      genai-declaration.at("usage-reflection"),
+      genai-declaration.at("usage", default: none),
+      genai-declaration.at("data-usage", default: none),
+      genai-declaration.at("technical-usage", default: none),
+      genai-declaration.at("usage-reflection", default: none),
     )
   }
 
