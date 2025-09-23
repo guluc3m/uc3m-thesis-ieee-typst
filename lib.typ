@@ -20,8 +20,7 @@
 /// - location (str): Presentation location.
 /// - thesis-type (str): Type of thesis (`"TFG"` or `"TFM"`).
 /// - date (datetime): Presentation date.
-/// - bibliography-file (str): Path to bibliography file.
-/// - bibliography-style (str): Bibliography citation style. See https://typst.app/docs/reference/model/bibliography/#parameters-style.
+/// - bibliography-content (content): Bibliography contents, usually calling `bibliography`.
 /// - language (str): `"en"` or `"es"`.
 /// - style (str): Visual style, mainly affecting headings, headers, and footers. The available styles are `strict`, which strictly follow's the university library's guidelines, `clean`, based on clean-dhbw, and `fancy`, based on my original LaTeX version.
 /// - titlepage-style (str, auto): Style for the titlepage (see `style`). If set to `auto`, uses the main style.
@@ -51,9 +50,7 @@
   location: none,
   thesis-type: none,
   date: none,
-  bibliography-file: none,
-  bibliography-style: "ieee",
-  bibliography: none,
+  bibliography-content: none,
   language: none,
   style: "fancy",
   titlepage-style: auto,
@@ -99,13 +96,9 @@
 
   validate-argument("date", date, target-type: datetime)
 
-  // validate-argument("bibliography-file", bibliography-file, target-type: str)
-
-  // validate-argument("bibliography-style", bibliography-style, target-type: str)
-
   validate-argument(
-    "bibliography",
-    bibliography,
+    "bibliography-content",
+    bibliography-content,
     optional: true,
     target-type: content,
   )
@@ -919,7 +912,20 @@
 
   /* BIBLIOGRAPHY */
 
-  bibliography
+  // color bibliography
+  // https://forum.typst.app/t/how-do-i-customize-the-numbering-of-the-bibliography/1490/3
+  show selector(bibliography).or(cite): it => {
+    show link: set text(accent-color)
+
+    // bibliography references (IEEE)
+    show regex("\[\d+\]"): num => {
+      set text(accent-color)
+      num
+    }
+    it
+  }
+
+  bibliography-content
 
 
   /* GLOSSARY */

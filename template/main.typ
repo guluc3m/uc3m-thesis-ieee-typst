@@ -19,7 +19,7 @@
   license: true,
   double-sided: true,
   flyleaf: true,
-  bibliography: bibliography,
+  bibliography-content: bibliography,
   epigraph: (
     quote: [Cacaaaaaaaaaaaa.],
     author: "Uno que se cagaba",
