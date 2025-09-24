@@ -949,14 +949,15 @@
 
   // ============================== APPENDIXES ============================== //
 
-  // we need to start a new page so `in-appendix` doesn't affect the bibliography
+  // we need to start a new page so `in-appendix` doesn't affect the
+  // bibliography
   newpage(double-sided, weak: true)
 
   in-appendix.update(true)
 
   set heading(
     // don't show numbering for headings above level 1
-    numbering: (..n) => { if n.pos().len() == 1 { numbering("A.1", ..n) } },
+    numbering: (..n) => { if n.pos().len() == 1 { numbering("A.", ..n) } },
     supplement: [#locale.APPENDIX.at(language)],
     outlined: false, // not in outline
   )
