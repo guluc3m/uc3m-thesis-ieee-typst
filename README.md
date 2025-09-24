@@ -73,3 +73,4 @@ typst compile main.typ
   - [LaTeX-to-typst Cheat Sheet](https://qwinsi.github.io/tex2typst-webapp/cheat-sheet.html)
 - [Typst table generator](https://www.latex-tables.com/?format=typst&force)
 - [Typst Examples Book](https://sitandr.github.io/typst-examples-book/book/)
+- [Typerino](https://typerino.com/): Online typst equation editor
