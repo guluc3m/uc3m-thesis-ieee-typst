@@ -900,13 +900,11 @@
 
   doc
 
-  // newpage(double-sided)
-  in-body.update(false)
-
 
   // ============================== ENDMATTER =============================== //
 
   newpage(double-sided, weak: false)
+  in-body.update(false)
   in-endmatter.update(true)
 
 
@@ -944,8 +942,6 @@
     }
   }
 
-  in-endmatter.update(false)
-
 
   // ============================== APPENDIXES ============================== //
 
@@ -953,6 +949,7 @@
   // bibliography
   newpage(double-sided, weak: true)
 
+  in-endmatter.update(false)
   in-appendix.update(true)
 
   set heading(
@@ -986,5 +983,7 @@
   }
 
 
+  // we _would_ need to set this on a new page,
+  // but as there are none, it's not needed
   // in-appendix.update(false)
 }
