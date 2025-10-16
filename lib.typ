@@ -232,7 +232,8 @@
       usage: (target-type: bool),
       data-usage: (
         target-type: dictionary,
-        optional: not genai-declaration.usage,
+        optional: type(genai-declaration) == dictionary
+          and not genai-declaration.usage,
         schema: (
           sensitive: (
             target-type: str,
@@ -264,7 +265,8 @@
       ),
       technical-usage: (
         target-type: dictionary,
-        optional: not genai-declaration.usage,
+        optional: type(genai-declaration) == dictionary
+          and not genai-declaration.usage,
         schema: (
           documentation: (target-type: content, optional: true),
           review: (target-type: content, optional: true),
@@ -282,7 +284,8 @@
       ),
       usage-reflection: (
         target-type: content,
-        optional: not genai-declaration.usage,
+        optional: type(genai-declaration) == dictionary
+          and not genai-declaration.usage,
       ),
     ),
   )
