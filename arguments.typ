@@ -15,8 +15,6 @@
     return "none"
   } else if value == auto {
     return "auto"
-  } else if type(value) == type {
-    return str(value)
   } else if type(value) == bool {
     return if value { "true" } else { "false" }
   } else if type(value) == str {
@@ -36,7 +34,7 @@
     )
   }
 
-  value
+  str(value)
 }
 
 
