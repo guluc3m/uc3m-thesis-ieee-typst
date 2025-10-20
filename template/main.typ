@@ -72,6 +72,10 @@
   }
 }
 
+// indent lists
+#set list(indent: 1em)
+#set enum(indent: 1em)
+
 
 
 /* Thesis */
