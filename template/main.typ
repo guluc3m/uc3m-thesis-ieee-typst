@@ -51,24 +51,19 @@
 /* Custom set/show rules */
 
 // more space around figures
-// https://github.com/typst/typst/issues/6095#issuecomment-2755785839
+// https://stackoverflow.com/questions/78622060/add-spacing-around-figure-in-typst
 #show figure.where(kind: image).or(figure.where(kind: table)): it => {
-  let figure_spacing = 0.75em
+  let spacing = 0.75em
 
   if it.placement == none {
-    block(it, inset: (y: figure_spacing))
-  } else if it.placement == top {
-    place(it.placement, float: true, block(
-      width: 100%,
-      inset: (bottom: figure_spacing),
-      align(center, it),
-    ))
-  } else if it.placement == bottom {
-    place(it.placement, float: true, block(
-      width: 100%,
-      inset: (top: figure_spacing),
-      align(center, it),
-    ))
+    block(it, inset: (y: spacing))
+  } else {
+    place(
+      it.placement,
+      float: true,
+      clearance: spacing,
+      block(align(center, it), spacing: spacing, width: 100%),
+    )
   }
 }
 
