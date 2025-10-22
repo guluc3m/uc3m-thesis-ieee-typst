@@ -71,6 +71,12 @@
 #set list(indent: 1em)
 #set enum(indent: 1em)
 
+// prevent floating elements from spilling into the next section
+#show heading.where(level: 2): it => {
+  place.flush()
+  it
+}
+
 
 
 /* Thesis */
