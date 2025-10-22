@@ -13,9 +13,9 @@ description = "Typst Bachelor Thesis template of the Universidad Carlos III de M
 repository = "https://github.com/guluc3m/uc3m-thesis-ieee-typst"
 keywords = ["uc3m", "thesis"]
 categories = ["paper", "thesis", "report"]
-exclude = [".github", "docs", "examples", ".vscode", "template/main.pdf"]
+exclude = [".github", "docs", "examples", ".vscode", "template/report.pdf"]
 
 [template]
 path = "template"
-entrypoint = "main.typ"
+entrypoint = "report.typ"
 thumbnail = "thumbnail.png"

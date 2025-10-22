@@ -20,13 +20,13 @@ The template is based on [ldcas-uc3m/thesis-template](https://github.com/ldcas-u
 > [!TIP]
 > One-liner for lazy people:
 > ```bash
-> git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i 's%"/lib.typ"%"uc3m-thesis-ieee-typst/lib.typ"%' main.typ
+> git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i 's%"/lib.typ"%"uc3m-thesis-ieee-typst/lib.typ"%' report.typ
 > ```
 
 1. Make a folder for your report.
 2. Clone or download this folder, as a subfolder.
 3. Move the files inside `template/` to your project folder.
-4. Change the following line in `main.typ`:
+4. Change the following line in `report.typ`:
    ```diff
    @@ -1,4 +1,4 @@
    -#import "/lib.typ": conf
@@ -37,7 +37,7 @@ The template is based on [ldcas-uc3m/thesis-template](https://github.com/ldcas-u
 The resulting structure should be as follows:
 ```
 my-thesis/
-├─ main.typ
+├─ report.typ
 ├─ references.bib
 ├─ parts/
 │  ├─ ...
@@ -52,7 +52,7 @@ my-thesis/
 ### Compilation
 Install [Typst](https://github.com/typst/typst?tab=readme-ov-file#installation) and run:
 ```
-typst compile main.typ
+typst compile report.typ
 ```
 
 > [!TIP]
