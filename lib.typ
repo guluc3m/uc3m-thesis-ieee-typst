@@ -291,6 +291,18 @@
   )
 
 
+
+  // ============================ DOCUMENT SETUP ============================ //
+  set document(
+    title: title,
+    author: author,
+    description: abstract.body,
+    keywords: abstract.keywords,
+    date: auto
+  )
+
+
+
   // ============================== PAGE SETUP ============================== //
 
   let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
