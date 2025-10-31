@@ -26,6 +26,7 @@
 /// - titlepage-style (str, auto): Style for the titlepage (see `style`). If set to `auto`, uses the main style.
 /// - table-style (str, auto): Style for the table caption, either `"clean"` or `"ieee"`. If set to `auto`, uses the default for the main style (`"clean"` for `clean` style, `"ieee"` for the rest).
 /// - figure-style (str, auto): Style for the figure caption, either `"clean"` or `"ieee"`. If set to `auto`, uses the default for the main style (`"clean"` for `clean` style, `"ieee"` for the rest).
+/// - figure-spacing (length, none): Extra spacing to give to figures and tables. If `none`, no extra spacing.
 /// - double-sided (bool): Whether to use double-sided pages. This is not allowed in the `strict` style.
 /// - logo (str): Type of logo (`"old"` or `"new"`).
 /// - short-title (str): Shorter version of the title, to be displayed in the headers. Only applies if `double-sided` is set to `true`.
@@ -58,6 +59,7 @@
   titlepage-style: auto,
   table-style: auto,
   figure-style: auto,
+  figure-spacing: 0.75em,
   double-sided: false,
   logo: "new",
   short-title: none,
@@ -150,6 +152,11 @@
   if figure-style == auto {
     figure-style = if style == "clean" { "clean" } else { "ieee" }
   }
+
+  validate-argument("figure-spacing", figure-spacing, target-type: (
+    length,
+    none,
+  ))
 
   validate-argument("double-sided", double-sided, target-type: bool)
 
@@ -528,6 +535,25 @@
 
   /* FIGURES */
 
+  // more space around figures
+  // https://stackoverflow.com/questions/78622060/add-spacing-around-figure-in-typst
+  show figure.where(kind: image).or(figure.where(kind: table)): it => {
+    if figure-spacing == none {
+      return it
+    }
+
+    if it.placement == none {
+      block(it, inset: (y: figure-spacing))
+    } else {
+      place(
+        it.placement,
+        float: true,
+        clearance: figure-spacing,
+        block(align(center, it), spacing: figure-spacing, width: 100%),
+      )
+    }
+  }
+
   // figure captions
   show figure.caption: it => {
     set text(size: 10pt)
@@ -605,6 +631,13 @@
 
   show ref: set text(accent-color)
   show link: set text(accent-color)
+
+
+  /* LISTS */
+
+  // indent lists
+  set list(indent: 1em)
+  set enum(indent: 1em)
 
 
   /* FOOTNOTES */

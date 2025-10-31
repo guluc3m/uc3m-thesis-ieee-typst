@@ -15,9 +15,6 @@
   date: datetime(year: 2025, month: 4, day: 20),
   language: "es",
   style: "fancy",
-  // titlepage-style: "fancy",
-  // table-style: "ieee",
-  // figure-style: "ieee",
   license: true,
   double-sided: true,
   flyleaf: true,
@@ -51,27 +48,6 @@
 
 
 /* Custom set/show rules */
-
-// more space around figures
-// https://stackoverflow.com/questions/78622060/add-spacing-around-figure-in-typst
-#show figure.where(kind: image).or(figure.where(kind: table)): it => {
-  let spacing = 0.75em
-
-  if it.placement == none {
-    block(it, inset: (y: spacing))
-  } else {
-    place(
-      it.placement,
-      float: true,
-      clearance: spacing,
-      block(align(center, it), spacing: spacing, width: 100%),
-    )
-  }
-}
-
-// indent lists
-#set list(indent: 1em)
-#set enum(indent: 1em)
 
 // prevent floating elements from spilling into the next section
 #show heading.where(level: 2): it => {
