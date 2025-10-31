@@ -16,6 +16,8 @@
   language: "es",
   style: "fancy",
   // titlepage-style: "fancy",
+  // table-style: "ieee",
+  // figure-style: "ieee",
   license: true,
   double-sided: true,
   flyleaf: true,
@@ -77,6 +79,11 @@
   it
 }
 
+// "booktab" table style
+#show table: block.with(stroke: (y: 0.7pt))
+#set table(column-gutter: .2em, stroke: none)
+#set table.hline(stroke: 0.4pt)
+
 
 
 /* Thesis */
@@ -100,7 +107,30 @@
   caption: [El mejor logo de la UC3M, con diferencia],
 ) <fig:logo>
 
-Figure @fig:logo.
+@fig:logo.
+
+#let yes = sym.checkmark
+#figure(
+  table(
+    columns: 7,
+    table.header(
+      [*OS*],
+      [*Silksong*],
+      [*Ads*],
+      [*Spyware*],
+      [*Unix*],
+      [*FOSS*],
+      [*Penguins*],
+    ),
+    table.hline(),
+    [Linux], [#yes], [], [], [#yes], [#yes], [#yes],
+    [MacOS], [#yes], [], [#yes], [#yes], [], [],
+    [Windows], [#yes], [#yes], [#yes], [], [], [],
+  ),
+  caption: [Comparison of desktop Operating Systems],
+) <tab:os>
+
+@tab:os.
 
 @sdg-un // bibliography reference
 

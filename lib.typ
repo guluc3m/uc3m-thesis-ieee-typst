@@ -24,6 +24,8 @@
 /// - language (str): `"en"` or `"es"`.
 /// - style (str): Visual style, mainly affecting headings, headers, and footers. The available styles are `strict`, which strictly follow's the university library's guidelines, `clean`, based on clean-dhbw, and `fancy`, based on my original LaTeX version.
 /// - titlepage-style (str, auto): Style for the titlepage (see `style`). If set to `auto`, uses the main style.
+/// - table-style (str, auto): Style for the table caption, either `"clean"` or `"ieee"`. If set to `auto`, uses the default for the main style (`"clean"` for `clean` style, `"ieee"` for the rest).
+/// - figure-style (str, auto): Style for the figure caption, either `"clean"` or `"ieee"`. If set to `auto`, uses the default for the main style (`"clean"` for `clean` style, `"ieee"` for the rest).
 /// - double-sided (bool): Whether to use double-sided pages. This is not allowed in the `strict` style.
 /// - logo (str): Type of logo (`"old"` or `"new"`).
 /// - short-title (str): Shorter version of the title, to be displayed in the headers. Only applies if `double-sided` is set to `true`.
@@ -54,6 +56,8 @@
   language: none,
   style: "fancy",
   titlepage-style: auto,
+  table-style: auto,
+  figure-style: auto,
   double-sided: false,
   logo: "new",
   short-title: none,
@@ -116,6 +120,36 @@
     titlepage-style,
     possible-values: (auto, "fancy", "clean", "strict"),
   )
+
+  validate-argument(
+    "table-style",
+    table-style,
+    possible-values: (auto, "ieee", "clean"),
+  )
+
+  assert(
+    not (table-style == "clean" and style == "strict"),
+    message: "'strict' style doesn't allow for 'table-style' to be set to 'clean'.",
+  )
+
+  if table-style == auto {
+    table-style = if style == "clean" { "clean" } else { "ieee" }
+  }
+
+  validate-argument(
+    "figure-style",
+    figure-style,
+    possible-values: (auto, "ieee", "clean"),
+  )
+
+  assert(
+    not (figure-style == "clean" and style == "strict"),
+    message: "'strict' style doesn't allow for 'figure-style' to be set to 'clean'.",
+  )
+
+  if figure-style == auto {
+    figure-style = if style == "clean" { "clean" } else { "ieee" }
+  }
 
   validate-argument("double-sided", double-sided, target-type: bool)
 
@@ -291,16 +325,14 @@
   )
 
 
-
   // ============================ DOCUMENT SETUP ============================ //
   set document(
     title: title,
     author: author,
     description: abstract.body,
     keywords: abstract.keywords,
-    date: auto
+    date: auto,
   )
-
 
 
   // ============================== PAGE SETUP ============================== //
@@ -508,12 +540,6 @@
     }
   }
 
-  set figure.caption(
-    separator: if style == "strict" {
-      [.]
-      h(1em)
-    } else { auto },
-  )
 
   // show chapter on numbering
   set figure(numbering: (..num) => numbering(
@@ -526,14 +552,20 @@
   /* IMAGES */
 
   // caption position
-  show figure.where(kind: image): set figure.caption(position: bottom)
-  show figure.caption.where(kind: image): set align(if style == "strict" {
+  show figure.where(kind: image): set figure.caption(
+    position: bottom,
+    separator: if figure-style == "ieee" {
+      [.]
+      h(1em)
+    } else { auto },
+  )
+  show figure.caption.where(kind: image): set align(if figure-style == "ieee" {
     left
   } else { center })
 
   // change supplement for strict style
   show figure.where(kind: image): set figure(
-    supplement: if style == "strict" {
+    supplement: if figure-style == "ieee" {
       "Fig."
     } else { auto },
     gap: { 1em },
@@ -542,14 +574,30 @@
 
   /* TABLES */
 
-  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.where(kind: table): set figure.caption(
+    position: top,
+    separator: if table-style == "ieee" {
+      [.]
+      h(1em)
+    } else { auto },
+  )
+
   show figure.caption.where(kind: table): it => {
-    if style == "strict" [
-      #context smallcaps(it.supplement)
-      #context smallcaps(it.counter.display(it.numbering)) \
-      #set text(weight: "regular")
-      #smallcaps(it.body) \
-    ] else { it }
+    if table-style == "ieee" {
+      {
+        set text(
+          fill: accent-color,
+          weight: if style == "strict" { "regular" } else { "semibold" },
+        )
+        context smallcaps(it.supplement)
+        [ ]
+        context smallcaps(it.counter.display(it.numbering))
+      }
+      linebreak()
+      set text(weight: "regular")
+      smallcaps(it.body)
+      linebreak()
+    } else { it }
   }
 
 
