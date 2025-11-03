@@ -557,10 +557,11 @@
   // figure captions
   show figure.caption: it => {
     set text(size: 10pt)
+    set par(first-line-indent: 0pt)
     if style == "strict" { it } else {
       [
         #set text(azuluc3m, weight: "semibold")
-        #it.supplement #context it.counter.display(it.numbering):
+        #it.supplement #context it.counter.display(it.numbering)#it.separator
       ]
       it.body
     }
@@ -580,10 +581,7 @@
   // caption position
   show figure.where(kind: image): set figure.caption(
     position: bottom,
-    separator: if figure-style == "ieee" {
-      [.]
-      h(1em)
-    } else { auto },
+    separator: if figure-style == "ieee" [.] else { auto },
   )
   show figure.caption.where(kind: image): set align(if figure-style == "ieee" {
     left
