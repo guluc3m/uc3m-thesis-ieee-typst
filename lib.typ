@@ -37,7 +37,7 @@
 /// - abstract (dictionary): A short and precise representation of the thesis content. Consists of `body` (of type `content`), the main text, and `keywords`, an array of key terms (of type `str`) (see [IEEE Taxonomy](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf)).
 /// - english-abstract (dictionary): An english translation of the abstract. Compulsory for spanish works, invalid for english ones.
 /// - acknowledgements (content, none): Text where you give thanks to everyone that helped you.
-/// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, of type `content`).
+/// - outlines (dictionaty, none): Set of extra outlines to include (`figures`, `tables`, `listings`), and extra custom outlines (`custom`, an array of `content`s -- typically the result of calling `outline`).
 /// - abbreviations (dictionary, content, none): Abbreviations, acronyms and initials used throughout the thesis. You can provide a map (dictionary of strings) or a custom one (`content`).
 /// - appendixes (content, none): Set of appendixes.
 /// - glossary (array, content, none): Glossary entries. If `array` is provided, it will use the `glossarium` library. If content is passed, it will display that content, without applying any styling.
@@ -236,7 +236,7 @@
       figures: (target-type: bool, optional: true),
       tables: (target-type: bool, optional: true),
       listings: (target-type: bool, optional: true),
-      custom: (target-type: content, optional: true),
+      custom: (target-type: ((array, content),), optional: true),
     ),
   )
 
@@ -942,9 +942,11 @@
     }
 
     // custom
-    if outlines.at("custom", default: false) {
-      custom
-      newpage(double-sided)
+    if outlines.at("custom", default: none) != none {
+      for o in outlines.at("custom") {
+        o
+        newpage(double-sided)
+      }
     }
   }
 

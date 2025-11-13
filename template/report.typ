@@ -38,7 +38,12 @@
     figures: true,
     tables: true,
     listings: false,
-    // custom: []
+    // custom: (
+    //   outline(
+    //     title: [List of algorithms],
+    //     target: figure.where(kind: "algorithm"),
+    //   ),
+    // ),
   ),
   // appendixes: [],
   glossary: glossary-entries, // comment this line if you don't want a glossary
