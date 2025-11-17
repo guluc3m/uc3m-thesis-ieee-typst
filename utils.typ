@@ -44,3 +44,12 @@
 #let is-last-page() = {
   counter(page).final().first() == counter(page).get().first()
 }
+
+
+/// Capitalizes a string.
+///
+/// - s (str): String to capitalize
+/// -> str
+#let capitalize(s) = {
+  s.replace(regex("^\w"), m => upper(m.text))
+}

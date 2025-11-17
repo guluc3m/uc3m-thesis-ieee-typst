@@ -371,6 +371,12 @@
   /* HEADINGS */
 
   set heading(numbering: if style == "clean" { "1.1" } else { "1." })
+
+  // set correct supplement for chapters
+  show heading.where(level: 1): set heading(
+    supplement: locale.CHAPTER.at(language),
+  )
+
   show heading: set text(
     accent-color,
     font: font,

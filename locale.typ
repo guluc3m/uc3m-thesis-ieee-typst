@@ -18,11 +18,15 @@
 
 #let CC-LICENSE = (
   es: [
-    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
       International]
   ],
   en: [
-    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
+    This work is licensed under #link(
+      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    )[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
       International]
   ],
 )
@@ -237,7 +241,7 @@
   ),
   followed-terms: (
     es: [Mi utilización de la herramienta de IA Generativa ha *respetado sus
-        términos de uso*, así como los principios éticos esenciales, no
+      términos de uso*, así como los principios éticos esenciales, no
       orientándola de manera maliciosa a obtener un resultado inapropiado para
       el trabajo presentado, es decir, que produzca una impresión o conocimiento
       contrario a la realidad de los resultados obtenidos, que suplante mi
