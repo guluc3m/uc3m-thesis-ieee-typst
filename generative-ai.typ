@@ -24,7 +24,6 @@
   // Remove first number of heading
   set heading(
     numbering: (..n) => { numbering("1.", ..n.pos().slice(1)) },
-    supplement: [#locale.PART.at(language)], // this doesn't work for some reason...
   )
 
 

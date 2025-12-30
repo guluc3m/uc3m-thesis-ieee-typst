@@ -1056,12 +1056,16 @@
 
   set heading(
     // don't show numbering for headings above level 1
-    numbering: (..n) => { if n.pos().len() == 1 { numbering("A.", ..n) } },
-    supplement: [#locale.APPENDIX.at(language)],
+    numbering: (..n) => { if n.pos().len() == 1 { numbering("A", ..n) } },
     outlined: false, // not in outline
   )
-  // show just appendixes titles in outline
-  show heading.where(level: 1): set heading(outlined: true)
+  show heading.where(level: 1): set heading(
+    // configure supplement
+    supplement: locale.APPENDIX.at(language),
+    // show just appendixes titles in outline
+    outlined: true,
+    numbering: "A.",
+  )
 
   counter(heading).update(0)
 
@@ -1069,7 +1073,7 @@
   if appendixes != none { appendixes }
 
   /* generative AI declaration */
-  [= #locale.AI-USAGE.title.at(language)]
+  [= #locale.AI-USAGE.title.at(language) <apx:genai>]
 
   if type(genai-declaration) == content {
     // custom
