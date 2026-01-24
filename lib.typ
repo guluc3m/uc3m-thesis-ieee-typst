@@ -963,6 +963,7 @@
     heading(
       locale.ABBREVIATIONS.at(language),
       numbering: none,
+      outlined: false,
     )
 
     if type(abbreviations) == dictionary {
