@@ -981,6 +981,8 @@
       // custom
       abbreviations
     }
+
+    newpage(double-sided)
   }
 
 
