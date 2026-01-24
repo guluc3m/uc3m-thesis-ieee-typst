@@ -974,7 +974,7 @@
           columns: (1fr, 2fr), // full page width
           stroke: none,
           align: left,
-          ..abbreviations.pairs().flatten()
+          ..abbreviations.pairs().sorted(key: ((abbr, _full)) => abbr).flatten()
         ),
       )
     } else if type(abbreviations) == content {
