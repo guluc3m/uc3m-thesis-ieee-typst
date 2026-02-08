@@ -843,75 +843,150 @@
     it
   }
 
-  // top-level TOC entries in bold without filling
-  show outline.entry.where(level: 1): it => {
-    // only apply for contents (headings) outline
-    if it.element.func() != heading { return it }
+  set outline.entry(fill: repeat([.], gap: 2pt))
 
-    // don't show page number in outline for appendixes
-    let page-number = if (
-      it.element.supplement == [#locale.APPENDIX.at(language)]
-    ) { "" } else { it.page() }
+  /// Formats an outline entry.
+  ///
+  /// - it (content): Outline entry.
+  /// - prefix (auto, content): Entry prefix (e.g. `[Chapter 1]`). If `auto`, default prefix.
+  /// - body (auto, content): Entry body (e.g. `[My chapter]`). If `auto`, default body.
+  /// - fill (boolean): When `true`, add dots between the body and the page number.
+  /// - page (boolean): When `true`, shows the page number.
+  /// - above (auto, fraction, relative): The spacing between this block and its predecessor (`block.above`).
+  /// - spacing (auto, fraction, relative): The spacing around the block (`block.spacing`). When `auto`, inherits the paragraph spacing.
+  /// - text-size (auto, lenght): Text size. When `auto`, default text size. (`text.size`)
+  /// - text-weight (int, str): Text weight (`text.weight`).
+  /// - color (color): Entry text color. Includes link color.
+  /// - indented (boolean): Whether to indent the entry.
+  /// - justified (boolean): When `false`, wraps the entry in a `block` to prevent justification.
+  /// -> content
+  let outline-entry-formatter(
+    it,
+    prefix: auto,
+    body: auto,
+    fill: true,
+    page: true,
+    above: auto,
+    spacing: auto,
+    text-size: auto,
+    text-weight: "regular",
+    color: black,
+    indented: true,
+    justified: true,
+  ) = context {
+    set block(spacing: spacing, above: above)
+    set text(
+      weight: text-weight,
+      size: if text-size == auto { text.size } else { text-size },
+      fill: accent-color,
+    )
+    show link: set text(color) // reset link color
+
+    let entry-prefix = if prefix == auto { it.prefix() } else { prefix }
+
+    let entry-body = {
+      // body
+      if body == auto { it.body() } else { body }
+
+      // fill
+      sym.space.nobreak
+      box(width: 1fr, if fill { it.fill } else {})
+      sym.space.en
+
+      // page
+      if page { it.page() }
+    }
+
+    let justified-wrapper = if not justified { block } else { x => { x } }
+
+    justified-wrapper(
+      link(
+        it.element.location(), // make entry linkable
+        {
+          if indented {
+            it.indented(
+              entry-prefix,
+              entry-body,
+            )
+          } else {
+            entry-prefix
+            entry-body
+          }
+        },
+      ),
+    )
+  }
+
+  // top-level outline entries
+  show outline.entry.where(level: 1): it => {
+    // non-TOC outlines
+    if it.element.func() != heading {
+      return outline-entry-formatter(it, color: black)
+    }
+
+    // TOC outlines
+
+    let is-appendix = it.element.supplement == [#locale.APPENDIX.at(language)]
+
+    let common-configs = (
+      fill: false,
+      page: not is-appendix, // don't show page number for appendixes
+    )
 
     if style == "strict" {
-      set block(spacing: 1.5em)
-      link(
-        it.element.location(), // make entry linkable
-        it.indented(
-          it.prefix(),
-          upper(it.body())
-            + if page-number == "" { "" } else {
-              "  " + box(width: 1fr, repeat([.], gap: 2pt)) + "  " + page-number
-            },
-        ),
+      outline-entry-formatter(
+        it,
+        spacing: 1.5em,
+        above: 1.5em,
+        body: upper(it.body()),
+        ..common-configs,
       )
     } else if style == "clean" {
-      set block(above: 2em)
-      set text(weight: "semibold", fill: azuluc3m)
-      link(
-        it.element.location(), // make entry linkable
-        it.indented(it.prefix(), it.body() + box(width: 1fr) + page-number),
+      outline-entry-formatter(
+        it,
+        above: 2em,
+        text-weight: "semibold",
+        color: accent-color,
+        ..common-configs,
       )
     } else if style == "fancy" {
-      set block(above: 1.3em)
-      set text(size: 13pt, weight: "semibold", fill: azuluc3m)
-
-      // wrap it in a block to prevent justification
-      block(
-        link(
-          it.element.location(), // make entry linkable
-          [
-            #if it.prefix() != none {
-              if regex("\d+") in it.prefix().text {
-                locale.CHAPTER.at(language) + " " + it.prefix()
-              } else {
-                locale.APPENDIX.at(language) + " " + it.prefix()
-              }
+      outline-entry-formatter(
+        it,
+        above: 1.3em,
+        text-size: 13pt,
+        text-weight: "semibold",
+        color: accent-color,
+        justified: false,
+        indented: false,
+        prefix: {
+          // add full name
+          if it.prefix() != none {
+            if regex("\d+") in it.prefix().text {
+              // chapter
+              locale.CHAPTER.at(language)
+              sym.space.nobreak
+              it.prefix()
             } else {
-              none
-            } #it.body() #box(width: 1fr) #page-number
-          ],
-        ),
+              // appendix
+              locale.APPENDIX.at(language)
+              sym.space.nobreak
+              it.prefix()
+            }
+            sym.space.nobreak
+          } else {
+            none
+          }
+        },
+        ..common-configs,
       )
     }
   }
 
   // other TOC entries in regular with adapted filling
   show outline.entry.where(level: 2).or(outline.entry.where(level: 3)): it => {
-    set block(above: if style == "strict" { auto } else { 0.8em })
-
-    show link: set text(black) // reset link color
-
-    link(
-      it.element.location(), // make entry linkable
-      it.indented(
-        it.prefix(),
-        it.body()
-          + "  "
-          + box(width: 1fr, repeat([.], gap: 2pt))
-          + "  "
-          + it.page(),
-      ),
+    outline-entry-formatter(
+      it,
+      above: if style == "strict" { auto } else { 0.8em },
     )
   }
 
