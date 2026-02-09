@@ -539,6 +539,16 @@
   }
 
 
+  /* EQUATIONS */
+
+  // show chapter on numbering
+  set math.equation(numbering: (..num) => numbering(
+    if in-appendix.get() { "(A.1)" } else { "(1.1)" },
+    counter(heading).get().first(),
+    num.pos().first(),
+  ))
+
+
   /* FIGURES */
 
   // more space around figures
