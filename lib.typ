@@ -476,56 +476,63 @@
               bottom-edge: -0.25em,
             )
           } else {
+            // appendix
             v(32pt)
             text(
               size: 32pt,
               fill: azuluc3m,
               weight: "bold",
               counter(heading).display() + h(0.5em) + it.body,
-            ) // appendix
+            )
           }
         }
       } else if style == "fancy" {
         box(
           width: 100%,
           inset: (top: 5.5em, bottom: 5em),
-          [
+          {
             // chapter number
-            #box(
+            box(
               width: 100%,
               stroke: (top: azuluc3m + 1.8pt, bottom: azuluc3m + 1.8pt),
               inset: (top: 1.5em, bottom: 1.5em),
-              [
-                #set align(center)
-                #text(
-                  [
-                    #upper(if in-body.get() {
+              {
+                set align(center)
+                text(
+                  size: 24pt,
+                  {
+                    upper(if in-body.get() {
                       locale.CHAPTER.at(language)
                     } else if in-appendix.get() {
                       locale.APPENDIX.at(language)
                     })
-                    #let count = counter(heading).get().first()
-                    #let image = numbering(heading.numbering, count)
-                    #if image.last() == "." {
+
+                    sym.space.nobreak
+
+                    let count = counter(heading).get().first()
+                    let image = numbering(heading.numbering, count)
+                    if image.last() == "." {
                       image = image.slice(0, image.len() - 1)
                     }
-                    #image
-                  ],
-                  size: 24pt,
+
+                    image
+                  },
                 )
-              ],
+              },
             )
+
             // chapter name
-            #box(
+            box(
               width: 100%,
               inset: (top: 0.2em),
-              [
-                #set align(center)
-                #set text(azuluc3m)
-                #set par(justify: false)
-                #text(upper(it.body), size: 24pt, weight: "semibold")],
+              {
+                set align(center)
+                set text(azuluc3m)
+                set par(justify: false)
+                text(upper(it.body), size: 24pt, weight: "semibold")
+              },
             )
-          ],
+          },
         )
       }
     }
@@ -814,7 +821,11 @@
   let make-abstract(data, language) = {
     set text(lang: language)
     heading(locale.ABSTRACT.at(language), numbering: none, outlined: false)
-    data.body
+
+    // wrap in block to remove first-line indent
+    // see
+    // https://forum.typst.app/t/how-to-remove-a-first-line-indent-of-a-paragraph-after-the-centered-text/1128/2
+    block(data.body)
 
     v(1fr)
     [*#locale.KEYWORDS.at(language):* #data.keywords.join(" • ")]
@@ -837,7 +848,7 @@
       numbering: none,
       outlined: false,
     )
-    acknowledgements
+    block(acknowledgements)
   }
 
 
