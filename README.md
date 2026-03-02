@@ -79,3 +79,8 @@ typst compile report.typ
 - [Typst table generator](https://www.latex-tables.com/?format=typst&force)
 - [Typst Examples Book](https://sitandr.github.io/typst-examples-book/book/)
 - [Typerino](https://typerino.com/): Online typst equation editor
+
+### Examples
+Here are some examples of thesis made with this template:
+- [J. A. Verde - Procesamiento de señales de encefalograma para la detección de ataques epilépticos](https://github.com/joseaverde/TFG/tree/master/report)
+- [L. D. Casais - Implementing Interrupts, Timers, and Memory-Mapped I/O in CREATOR](https://github.com/ldcas-uc3m/TFM)
