@@ -338,7 +338,7 @@
     author: author,
     description: abstract.body,
     keywords: abstract.keywords,
-    date: auto,
+    date: date,
   )
 
 
