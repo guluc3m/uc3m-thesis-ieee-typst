@@ -60,6 +60,14 @@ Install [Typst](https://github.com/typst/typst?tab=readme-ov-file#installation) 
 typst compile report.typ
 ```
 
+If you want to compile in the PDF/A ISO standard (recommended), use:
+```
+typst compile report.typ --pdf-standard=a-4
+```
+
+More information in [Typst's documentation](https://typst.app/docs/reference/pdf/#pdf-a).
+
+
 > [!TIP]
 > For [VS Code](https://code.visualstudio.com/) users, it is recommended to use the [Tinymist Typst](https://marketplace.visualstudio.com/items/?itemName=myriad-dreamin.tinymist) extension, which works without needing to install the compiler.
 
