@@ -99,8 +99,11 @@
               fill: if data-usage.at(question-key) == (answer-key == "yes") {
                 gray
               },
-            )[#set par(justify: false)
-              #answer-text.at(language)],
+            )[
+              #set align(horizon)
+              #set par(justify: false)
+              #answer-text.at(language)
+            ],
           )
         },
       )
@@ -116,8 +119,7 @@
   if tool != none {
     [
       #locale.AI-TECHNICAL-USAGE.tool-declaration.at(language)
-      (#tool)
-      #locale.AI-TECHNICAL-USAGE.tool-declaration-suffix.at(language):
+      (#tool) #locale.AI-TECHNICAL-USAGE.tool-declaration-suffix.at(language):
     ]
   }
 

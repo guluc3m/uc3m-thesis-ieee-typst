@@ -117,12 +117,12 @@
 
 #let AFFIRMATION = (
   es: "SI",
-  en: "Yes",
+  en: "YES",
 )
 
 #let NEGATION = (
-  es: "No",
-  en: "No",
+  es: "NO",
+  en: "NO",
 )
 
 #let AI-USAGE = (
@@ -194,10 +194,16 @@
         yes: (
           es: [Sí, he usado estos materiales con autorización de los titulares
             de derechos de autor; o bien sin ella porque se ajustan a una de
-            las excepciones o límites que permite la ley.],
+            las excepciones o límites que permite la ley:
+            - Obra en dominio público
+            - Obra licenciada (licencias Creative Commons)
+            - Uso de fragmentos con fines de investigación (derecho de cita)],
           en: [Yes, I have used these materials with permission from the
             copyright holders, or without permission because they fall within
-            one of the exceptions or limitations permitted by law.],
+            one of the exceptions or limitations permitted by law:
+            - Public domain work
+            - Licensed work (Creative Commons licenses)
+            - Use of excerpts for research purposes (fair use)],
         ),
         no: (
           es: [No, no he usado materiales protegidos por derechos de autoría.],
@@ -216,11 +222,11 @@
       answers: (
         yes: (
           es: [Sí, he usado estos datos con autorización de los interesados y
-            conforme a las instrucciones contenidas en la #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?tab=t.0")[guía] aprobada por la
-            Universidad.],
+            conforme a las instrucciones contenidas en la #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?tab=t.0")[guía aprobada por la
+            Universidad].],
           en: [Yes, I have used this data with the authorization of the
             interested parties and in accordance with the instructions contained
-            in the #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?pli=1&tab=t.0")[guide] approved by the University.],
+            in the #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?pli=1&tab=t.0")[guide approved by the University].],
         ),
         no: (
           es: [No, no he usado datos de carácter personal.],
