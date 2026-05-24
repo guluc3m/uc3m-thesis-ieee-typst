@@ -18,11 +18,11 @@
 
 #let CC-LICENSE = (
   es: [
-    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ #strong[Reconocimiento -- No Comercial -- Sin Derivadas] 4.0
       International]
   ],
   en: [
-    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
+    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ #strong[Attribution -- Non Commercial -- No Derivatives] 4.0
       International]
   ],
 )
@@ -116,13 +116,25 @@
 
 
 #let AFFIRMATION = (
-  es: "SI",
-  en: "YES",
+  fancy: (
+    es: "Sí",
+    en: "Yes",
+  ),
+  strict: (
+    es: "SI",
+    en: "YES",
+  ),
 )
 
 #let NEGATION = (
-  es: "NO",
-  en: "NO",
+  fancy: (
+    es: "No",
+    en: "No",
+  ),
+  strict: (
+    es: "NO",
+    en: "NO",
+  ),
 )
 
 #let AI-USAGE = (
@@ -135,10 +147,10 @@
     en: "I have used Generative AI in this work:",
   ),
   negation: (
-    es: [El autor de esta tésis *no* ha usado ningún tipo de inteligencia
+    es: [El autor de esta tésis #strong[no] ha usado ningún tipo de inteligencia
       artificial generativa durante el desarrollo del proyecto ni durante la
       redacción de este documento.],
-    en: [The author of this thesis *has not* used any type of generative
+    en: [The author of this thesis #strong[has not] used any type of generative
       artificial intelligence during the development of the project or during
       the writing of this document.],
   ),
@@ -197,13 +209,15 @@
             las excepciones o límites que permite la ley:
             - Obra en dominio público
             - Obra licenciada (licencias Creative Commons)
-            - Uso de fragmentos con fines de investigación (derecho de cita)],
+            - Uso de fragmentos con fines de investigación (derecho de cita)
+          ],
           en: [Yes, I have used these materials with permission from the
             copyright holders, or without permission because they fall within
             one of the exceptions or limitations permitted by law:
             - Public domain work
             - Licensed work (Creative Commons licenses)
-            - Use of excerpts for research purposes (fair use)],
+            - Use of excerpts for research purposes (fair use)
+          ],
         ),
         no: (
           es: [No, no he usado materiales protegidos por derechos de autoría.],
@@ -223,7 +237,7 @@
         yes: (
           es: [Sí, he usado estos datos con autorización de los interesados y
             conforme a las instrucciones contenidas en la #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?tab=t.0")[guía aprobada por la
-            Universidad].],
+              Universidad].],
           en: [Yes, I have used this data with the authorization of the
             interested parties and in accordance with the instructions contained
             in the #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?pli=1&tab=t.0")[guide approved by the University].],
@@ -237,7 +251,7 @@
     tos: (
       prompt: (
         es: [Mi utilización de la herramienta de Inteligencia Artificial Generativa ha #strong[respetado sus términos de uso], así como los principios éticos esenciales, no orientándola de manera maliciosa a obtener un resultado inapropiado para el trabajo presentado.],
-        en: [My use of the Generative AI tool has *respected its terms of use*, as well as the essential ethical principles, not being maliciously oriented to obtain an inappropriate result for the work presented.],
+        en: [My use of the Generative AI tool has #strong[respected its terms of use], as well as the essential ethical principles, not being maliciously oriented to obtain an inappropriate result for the work presented.],
       ),
       answers: (
         yes: (

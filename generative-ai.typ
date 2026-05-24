@@ -35,6 +35,7 @@
 /// -> content
 #let genai-template(
   language,
+  style,
   usage,
   data-usage,
   technical-usage,
@@ -55,8 +56,8 @@
     fill: (x, y) => if x != int(usage) { gray },
     columns: 2,
     align: auto,
-    [#strong[#locale.AFFIRMATION.at(language)];],
-    [#strong[#locale.NEGATION.at(language)];],
+    [#strong[#locale.AFFIRMATION.at(style).at(language)];],
+    [#strong[#locale.NEGATION.at(style).at(language)];],
   )
 
   if not usage {

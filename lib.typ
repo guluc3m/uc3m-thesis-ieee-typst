@@ -1132,6 +1132,7 @@
   } else {
     genai-template(
       language,
+      style,
       genai-declaration.at("usage", default: none),
       genai-declaration.at("data-usage", default: none),
       genai-declaration.at("technical-usage", default: none),
