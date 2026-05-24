@@ -48,6 +48,14 @@
     numbering: (..n) => { numbering("1.", ..n.pos().slice(1)) },
   )
 
+  let answer-box = body => box(
+    body,
+    stroke: 0.5pt + black,
+    inset: 0.5em,
+    outset: 0.2em,
+    radius: if style == "fancy" { 0.1em } else { 0em },
+  )
+
   /* USAGE */
 
   [#strong[#locale.AI-USAGE.affirmation.at(language)]]
@@ -132,7 +140,8 @@
       if technical-usage.keys().contains(key) {
         let label = locale.AI-TECHNICAL-USAGE.questions.at(key).at(language)
         let body = technical-usage.at(key)
-        [- *#label:* #body]
+        [- *#label:*]
+        answer-box(body)
       }
     }
   }
@@ -159,5 +168,5 @@
 
   [== #locale.AI-USAGE-REFLECTION.title.at(language)]
 
-  usage-reflection
+  answer-box(usage-reflection)
 }
