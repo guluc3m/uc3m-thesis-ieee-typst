@@ -4,6 +4,27 @@
 #import "utils.typ": newpage
 #import "arguments.typ": validate-argument
 
+// Keys that belong to the documentation & drafting group
+#let _documentation-keys = (
+  "documentation",
+  "reflection",
+  "review",
+  "research",
+  "references",
+  "summary",
+  "translation",
+)
+
+// Keys that belong to the specific content development group
+#let _specific-content-keys = (
+  "assistance-coding",
+  "generating-content",
+  "optimization",
+  "data-processing",
+  "idea-inspiration",
+  "other",
+)
+
 
 /// UC3M template for declaration of use of AI in the project.
 ///
@@ -51,10 +72,10 @@
   [== #locale.AI-DATA-USAGE.title.at(language)]
 
   table(
-    columns: (2fr, 1fr, 1fr, 2fr),
+    columns: (1fr, 1fr),
     align: center,
     inset: 0.8em,
-    table.cell(colspan: 4, inset: 0.6em)[*#locale.QUESTION.at(language)*],
+    table.cell(colspan: 2, inset: 0.6em)[*#locale.QUESTION.at(language)*],
 
     /* general question */
     ..for (index, (question-key, question-data)) in locale
@@ -66,7 +87,7 @@
       // see https://forum.typst.app/t/how-come-this-does-not-generate-a-grid-as-expected/1660/2
       (
         // prompt spanning all columns
-        table.cell(colspan: 4)[
+        table.cell(colspan: 2)[
           #set enum(start: index + 1) // correctly set enum number
           + #question-data.prompt.at(language)
         ],
@@ -77,8 +98,8 @@
           .enumerate() {
           (
             table.cell(
-              colspan: if i == 1 { 2 } else { 1 }, // middle answer spans 2 columns
-              fill: if data-usage.at(question-key) == answer-key { gray },
+              // answer-key is "yes"/"no"; data-usage values are booleans
+              fill: if data-usage.at(question-key) == (answer-key == "yes") { gray },
             )[#set par(justify: false)
               #answer-text.at(language)],
           )
@@ -86,52 +107,48 @@
       )
     },
 
-    /* terms of use */
-    table.cell(colspan: 4)[
-      #set enum(start: locale.AI-DATA-USAGE.questions.len() + 1)
-      + #locale.AI-DATA-USAGE.followed-terms.at(language)
-    ],
-
-    table.cell(
-      colspan: 2,
-      inset: 0.6em,
-      fill: if data-usage.followed-terms { gray },
-    )[#locale.AFFIRMATION.at(language)],
-
-    table.cell(
-      colspan: 2,
-      inset: 0.6em,
-      fill: if not data-usage.followed-terms { gray },
-    )[#locale.NEGATION.at(language)],
   )
-
-  if (
-    data-usage.at("sensitive") == "without-authorization"
-      or data-usage.at("copyright") == "without-authorization"
-      or data-usage.at("personal") == "without-authorization"
-  ) {
-    assert(
-      data-usage.at("explanation", default: none) != none,
-      message: "Missing key 'explanation' in 'genai-declaration'. If any of the data usage was done without authorization, you must provide an explanation.",
-    )
-    data-usage.explanation
-  }
 
 
   /* TECHNICAL USAGE */
 
   [== #locale.AI-TECHNICAL-USAGE.title.at(language)]
 
+  // Tool declaration intro sentence
+  let tool = technical-usage.at("tool", default: none)
+  if tool != none {
+    [
+      #locale.AI-TECHNICAL-USAGE.tool-declaration.at(language)
+      (#tool)
+      #locale.AI-TECHNICAL-USAGE.tool-declaration-suffix.at(language):
+    ]
+  }
+
   show heading.where(level: 3): set heading(numbering: none) // remove numbering
 
-  for (key_interaction, interactions) in technical-usage {
-    assert(
-      locale.AI-TECHNICAL-USAGE.questions.keys().contains(key_interaction),
-      message: "Unknown technical-usage '" + key_interaction + "'",
-    )
+  // Helper: render a list of items for a given set of keys
+  let render-items(keys) = {
+    for key in keys {
+      if technical-usage.keys().contains(key) {
+        let label = locale.AI-TECHNICAL-USAGE.questions.at(key).at(language)
+        let body = technical-usage.at(key)
+        [- *#label:* #body]
+      }
+    }
+  }
 
-    [=== #locale.AI-TECHNICAL-USAGE.questions.at(key_interaction).at(language)
-      #interactions]
+  // Documentation & drafting section
+  let has-documentation = _documentation-keys.any(k => technical-usage.keys().contains(k))
+  if has-documentation {
+    [=== #locale.AI-TECHNICAL-USAGE.documentation-section.at(language)]
+    render-items(_documentation-keys)
+  }
+
+  // Develop specific content section
+  let has-specific = _specific-content-keys.any(k => technical-usage.keys().contains(k))
+  if has-specific {
+    [=== #locale.AI-TECHNICAL-USAGE.specific-content-section.at(language)]
+    render-items(_specific-content-keys)
   }
 
 

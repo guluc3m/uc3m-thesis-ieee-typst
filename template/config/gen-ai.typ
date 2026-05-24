@@ -1,24 +1,23 @@
 #let genai-declaration = (
     usage: true,
     data-usage: (
-      sensitive: "with-authorization",
-      copyright: "without-authorization",
-      personal: "not-used",
-      followed-terms: true,
-      explanation: [_[Add an example] e.g. "the materials were protected but
-        permitted use for this purpose" or "the terms of use, which can be found
-        at this address (...), prevent the use I have made, but it was essential
-        given the nature of the work_],
+      // true = YES / used with authorization; false = NO / not used
+      confidential: true,
+      copyright: false,
+      personal: true,
+      // Did your usage respect the tool's terms of use?
+      tos: true,
     ),
     technical-usage: (
+      // Name of the AI system/tool and version (e.g. "ChatGPT 4o", "Gemini 2.0")
+      // tool: "ChatGPT 4o",
+
       // If you think it is necessary to include it, add it in each case:
       // *using the prompt* ...
-      //            (write the request made to the IAG)
+      //            (write the request made to the AI)
       // *having as interaction* ...
-      //            (describe what interaction you made with the IAG after the
+      //            (describe what interaction you made with the AI after the
       //            prompt's response)
-      //
-      // Comment out the ones that don't apply.
       //
       // Example: I declare that I have made use of the Generative AI system
       // Chat GPT 3.5 to search for information using the prompt: "Tell me a
@@ -26,7 +25,13 @@
       // proposal of the 15-minute City in Spain", having as interaction the
       // proposition of the concrete example of the Chamartín district that has
       // been reflected in the report.
+      //
+      // ── Documentation and drafting ────────────────────────────────────────
+      // Comment out the ones that don't apply.
       documentation: [_[Add an example] For example: I have asked for a list of
+        alternatives to address the problem stated at the beginning of the
+        paper._],
+      reflection: [_[Add an example] For example: I have asked for a list of
         alternatives to address the problem stated at the beginning of the
         paper._],
       review: [_[Add an example] For example: I have asked for paragraphs to be
@@ -38,6 +43,7 @@
       references: [_Bibliography search._],
       summary: [_Summary of bibliography consulted._],
       translation: [_Translation of texts consulted._],
+      // ── Develop specific content ───────────────────────────────────────────
       assistance-coding: [_[Add an example of the usual flow of use for
         programming] For example: I have asked for explanations about a code in
         Python._],

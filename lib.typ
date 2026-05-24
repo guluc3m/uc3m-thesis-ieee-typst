@@ -276,32 +276,12 @@
         optional: type(genai-declaration) == dictionary
           and not genai-declaration.usage,
         schema: (
-          sensitive: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          copyright: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          personal: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          followed-terms: (target-type: bool),
-          explanation: (target-type: str, optional: true),
+          // true  = YES / used with authorization
+          // false = NO  / not used
+          confidential: (target-type: bool),
+          copyright: (target-type: bool),
+          personal: (target-type: bool),
+          tos: (target-type: bool),
         ),
       ),
       technical-usage: (
