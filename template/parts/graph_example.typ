@@ -25,15 +25,9 @@
 
 #lq.diagram(
   xaxis: (
-    ticks: ("Apples", "Bananas", "Kiwis", "Mangos", "Papayas")
-      .map(rotate.with(-45deg, reflow: true))
-      .map(align.with(right))
-      .enumerate(),
+    ticks: ("Apples", "Bananas", "Kiwis", "Mangos", "Papayas").map(rotate.with(-45deg, reflow: true)).map(align.with(right)).enumerate(),
     subticks: none,
   ),
-  lq.bar(
-    range(5),
-    (5, 3, 4, 2, 1),
-  ),
+  lq.bar(range(5), (5, 3, 4, 2, 1)),
 ),
 

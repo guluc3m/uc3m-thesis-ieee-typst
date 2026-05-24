@@ -47,7 +47,6 @@
     numbering: (..n) => { numbering("1.", ..n.pos().slice(1)) },
   )
 
-
   /* USAGE */
 
   [#strong[#locale.AI-USAGE.affirmation.at(language)]]
@@ -60,12 +59,10 @@
     [#strong[#locale.NEGATION.at(language)];],
   )
 
-
   if not usage {
     [#locale.AI-USAGE.negation.at(language)]
     return
   }
-
 
   /* DATA USAGE */
 
@@ -99,16 +96,16 @@
           (
             table.cell(
               // answer-key is "yes"/"no"; data-usage values are booleans
-              fill: if data-usage.at(question-key) == (answer-key == "yes") { gray },
+              fill: if data-usage.at(question-key) == (answer-key == "yes") {
+                gray
+              },
             )[#set par(justify: false)
               #answer-text.at(language)],
           )
         },
       )
     },
-
   )
-
 
   /* TECHNICAL USAGE */
 
@@ -138,19 +135,22 @@
   }
 
   // Documentation & drafting section
-  let has-documentation = _documentation-keys.any(k => technical-usage.keys().contains(k))
+  let has-documentation = _documentation-keys.any(k => technical-usage
+    .keys()
+    .contains(k))
   if has-documentation {
     [=== #locale.AI-TECHNICAL-USAGE.documentation-section.at(language)]
     render-items(_documentation-keys)
   }
 
   // Develop specific content section
-  let has-specific = _specific-content-keys.any(k => technical-usage.keys().contains(k))
+  let has-specific = _specific-content-keys.any(k => technical-usage
+    .keys()
+    .contains(k))
   if has-specific {
     [=== #locale.AI-TECHNICAL-USAGE.specific-content-section.at(language)]
     render-items(_specific-content-keys)
   }
-
 
   /* REFLECTION */
 

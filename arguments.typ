@@ -211,7 +211,6 @@
         )
       }
 
-
       if (
         config.at("max-len", default: none) != none
           and value.at(key).len() > config.max-len
@@ -231,7 +230,6 @@
       return (false, "Invalid type for field '" + key + "'. " + err)
     }
   }
-
 
   (true, "")
 }
