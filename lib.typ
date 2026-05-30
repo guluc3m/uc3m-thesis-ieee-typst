@@ -276,32 +276,12 @@
         optional: type(genai-declaration) == dictionary
           and not genai-declaration.usage,
         schema: (
-          sensitive: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          copyright: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          personal: (
-            target-type: str,
-            possible-values: (
-              "with-authorization",
-              "without-authorization",
-              "not-used",
-            ),
-          ),
-          followed-terms: (target-type: bool),
-          explanation: (target-type: str, optional: true),
+          // true  = YES / used with authorization
+          // false = NO  / not used
+          confidential: (target-type: bool),
+          copyright: (target-type: bool),
+          personal: (target-type: bool),
+          tos: (target-type: bool),
         ),
       ),
       technical-usage: (
@@ -331,7 +311,6 @@
     ),
   )
 
-
   // ============================ DOCUMENT SETUP ============================ //
   set document(
     title: title,
@@ -341,7 +320,6 @@
     date: date,
   )
 
-
   // ============================== PAGE SETUP ============================== //
 
   let in-frontmatter = state("in-frontmatter", false) // to control page number format in frontmatter
@@ -350,7 +328,6 @@
   let in-appendix = state("in-appendix", false) // to control heading formatting in the appendixes
 
   let accent-color = if style == "strict" { black } else { azuluc3m }
-
 
   /* TEXT */
 
@@ -366,7 +343,6 @@
     first-line-indent: 1.8em,
     justify: true,
   )
-
 
   /* HEADINGS */
 
@@ -427,7 +403,6 @@
       v(1.15em)
       return
     }
-
 
     if in-frontmatter.get() or in-endmatter.get() {
       /* frontmatter / endmatter */
@@ -545,7 +520,6 @@
     if style == "clean" { v(16pt) + text(size: 11pt, it) } else { it }
   }
 
-
   /* EQUATIONS */
 
   // show chapter on numbering
@@ -554,7 +528,6 @@
     counter(heading).get().first(),
     num.pos().first(),
   ))
-
 
   /* FIGURES */
 
@@ -590,14 +563,12 @@
     }
   }
 
-
   // show chapter on numbering
   set figure(numbering: (..num) => numbering(
     if in-appendix.get() { "A.1" } else { "1.1" },
     counter(heading).get().first(),
     num.pos().first(),
   ))
-
 
   /* IMAGES */
 
@@ -617,7 +588,6 @@
     } else { auto },
     gap: { 1em },
   )
-
 
   /* TABLES */
 
@@ -647,19 +617,16 @@
     } else { it }
   }
 
-
   /* REFERENCES & LINKS */
 
   show ref: set text(accent-color)
   show link: set text(accent-color)
-
 
   /* LISTS */
 
   // indent lists
   set list(indent: 1em)
   set enum(indent: 1em)
-
 
   /* FOOTNOTES */
 
@@ -681,7 +648,6 @@
     h(.05em) // mini-space in between number and body (same as default)
     it.note.body
   }
-
 
   /* PAGE LAYOUT */
 
@@ -761,7 +727,6 @@
     },
   )
 
-
   // ============================== TITLEPAGE =============================== //
 
   titlepage(
@@ -786,7 +751,6 @@
   )
 
   if flyleaf { make-flyleaf(double-sided) }
-
 
   // ============================= FRONTMATTER ============================== //
 
@@ -815,7 +779,6 @@
     newpage(double-sided)
   }
 
-
   /* ABSTRACT */
 
   let make-abstract(data, language) = {
@@ -839,7 +802,6 @@
     make-abstract(english-abstract, "en")
   }
 
-
   /* ACKNOWLEDGEMENTS */
 
   if acknowledgements != none {
@@ -851,9 +813,7 @@
     block(acknowledgements)
   }
 
-
   /* OUTLINES */
-
 
   // disable footnotes
   show outline: it => {
@@ -1052,7 +1012,6 @@
     }
   }
 
-
   /* ABBREVIATIONS */
 
   if abbreviations != none {
@@ -1082,9 +1041,7 @@
     newpage(double-sided)
   }
 
-
   in-frontmatter.update(false)
-
 
   // ============================ DOCUMENT BODY ============================= //
 
@@ -1101,13 +1058,11 @@
 
   doc
 
-
   // ============================== ENDMATTER =============================== //
 
   newpage(double-sided, weak: false)
   in-body.update(false)
   in-endmatter.update(true)
-
 
   /* BIBLIOGRAPHY */
 
@@ -1126,7 +1081,6 @@
 
   bibliography-content
 
-
   /* GLOSSARY */
 
   if glossary != none {
@@ -1142,7 +1096,6 @@
       glossary
     }
   }
-
 
   // ============================== APPENDIXES ============================== //
 
@@ -1168,7 +1121,6 @@
 
   counter(heading).update(0)
 
-
   if appendixes != none { appendixes }
 
   /* generative AI declaration */
@@ -1180,13 +1132,13 @@
   } else {
     genai-template(
       language,
+      style,
       genai-declaration.at("usage", default: none),
       genai-declaration.at("data-usage", default: none),
       genai-declaration.at("technical-usage", default: none),
       genai-declaration.at("usage-reflection", default: none),
     )
   }
-
 
   // we _would_ need to set this on a new page,
   // but as there are none, it's not needed

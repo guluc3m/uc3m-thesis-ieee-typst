@@ -18,15 +18,11 @@
 
 #let CC-LICENSE = (
   es: [
-    Esta obra se encuentra sujeta a la licencia #link(
-      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    )[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
+    Esta obra se encuentra sujeta a la licencia #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Reconocimiento -- No Comercial -- Sin Derivadas* 4.0
       International]
   ],
   en: [
-    This work is licensed under #link(
-      "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-    )[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
+    This work is licensed under #link("https://creativecommons.org/licenses/by-nc-nd/4.0/")[Creative Commons\ *Attribution -- Non Commercial -- No Derivatives* 4.0
       International]
   ],
 )
@@ -120,13 +116,25 @@
 
 
 #let AFFIRMATION = (
-  es: "SI",
-  en: "YES",
+  fancy: (
+    es: "Sí",
+    en: "Yes",
+  ),
+  strict: (
+    es: "SI",
+    en: "YES",
+  ),
 )
 
 #let NEGATION = (
-  es: "NO",
-  en: "NO",
+  fancy: (
+    es: "No",
+    en: "No",
+  ),
+  strict: (
+    es: "NO",
+    en: "NO",
+  ),
 )
 
 #let AI-USAGE = (
@@ -162,95 +170,100 @@
 
 #let AI-DATA-USAGE = (
   title: (
-    es: "Reflexión sobre comportamiento ético y responsable",
-    en: "Reflection on ethical and responsible behaviour",
+    es: "Reflexión sobre comportamiento legal, ético y responsable",
+    en: "Reflection on legal, ethical and responsible behaviour",
   ),
   questions: (
-    sensitive: (
+    confidential: (
       prompt: (
-        es: [En mi interacción con herramientas de IA Generativa he remitido
-          *datos de carácter sensible* con la debida autorización de los
-          interesados.],
-        en: [In my interaction with Generative AI tools, I have submitted
-          *sensitive data* with the consent of the data subjects.],
+        es: [En mi interacción con herramientas de Inteligencia Artificial Generativa he facilitado
+          *datos de carácter confidencial* contando siempre con la debida
+          autorización de los interesados.],
+        en: [In my interactions with Generative AI tools, I have provided
+          *confidential data*, always with the appropriate authorization of the
+          data subjects.],
       ),
       answers: (
-        with-authorization: (
-          es: [SÍ, he usado estos datos con autorización],
-          en: [YES, I have used this data with permission],
+        yes: (
+          es: [Sí, he usado estos datos con la autorización correspondiente.],
+          en: [Yes, I have used this data with adequate authorization.],
         ),
-        without-authorization: (
-          es: [NO, he usado estos datos sin autorización],
-          en: [NO, I have used this data without authorisation],
-        ),
-        not-used: (
-          es: [NO, no he usado datos de carácter sensible],
-          en: [NO, I have not used sensitive data],
+        no: (
+          es: [No, no he usado datos de carácter confidencial.],
+          en: [No, I have not used confidential data.],
         ),
       ),
     ),
     copyright: (
       prompt: (
-        es: [
-          En mi interacción con herramientas de IA Generativa he remitido
-          #strong[materiales protegidos por derechos de autor] con la debida
-          autorización de los interesados.
-        ],
+        es: [En mi interacción con herramientas de Inteligencia Artificial Generativa he facilitado
+          *materiales protegidos por derechos de autoría* contando con
+          la autorización respectiva.],
         en: [In my interaction with Generative AI tools, I have submitted
-          #strong[copyrighted materials] with the permission of those
-          concerned.],
+          *copyrighted materials* with the permission of those concerned.],
       ),
       answers: (
-        with-authorization: (
-          es: [SÍ, he usado estos materiales con autorización],
-          en: [YES, I have used these materials with permission.],
+        yes: (
+          es: [Sí, he usado estos materiales con autorización de los titulares
+            de derechos de autor; o bien sin ella porque se ajustan a una de
+            las excepciones o límites que permite la ley:
+            - Obra en dominio público
+            - Obra licenciada (licencias Creative Commons)
+            - Uso de fragmentos con fines de investigación (derecho de cita)
+          ],
+          en: [Yes, I have used these materials with permission from the
+            copyright holders, or without permission because they fall within
+            one of the exceptions or limitations permitted by law:
+            - Public domain work
+            - Licensed work (Creative Commons licenses)
+            - Use of excerpts for research purposes (fair use)
+          ],
         ),
-        without-authorization: (
-          es: [NO, he usado estos materiales sin autorización],
-          en: [NO, I have used these materials without permission.],
-        ),
-        not-used: (
-          es: [NO, no he usado materiales protegidos],
-          en: [NO, I have not used protected materials.],
+        no: (
+          es: [No, no he usado materiales protegidos por derechos de autoría.],
+          en: [No, I have not used copyrighted materials.],
         ),
       ),
     ),
     personal: (
       prompt: (
-        es: [En mi interacción con herramientas de IA Generativa he remitido
-          #strong[datos de carácter personal] con la debida autorización de los
+        es: [En mi interacción con herramientas de Inteligencia Artificial Generativa he facilitado
+          *datos de carácter personal* con la debida autorización de los
           interesados.],
         en: [In my interaction with Generative AI tools, I have submitted
-          #strong[personal data] with the consent of the data subjects.],
+          *personal data* with the consent of the data subjects.],
       ),
       answers: (
-        with-authorization: (
-          es: [SÍ, he usado estos materiales con autorización],
-          en: [YES, I have used these materials with permission.],
+        yes: (
+          es: [Sí, he usado estos datos con autorización de los interesados y
+            conforme a las instrucciones contenidas en la #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?tab=t.0")[guía aprobada por la
+              Universidad].],
+          en: [Yes, I have used this data with the authorization of the
+            interested parties and in accordance with the instructions contained
+            in the #link("https://docs.google.com/document/d/1YghVxFwo8a1VqdfnvJiZzlmAkfYepbDmD4g3hTOW9ro/edit?pli=1&tab=t.0")[guide approved by the University].],
         ),
-        without-authorization: (
-          es: [NO, he usado estos materiales sin autorización],
-          en: [NO, I have used these materials without permission.],
-        ),
-        not-used: (
-          es: [NO, no he usado datos de carácter personal],
-          en: [NO, I have not used personal data.],
+        no: (
+          es: [No, no he usado datos de carácter personal.],
+          en: [No, I have not used personal data.],
         ),
       ),
     ),
-  ),
-  followed-terms: (
-    es: [Mi utilización de la herramienta de IA Generativa ha *respetado sus
-      términos de uso*, así como los principios éticos esenciales, no
-      orientándola de manera maliciosa a obtener un resultado inapropiado para
-      el trabajo presentado, es decir, que produzca una impresión o conocimiento
-      contrario a la realidad de los resultados obtenidos, que suplante mi
-      propio trabajo o que pueda resultar en un perjuicio para las personas.],
-    en: [My use of the Generative AI tool has *respected its terms of use*, as
-      well as the essential ethical principles, not being maliciously oriented
-      to obtain an result for the work presented, that is to say, one that an
-      impression or knowledge contrary to the reality of the obtained, that
-      supplants my own work or that could harm people.],
+    tos: (
+      prompt: (
+        es: [Mi utilización de la herramienta de Inteligencia Artificial Generativa ha *respetado sus términos de uso*, así como los principios éticos esenciales, no orientándola de manera maliciosa a obtener un resultado inapropiado para el trabajo presentado.],
+        en: [My use of the Generative AI tool has *respected its terms of use*, as well as the essential ethical principles, not being maliciously oriented to obtain an inappropriate result for the work presented.],
+      ),
+      answers: (
+        yes: (
+          es: [Sí],
+          en: [Yes],
+        ),
+        no: (
+          es: [No],
+          en: [No],
+        ),
+      ),
+    ),
   ),
 )
 
@@ -259,10 +272,30 @@
     es: "Declaración de uso técnico",
     en: "Declaration of technical use",
   ),
+  tool-declaration: (
+    es: "Declaro haber hecho uso del sistema de IAG",
+    en: "I declare that I have made use of the Generative AI system",
+  ),
+  tool-declaration-suffix: (
+    es: "para",
+    en: "for",
+  ),
+  documentation-section: (
+    es: "Documentación y redacción",
+    en: "Documentation and drafting",
+  ),
+  specific-content-section: (
+    es: "Desarrollar contenido específico",
+    en: "Develop specific content",
+  ),
   questions: (
     documentation: (
-      es: "Documentación y redacción",
-      en: "Documentation and drafting",
+      es: "Soporte a la documentación y redacción del trabajo: generación de contenido textual para la elaboración de la memoria, así como apoyo en la documentación de los procesos seguidos durante el desarrollo del proyecto",
+      en: "Support for documentation and drafting of the work: generation of textual content for the preparation of the report, as well as support in documenting the processes followed during the development of the project",
+    ),
+    reflection: (
+      es: "Soporte a la reflexión en relación con el desarrollo del trabajo: proceso iterativo de análisis de alternativas y enfoques utilizando la IAG",
+      en: "Supporting reflection in relation to the development of the work: iterative process of analysing alternatives and approaches using AI",
     ),
     review: (
       es: "Revisión o reescritura de párrafos redactados previamente",
@@ -281,8 +314,8 @@
       en: "Summary of bibliography consulted",
     ),
     translation: (
-      es: "Traducción de texto consultados ",
-      en: "Translation of texts consulted ",
+      es: "Traducción de textos consultados",
+      en: "Translation of texts consulted",
     ),
     assistance-coding: (
       es: "Asistencia en el desarrollo de líneas de código (programación)",
