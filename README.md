@@ -41,11 +41,11 @@ This creates a `my-final-thesis/` directory with all the files needed to get sta
 > One-liner for lazy people:
 > - Linux:
 >    ```bash
->    git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i 's%"/lib.typ"%"uc3m-thesis-ieee-typst/lib.typ"%' report.typ
+>    git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i 's%"@preview/uc3m-thesis-ieee:0.4.0"%"uc3m-thesis-ieee-typst/lib.typ"%' report.typ
 >    ```
 > - MacOS:
 >    ```bash
->    git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i '' 's%"/lib.typ"%"uc3m-thesis-ieee-typst/lib.typ"%' report.typ
+>    git clone https://github.com/guluc3m/uc3m-thesis-ieee-typst.git --depth=1 && mv uc3m-thesis-ieee-typst/template/* . && rm -rf uc3m-thesis-ieee-typst/.git* uc3m-thesis-ieee-typst/template && sed -i '' 's%"@preview/uc3m-thesis-ieee:0.4.0"%"uc3m-thesis-ieee-typst/lib.typ"%' report.typ
 >    ```
 
 1. Make a folder for your report.
@@ -54,7 +54,7 @@ This creates a `my-final-thesis/` directory with all the files needed to get sta
 4. Change the following line in `report.typ`:
    ```diff
    @@ -1,4 +1,4 @@
-   -#import "/lib.typ": conf
+   -#import "@preview/uc3m-thesis-ieee:0.4.0": conf
    +#import "uc3m-thesis-ieee-typst/lib.typ": conf
    ```
 5. [Optional, but recommended] Delete the `.git/`, `template/` folders and `typst.toml`, `.gitignore` files.
