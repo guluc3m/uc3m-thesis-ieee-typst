@@ -58,14 +58,14 @@
 
   /* USAGE */
 
-  [#strong[#locale.AI-USAGE.affirmation.at(language)]]
+  [*#locale.AI-USAGE.affirmation.at(language)*]
 
   table(
     fill: (x, y) => if x != int(usage) { gray },
     columns: 2,
     align: auto,
-    [#strong[#locale.AFFIRMATION.at(style).at(language)];],
-    [#strong[#locale.NEGATION.at(style).at(language)];],
+    [*#locale.AFFIRMATION.at(style).at(language)*;],
+    [*#locale.NEGATION.at(style).at(language)*;],
   )
 
   if not usage {
