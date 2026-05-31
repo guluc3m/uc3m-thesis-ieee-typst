@@ -11,7 +11,7 @@
 /// - usage (bool): Whether AI is used in the project.
 /// - data-usage (dictionary): AI data usage declaration.
 /// - technical-usage (dictionary): Technical usage of AI.
-/// -> content
+/// - usage-reflection (content): Reflection on the usage of AI.
 #let genai-template(
   language,
   usage,

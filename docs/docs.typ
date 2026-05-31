@@ -92,8 +92,15 @@ My thesis starts here.
 
 == All parameters
 
-#let pkg-docs = tidy.parse-module(read("../lib.typ"))
-#tidy.show-module(pkg-docs, style: tidy.styles.default)
+#for file in ("lib", "generative-ai"){ //,, "titlepage") {
+  let docs = tidy.parse-module(read("../" + file + ".typ"), name: file, old-syntax: true)
+  tidy.show-module(docs)
+}
+
+
+
+// #let pkg-docs = tidy.parse-module(read("../lib.typ"))
+// #tidy.show-module(pkg-docs, style: tidy.styles.default)
 
 
 == Abstract
