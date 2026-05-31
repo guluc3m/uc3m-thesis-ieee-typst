@@ -36,7 +36,7 @@
 #set par(leading: 8pt, justify: true, first-line-indent: 0pt)
 
 #let images_example(style) = {
-  let images = ("cover", "toc").map(section =>
+  let images = ("cover", "chapter").map(section =>
     image("report_" + style + "_" + section + ".png", width: 92%)
   )
 
