@@ -35,6 +35,20 @@
 #set text(font: "Libertinus Serif", size: 11pt)
 #set par(leading: 8pt, justify: true, first-line-indent: 0pt)
 
+#let images_example(style) = {
+  let images = ("cover", "toc").map(section =>
+    image("report_" + style + "_" + section + ".png", width: 92%)
+  )
+
+  figure(
+    grid(
+      columns: 2,
+      gutter: 0cm,
+      ..images,
+    ),
+    caption: [Example of the *#style* style.],
+  )
+}
 
 
 #align(center)[
@@ -89,18 +103,6 @@ The template exports a single `conf` function, which you apply to your document 
 
 My thesis starts here.
 ```
-
-== All parameters
-
-#for file in ("lib", "generative-ai"){ //,, "titlepage") {
-  let docs = tidy.parse-module(read("../" + file + ".typ"), name: file, old-syntax: true)
-  tidy.show-module(docs)
-}
-
-
-
-// #let pkg-docs = tidy.parse-module(read("../lib.typ"))
-// #tidy.show-module(pkg-docs, style: tidy.styles.default)
 
 
 == Abstract
@@ -245,7 +247,7 @@ abbreviations: [
 
 == Glossary
 <sec:glossary>
-The template integrates with [`glossarium`](https://typst.app/universe/package/glossarium/) for automatic glossary and acronym management.
+The template integrates with #link("https://typst.app/universe/package/glossarium/")[`glossarium`] for automatic glossary and acronym management.
 
 Define your entries in a separate file (e.g. `config/glossary.typ`):
 
@@ -440,31 +442,49 @@ The template offers three visual styles, controlled by the `style` parameter.
 
 == `"fancy"` (default)
 
-An opinionated style inspired by the original [LaTeX template](https://github.com/ldcas-uc3m/thesis-template), with:
+An opinionated style inspired by the original #link("https://github.com/ldcas-uc3m/thesis-template")[LaTeX template], with:
 - Decorative chapter title pages with a horizontal rule and chapter number/name centered
 - Serif headers showing the current chapter name and page number
 - IEEE-style figure captions and table captions
 - *Libertinus Serif* body font
 
+// Insert a screenshot of the fancy style here
+#images_example("fancy")
+
 == `"clean"`
 
-A clean, minimal style inspired by [clean-dhbw](https://github.com/roland-KA/clean-dhbw-typst-template), with:
+A clean, minimal style inspired by #link("https://github.com/roland-KA/clean-dhbw-typst-template")[clean-dhbw], with:
 - Large chapter number in the background on chapter pages
 - Simple running header showing the chapter name
 - Clean-style figure and table captions
 - *Libertinus Serif* body font
 
+// Insert a screenshot of the clean style here
+#images_example("clean")
+
 == `"strict"`
 
-Strictly follows the [UC3M library guidelines](https://uc3m.libguides.com/en/TFG/writing):
+Strictly follows the #link("https://uc3m.libguides.com/en/TFG/writing")[UC3M library guidelines]:
 - Times New Roman font, 12pt
 - Centered uppercase chapter headings
 - Page numbers in the footer (Roman numerals in front matter, Arabic in body)
 - No decorative elements
 - Double-sided layout is *not* permitted with this style
 
+// Insert a screenshot of the strict style here
+#images_example("strict")
+
 > [!NOTE]
 > You can mix styles for the title page and body independently using `titlepage-style`. For example, to use a `fancy` title page with a `strict` body: `style: "strict", titlepage-style: "fancy"`.
 
 #line(length: 100%, stroke: 0.5pt)
 
+== All parameters (API Reference)
+
+#[
+  #set heading(numbering: none)
+  #for file in ("lib", "generative-ai"){ //,, "titlepage") {
+    let docs = tidy.parse-module(read("../" + file + ".typ"), name: file, old-syntax: true)
+    tidy.show-module(docs)
+  }
+]
