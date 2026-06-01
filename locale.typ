@@ -147,7 +147,7 @@
     en: "I have used Generative AI in this work:",
   ),
   negation: (
-    es: [El autor de esta tésis *no* ha usado ningún tipo de inteligencia
+    es: [El autor de esta tesis *no* ha usado ningún tipo de inteligencia
       artificial generativa durante el desarrollo del proyecto ni durante la
       redacción de este documento.],
     en: [The author of this thesis *has not* used any type of generative
