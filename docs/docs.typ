@@ -74,6 +74,19 @@
   inset: (x: 8pt, y: 5pt),
 )
 
+A #link("https://typst.app/")[Typst] template for bachelor/master theses at #link("https://uc3m.es")[Universidad Carlos III de Madrid], following #link("https://uc3m.libguides.com/en/TFG/writing")[university guidelines].
+
+The template is based on #link("https://github.com/ldcas-uc3m/thesis-template")[ldcas-uc3m/thesis-template] and #link("https://github.com/JorgeyGari/clean-uc3m-typst-template")[clean-uc3m] (a fork of #link("https://github.com/roland-KA/clean-dhbw-typst-template")[clean-dhbw]).
+
+
+
+= Installation
+The recommended way to install it is through #link("https://typst.app/universe/")[Typst Universe]. You can initialize a new project from the template with:
+```shell
+typst init @preview/uc3m-thesis-ieee my-final-thesis
+```
+
+This creates a `my-final-thesis/` directory with all the files needed to get started.
 
 
 = Configuration
