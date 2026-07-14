@@ -1,6 +1,8 @@
 #import "@preview/tidy:0.4.3"
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
+#import "@preview/gentle-clues:1.3.1": *
+
 #show: codly-init.with()
 
 #set document(
@@ -36,9 +38,10 @@
 #set par(leading: 8pt, justify: true, first-line-indent: 0pt)
 
 #let images_example(style) = {
-  let images = ("cover", "chapter").map(section =>
-    image("report_" + style + "_" + section + ".png", width: 92%)
-  )
+  let images = ("cover", "chapter").map(section => image(
+    "report_" + style + "_" + section + ".png",
+    width: 92%,
+  ))
 
   figure(
     grid(
@@ -75,11 +78,11 @@
 
 = Configuration
 
-The template exports a single `conf` function, which you apply to your document with `#show: conf.with(...)`.
+The template exports a single `conf` function, which you apply to your document
+with `#show: conf.with(...)`.
 
 == Minimal example
 
-#codly
 ```typ
 #import "@preview/uc3m-thesis-ieee:0.4.0": conf
 
@@ -122,7 +125,9 @@ The `abstract` parameter takes a dictionary with the following keys:
   [The abstract text.],
   [`keywords`\*],
   [`array` of `str`],
-  [Between 2 and 5 keywords. See #link("https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf")[IEEE Taxonomy].],
+  [Between 2 and 5 keywords. See #link(
+      "https://www.ieee.org/content/dam/ieee-org/ieee/web/org/pubs/ieee-taxonomy.pdf",
+    )[IEEE Taxonomy].],
 )
 
 ```typ
@@ -135,7 +140,8 @@ The `abstract` parameter takes a dictionary with the following keys:
 ),
 ```
 
-For Spanish documents, it is required to provide an `english-abstract` with the same structure:
+For Spanish documents, it is required to provide an `english-abstract` with the
+same structure:
 
 ```typ
 language: "es",
@@ -183,7 +189,8 @@ epigraph: (
 == Outlines
 <sec:outlines>
 
-The `outlines` parameter accepts an optional dictionary with the following boolean keys. All keys are optional (default `false`):
+The `outlines` parameter accepts an optional dictionary with the following
+boolean keys. All keys are optional (default `false`):
 
 #doc-table(
   columns: (auto, auto, 1fr),
@@ -222,7 +229,8 @@ outlines: (
 
 == Abbreviations
 <sec:abbreviations>
-You can pass abbreviations as a dictionary mapping abbreviations to their expansions (automatically sorted alphabetically):
+You can pass abbreviations as a dictionary mapping abbreviations to their
+expansions (automatically sorted alphabetically):
 
 ```typ
 abbreviations: (
@@ -247,7 +255,9 @@ abbreviations: [
 
 == Glossary
 <sec:glossary>
-The template integrates with #link("https://typst.app/universe/package/glossarium/")[`glossarium`] for automatic glossary and acronym management.
+The template integrates with #link(
+  "https://typst.app/universe/package/glossarium/",
+)[`glossarium`] for automatic glossary and acronym management.
 
 Define your entries in a separate file (e.g. `config/glossary.typ`):
 
@@ -279,7 +289,9 @@ Then import it in your main file and pass it to `conf`:
 )
 ```
 
-To reference a glossary term in the body text, use `#gls("key")` (singular) or `#glspl("key")` (plural). These are re-exported from `glossarium` and available after the `#show: conf.with(...)` call:
+To reference a glossary term in the body text, use `#gls("key")` (singular) or
+`#glspl("key")` (plural). These are re-exported from `glossarium` and available
+after the `#show: conf.with(...)` call:
 
 ```typ
 #import "@preview/uc3m-thesis-ieee:0.4.0": conf
@@ -290,12 +302,14 @@ The #gls("API") exposes several endpoints.
 Multiple #glspl("ML") models were evaluated.
 ```
 
-Alternatively, you can pass fully custom `content` to `glossary` if you don't want to use `glossarium`.
+Alternatively, you can pass fully custom `content` to `glossary` if you don't
+want to use `glossarium`.
 
 == Generative AI Declaration
 <sec:genai-declaration>
 
-The `genai-declaration` parameter is *required* by the university. You can either:
+The `genai-declaration` parameter is *required* by the university. You can
+either:
 
 === Option A: Use the built-in template (recommended)
 
@@ -305,7 +319,8 @@ The `genai-declaration` parameter is *required* by the university. You can eithe
 genai-declaration: (usage: false),
 ```
 
-*If you did use generative AI* (`usage: true`), it is required to provide the full declaration:
+*If you did use generative AI* (`usage: true`), it is required to provide the
+full declaration:
 
 Pass a dictionary with the following keys:
 
@@ -353,13 +368,18 @@ Pass a dictionary with the following keys:
   [Did your usage respect the tool's terms of use?],
 )
 
-*`technical-usage` keys* — include only those that apply, with a brief description of the prompt and interaction. Items are automatically grouped into two sections matching the official form:
+*`technical-usage` keys* — include only those that apply, with a brief
+description of the prompt and interaction. Items are automatically grouped into
+two sections matching the official form:
 
-*Documentation and drafting:* `reflection`, `review`, `research`, `references`, `summary`, `translation`
+*Documentation and drafting:* `reflection`, `review`, `research`, `references`,
+`summary`, `translation`
 
-*Develop specific content:* `assistance-coding`, `generating-content`, `optimization`, `data-processing`, `idea-inspiration`, `other`
+*Develop specific content:* `assistance-coding`, `generating-content`,
+`optimization`, `data-processing`, `idea-inspiration`, `other`
 
-An optional `tool` key (`str`) declares the AI system name and version (e.g. `"ChatGPT 4o"`).
+An optional `tool` key (`str`) declares the AI system name and version (e.g.
+`"ChatGPT 4o"`).
 
 ```typ
 genai-declaration: (
@@ -435,15 +455,17 @@ Pass the result of Typst's built-in `bibliography()` call:
 
 #line(length: 100%, stroke: 0.5pt)
 
-= Styles
-<sec:styles>
+= Styles <sec:styles>
 
 The template offers three visual styles, controlled by the `style` parameter.
 
 == `"fancy"` (default)
 
-An opinionated style inspired by the original #link("https://github.com/ldcas-uc3m/thesis-template")[LaTeX template], with:
-- Decorative chapter title pages with a horizontal rule and chapter number/name centered
+An opinionated style inspired by the original #link(
+  "https://github.com/ldcas-uc3m/thesis-template",
+)[LaTeX template], with:
+- Decorative chapter title pages with a horizontal rule and chapter number/name
+  centered
 - Serif headers showing the current chapter name and page number
 - IEEE-style figure captions and table captions
 - *Libertinus Serif* body font
@@ -453,7 +475,9 @@ An opinionated style inspired by the original #link("https://github.com/ldcas-uc
 
 == `"clean"`
 
-A clean, minimal style inspired by #link("https://github.com/roland-KA/clean-dhbw-typst-template")[clean-dhbw], with:
+A clean, minimal style inspired by #link(
+  "https://github.com/roland-KA/clean-dhbw-typst-template",
+)[clean-dhbw], with:
 - Large chapter number in the background on chapter pages
 - Simple running header showing the chapter name
 - Clean-style figure and table captions
@@ -464,7 +488,8 @@ A clean, minimal style inspired by #link("https://github.com/roland-KA/clean-dhb
 
 == `"strict"`
 
-Strictly follows the #link("https://uc3m.libguides.com/en/TFG/writing")[UC3M library guidelines]:
+Strictly follows the #link("https://uc3m.libguides.com/en/TFG/writing")[UC3M
+  library guidelines]:
 - Times New Roman font, 12pt
 - Centered uppercase chapter headings
 - Page numbers in the footer (Roman numerals in front matter, Arabic in body)
@@ -474,17 +499,15 @@ Strictly follows the #link("https://uc3m.libguides.com/en/TFG/writing")[UC3M lib
 // Insert a screenshot of the strict style here
 #images_example("strict")
 
-> [!NOTE]
-> You can mix styles for the title page and body independently using `titlepage-style`. For example, to use a `fancy` title page with a `strict` body: `style: "strict", titlepage-style: "fancy"`.
+#idea[You can mix styles for the title page and body independently using
+  `titlepage-style`. For example, to use a `fancy` title page with a `strict`
+  body: `style: "strict", titlepage-style: "fancy"`.]
 
 #line(length: 100%, stroke: 0.5pt)
 
-== All parameters (API Reference)
 
-#[
-  #set heading(numbering: none)
-  #for file in ("lib", "generative-ai"){ //,, "titlepage") {
-    let docs = tidy.parse-module(read("../" + file + ".typ"), name: file, old-syntax: true)
-    tidy.show-module(docs)
-  }
-]
+= API Reference
+
+#set heading(numbering: none)
+#let docs = tidy.parse-module(read("../lib.typ"), old-syntax: true)
+#tidy.show-module(docs, show-outline: false, omit-private-definitions: true)

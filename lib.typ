@@ -881,7 +881,7 @@
   /// - indented (boolean): Whether to indent the entry.
   /// - justified (boolean): When `false`, wraps the entry in a `block` to prevent justification.
   /// -> content
-  let outline-entry-formatter(
+  let _outline-entry-formatter(
     it,
     prefix: auto,
     body: auto,
@@ -942,7 +942,7 @@
   show outline.entry.where(level: 1): it => {
     // non-TOC outlines
     if it.element.func() != heading {
-      return outline-entry-formatter(it, color: black)
+      return _outline-entry-formatter(it, color: black)
     }
 
     // TOC outlines
@@ -955,7 +955,7 @@
     )
 
     if style == "strict" {
-      outline-entry-formatter(
+      _outline-entry-formatter(
         it,
         spacing: 1.5em,
         above: 1.5em,
@@ -963,7 +963,7 @@
         ..common-configs,
       )
     } else if style == "clean" {
-      outline-entry-formatter(
+      _outline-entry-formatter(
         it,
         above: 2em,
         text-weight: "semibold",
@@ -971,7 +971,7 @@
         ..common-configs,
       )
     } else if style == "fancy" {
-      outline-entry-formatter(
+      _outline-entry-formatter(
         it,
         above: 1.3em,
         text-size: 13pt,
@@ -1005,7 +1005,7 @@
 
   // other TOC entries in regular with adapted filling
   show outline.entry.where(level: 2).or(outline.entry.where(level: 3)): it => {
-    outline-entry-formatter(
+    _outline-entry-formatter(
       it,
       above: if style == "strict" { auto } else { 0.8em },
     )
