@@ -1,4 +1,4 @@
-#import "/lib.typ": conf
+#import "@preview/uc3m-thesis-ieee:0.4.0": conf
 #import "config/glossary.typ": glossary-entries
 #import "config/gen-ai.typ": genai-declaration
 #import "config/bibliography.typ": bibliography
